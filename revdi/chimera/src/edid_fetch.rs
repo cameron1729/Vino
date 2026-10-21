@@ -79,6 +79,14 @@ fn drain_once(
         Err(UsbError::Timeout) => return Ok(false),
         Err(e) => return Err(FetchError::Transport(e)),
     };
+    if std::env::var_os("VINO_SUPERVISED").is_some() {
+        // Metadata only: distinguish no reply from an undecodable/rejected reply, without keys.
+        eprintln!(
+            "chimera-edid: rx {} bytes, decoded header {:?}",
+            reply.len(),
+            kvino::decode_in_lenient(ks, riv, &reply)
+        );
+    }
     if edid.is_none() {
         if let Some(decoded) =
             kvino::parse_edid_from_reply(ks, riv, &reply).map_err(FetchError::Build)?
@@ -90,6 +98,30 @@ fn drain_once(
         kvino::edid_poll_ready(ks, riv, &reply),
         Some(true)
     ))
+}
+
+/// Ella's discovery phase: one probe and one fetch, without Ridge's readiness kick or engages.
+/// The caller fetches all connectors before engaging any, matching native session/setup.rs.
+pub fn fetch_shared_edid(
+    dock: &Dock,
+    ks: &[u8; 16],
+    riv: &[u8; 8],
+    wire_seq: &mut u32,
+    inner_counter: &mut u16,
+    head: u8,
+) -> Result<Option<Vec<u8>>, FetchError> {
+    let mut edid = None;
+    for sub in [0x20, 0x21] {
+        send_message(dock, ks, riv, wire_seq, inner_counter, 0x15, |counter| {
+            kvino::get_edid_req_sub(counter, sub, head)
+        })?;
+        let _ = drain_once(dock, ks, riv, &mut edid)?;
+    }
+    let started = Instant::now();
+    while edid.is_none() && started.elapsed() < ASYNC_EDID_WAIT {
+        let _ = drain_once(dock, ks, riv, &mut edid)?;
+    }
+    Ok(edid)
 }
 
 /// Discover `head`'s EDID in an already-engaged session.

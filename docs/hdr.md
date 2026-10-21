@@ -477,29 +477,38 @@ Runtime strings worth having:
 
 ### …and it answers the shader question
 
-**The shader bytecode is embedded directly inside `dlidusb3.dll` in `.rdata` at file offset `0x5ee000`.**
+The first recovered encrypted shader in **dlidusb3.dll** is in **.rdata** at file
+offset `0x5ed460` (RVA `0x5eec60`). For the pinned x64 version `12.2.2204.0`,
+AES-128-ECB with key `7c01a5ce4fb3f107f1906e7380d76174` recovers **76 distinct
+DXBC Shader Model 5.0 compute containers**, totalling 4,998,752 bytes. The first
+container starts at `0x5ed460` and the last at `0xac76c0`.
 
-It is encrypted using AES-128 (ECB / CBC zero-IV) with the general obfuscation key `7c01a5ce4fb3f107f1906e7380d76174`. Decrypting the ~1 MB payload starting at offset `0x5ee000` (RVA `0x5ef800`) yields:
+The earlier count of 19 covered only the beginning of the payload. Scanning
+through the remainder of the PE section, checking container/chunk bounds and
+shader token lengths, and disassembling every result establishes the larger
+inventory. The later host trace extended the scan backwards from `0x5ee000` and recovered
+the complete preceding shader at `0x5ed460`. It is named `shader_75` to preserve
+the original identifiers; the old prefix was its tail.
 
-1. **Raw SM4/SM5 Instruction Header (`0x00000`–`0x015af`, ~5.5 KB):** Dispatch routines and opcode token streams.
-2. **DXBC Container Array (`0x015b0` onwards):** Exactly **19 compiled DXBC Shader Model 5.0 Compute Shader containers (`cs_5_0`)**.
+See [Windows shader research](gpu-windows-shaders.md) for the input hash, pinned
+disassembler, reproduction commands, complete metadata inventory and the limits
+of the architectural inferences. Local binaries and assembly are generated in
+the ignored **gpu-artifacts/windows/** directory.
 
-The complete set of extracted `.dxbc` binaries and disassembled `.asm` assembly listings lives in the local capture archive, outside this repository, as `gpu-shaders/`.
-
-### Shader Suite Breakdown
+### Shader suite breakdown (original identifiers 00–18)
 
 | Shader | Offset | Size | Thread Group | Primary Function |
 | :--- | :---: | :---: | :---: | :--- |
 | **`shader_00`–`02`** | `0x5ef5b0`–`0x5f3ae0` | 8.8–9.2 KB | `16 × 4 × 1` | Texture input to 1040-word structured records; direct conversion/transform family |
 | **`shader_03`–`08`** | `0x5f5ee0`–`0x5ffa90` | 7.7–8.6 KB | `16 × 4 × 1` | Sampled texture input to 528-word structured records; scaling/subsample family |
 | **`shader_09`–`14`** | `0x601c30`–`0x644560` | 53.8–55.3 KB | `16 × 1 × 1` | Structured-input bitstream/record packing (`ubfe`, `bfi`, many structured stores) |
-| **`shader_15`–`18`** | `0x6517f0`–`0x6cd440` | 140.6–146.4 KB | `8 × 2 × 3` | Fused texture-to-packed-output encoder family; 48 threads, bit reversal and atomic packing |
+| **`shader_15`–`18`** | `0x6517f0`–`0x6bb440` | 140.6–146.4 KB | `8 × 2 × 3` | Fused texture-to-packed-output encoder family; 48 threads, bit reversal and atomic packing |
 
 These labels deliberately stop at what the declarations and instructions establish. In
 particular shaders 09–14 contain **no `bfrev` instruction**, while shaders 15–18 contain 128–131;
-and nothing in the bytecode alone establishes that the latter perform motion estimation. Run
-`scripts/codec-re/dxbc-shader-inventory.py gpu-shaders` from the repository root for reproducible
-declaration/opcode counts.
+and nothing in the bytecode alone establishes that the latter perform motion estimation. The
+[reproducible extractor](../tools/gpu/extract-windows-shaders.py) records declaration
+and opcode counts for all 76 containers.
 
 ## 2b. ✅ How DLM actually does HDR
 

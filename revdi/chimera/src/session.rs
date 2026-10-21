@@ -56,6 +56,44 @@ struct SessionKeys {
     receiver_id_list: Vec<u8>,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum SharedSetupStep {
+    Fetch(u8),
+    Hello,
+    Engage(u8),
+    Poll,
+    Open(u8),
+    Capability(u8),
+}
+
+/// The phase order from native session/setup.rs, with measured spacing from the profile.
+fn shared_setup_steps(profile: DockProfile) -> Vec<SharedSetupStep> {
+    use SharedSetupStep::*;
+    let mut steps: Vec<_> = (0..profile.connectors()).map(Fetch).collect();
+    steps.push(Hello);
+    steps.extend((0..profile.connectors()).map(Engage));
+    for head in 0..profile.connectors() {
+        steps.extend((0..profile.setup_polls_before_open(head)).map(|_| Poll));
+        steps.push(Open(head));
+    }
+    steps.extend((0..profile.setup_polls_after_opens()).map(|_| Poll));
+    steps.extend((0..profile.connectors()).map(Capability));
+    steps
+}
+
+fn setup_finalizers(
+    profile: DockProfile,
+    authenticated: &[bool; MAX_CONNECTORS],
+) -> impl Iterator<Item = (u16, u16, u8)> + '_ {
+    (0..profile.connectors())
+        .filter(move |&head| !profile.video_on_ctrl_pipe() && authenticated[usize::from(head)])
+        .flat_map(|head| {
+            kvino::CP_SETUP_FINALIZE_STEPS
+                .into_iter()
+                .map(move |(id, sub)| (id, sub, head))
+        })
+}
+
 /// One authenticated userspace control session.
 pub struct ControlSession {
     dock: Dock,
@@ -66,11 +104,15 @@ pub struct ControlSession {
     wire_seq: u32,
     inner_counter: u16,
     video_keys: [[u8; 24]; MAX_CONNECTORS],
+    /// EDIDs collected during Ella's dock-wide setup, consumed by each connector's first fetch.
+    setup_edids: [Option<Vec<u8>>; MAX_CONNECTORS],
     /// Whether each connector still owes its stream a report restating the mode.
     ///
     /// The frame after a mode set carries it. On a dock that shares its pipes it is the only
     /// report the stream wants, and the vendor sends fourteen across seven thousand frames.
     mode_restate_owed: [bool; MAX_CONNECTORS],
+    /// Ella starts blanked; release it after the carrier and two picture presentations.
+    unblank_owed: [bool; MAX_CONNECTORS],
     /// The mode each connector was last programmed with, which its stream reports restate.
     programmed_mode: [(u16, u16); MAX_CONNECTORS],
     /// Which connectors currently hold a programmed mode.
@@ -85,6 +127,9 @@ pub struct ControlSession {
     /// accounted for.
     video_seal_seq: [u32; MAX_CONNECTORS],
     frame_seq: [u32; MAX_CONNECTORS],
+    /// Reused only after submission (including timeout retries) has drained every USB transfer.
+    /// One pool serves all heads because a session presents them sequentially.
+    frame_packets: FramePackets,
     /// Per-head content shadow and retransmit ledger; see [`crate::scanout`].
     scanout: [crate::scanout::HeadScanout; MAX_CONNECTORS],
     /// The cursor each connector was last given, so a mode set can put it back.
@@ -94,6 +139,19 @@ pub struct ControlSession {
     /// mode was programmed after the pointer was uploaded keeps no pointer at all -- and having
     /// taken the cursor out of band, nothing draws one into the frame either.
     cursor_shot: [Option<CursorShot>; MAX_CONNECTORS],
+}
+
+/// Pipeline timings; USB completion is not a monitor presentation timestamp.
+#[derive(Clone, Copy, Debug, Default)]
+pub struct PresentStats {
+    pub encode_time: Duration,
+    pub usb_time: Duration,
+    pub bytes: usize,
+    pub presentations: u32,
+    /// Newly changed content, excluding strips sent only to refresh another dock buffer.
+    pub changed_strips: usize,
+    /// Strip-aligned half-open [x0, y0, x1, y1] bounds, not exact changed pixels.
+    pub changed_bounds: Option<[usize; 4]>,
 }
 
 impl ControlSession {
@@ -125,6 +183,25 @@ impl ControlSession {
         } else {
             profile
         };
+        Self::engage_opened(dock, profile)
+    }
+
+    /// The bounded single-head trial only supports the explicitly selected Ella dock.
+    pub fn engage_ella_at(port: &str) -> Result<Self, String> {
+        let profile = DockProfile::for_family(kvino::Family::Ella).expect("Ella profile");
+        let dock = Dock::open_ella_at(
+            port,
+            vino_driver::Placement {
+                name: profile.name(),
+                video_endpoints: profile.video_endpoints(),
+                connectors: profile.connectors(),
+            },
+        )
+        .map_err(|e| format!("open selected Ella dock: {e}"))?;
+        Self::engage_opened(dock, profile)
+    }
+
+    fn engage_opened(dock: Dock, profile: DockProfile) -> Result<Self, String> {
         device_open_preamble(&dock)?;
         session_init(&dock)?;
         let mut keys = authenticate(&dock)?;
@@ -133,21 +210,28 @@ impl ControlSession {
         if acknowledgements == 0 {
             return Err("dock did not acknowledge the encrypted control session".into());
         }
-        Ok(Self {
+        let mut session = Self {
             dock,
             profile,
             keys,
             wire_seq,
             inner_counter,
             video_keys,
+            setup_edids: core::array::from_fn(|_| None),
             mode_restate_owed: [false; MAX_CONNECTORS],
+            unblank_owed: [false; MAX_CONNECTORS],
             programmed_mode: [(0, 0); MAX_CONNECTORS],
             mode_active: [false; MAX_CONNECTORS],
             video_seal_seq: [0; MAX_CONNECTORS],
             frame_seq: [0; MAX_CONNECTORS],
+            frame_packets: FramePackets::default(),
             scanout: core::array::from_fn(|_| crate::scanout::HeadScanout::new(profile)),
             cursor_shot: core::array::from_fn(|_| None),
-        })
+        };
+        if profile.video_on_ctrl_pipe() {
+            session.setup_shared_streams()?;
+        }
+        Ok(session)
     }
 
     /// How many connectors this dock actually backs. Every per-head loop is bounded by this,
@@ -163,6 +247,23 @@ impl ControlSession {
 
     /// Fetch one downstream head's EDID without losing the session counters.
     pub fn fetch_edid(&mut self, head: u8) -> Result<Vec<u8>, crate::edid_fetch::FetchError> {
+        if usize::from(head) >= self.connectors() {
+            return Err(crate::edid_fetch::FetchError::NoEdid { head });
+        }
+        if self.profile.video_on_ctrl_pipe() {
+            if let Some(edid) = self.setup_edids[usize::from(head)].take() {
+                return Ok(edid);
+            }
+            return crate::edid_fetch::fetch_shared_edid(
+                &self.dock,
+                &self.keys.control_key,
+                &self.keys.control_nonce,
+                &mut self.wire_seq,
+                &mut self.inner_counter,
+                head,
+            )?
+            .ok_or(crate::edid_fetch::FetchError::NoEdid { head });
+        }
         crate::edid_fetch::fetch_edid(
             &self.dock,
             self.profile,
@@ -172,6 +273,55 @@ impl ControlSession {
             &mut self.inner_counter,
             head,
         )
+    }
+
+    /// Native Ella setup walks each phase across both connectors before changing phase. Stream
+    /// opens consume video block zero here; the later decoder configuration must start at one.
+    fn setup_shared_streams(&mut self) -> Result<(), String> {
+        for step in shared_setup_steps(self.profile) {
+            if std::env::var_os("VINO_SUPERVISED").is_some() {
+                eprintln!("chimera-setup: {step:?}, counter {}", self.inner_counter);
+            }
+            let content = match step {
+                SharedSetupStep::Fetch(head) => {
+                    self.setup_edids[usize::from(head)] = crate::edid_fetch::fetch_shared_edid(
+                        &self.dock,
+                        &self.keys.control_key,
+                        &self.keys.control_nonce,
+                        &mut self.wire_seq,
+                        &mut self.inner_counter,
+                        head,
+                    )
+                    .map_err(|e| e.to_string())?;
+                    continue;
+                }
+                SharedSetupStep::Hello => kvino::session_hello(self.inner_counter).to_vec(),
+                SharedSetupStep::Engage(head) => kvino::edid_engage_req(self.inner_counter, head)
+                    .map_err(build_error("shared-pipe engage"))?,
+                SharedSetupStep::Poll => kvino::device_query_req(self.inner_counter, 0x000c)
+                    .map_err(build_error("setup status"))?,
+                SharedSetupStep::Open(head) => {
+                    let (key, nonce) = self.video_key(usize::from(head)).ok_or("invalid head")?;
+                    let mut sequence = self.video_seal_seq[usize::from(head)];
+                    let (open, announce) =
+                        kvino::shared_stream_open(self.profile, head, &key, &nonce, &mut sequence)
+                            .map_err(build_error("shared-pipe stream open"))?;
+                    self.send_plain_video(head, &open)?;
+                    self.send_plain_video(head, &announce)?;
+                    self.video_seal_seq[usize::from(head)] = sequence;
+                    drain_acknowledgements(&self.dock, &self.keys, EP84_DRAIN_READS);
+                    continue;
+                }
+                SharedSetupStep::Capability(head) => {
+                    kvino::post_edid_query(self.inner_counter, head)
+                        .map_err(build_error("connector capability"))?
+                }
+            };
+            let id = u16::from_le_bytes([content[0], content[1]]);
+            self.send_control(id, &content)?;
+            drain_acknowledgements(&self.dock, &self.keys, EP84_DRAIN_READS);
+        }
+        Ok(())
     }
 
     /// Probe whether a monitor is attached to one downstream head.
@@ -207,6 +357,19 @@ impl ControlSession {
         self.poll_status()
     }
 
+    /// Consume replies already collected by libusb while video was in flight. This sends no
+    /// control traffic and does not wait for USB; firmware diagnostic pushes otherwise sit queued
+    /// until the next keepalive, which can be later than a failed frame.
+    pub fn drain_pending_replies(&self) -> Result<(), String> {
+        for _ in 0..64 {
+            let Some(reply) = receive_optional(&self.dock, Duration::ZERO)? else {
+                break;
+            };
+            trace_control_reply(&self.keys, &reply);
+        }
+        Ok(())
+    }
+
     /// Borrow the transport for video submission.
     pub fn dock(&self) -> &Dock {
         &self.dock
@@ -237,13 +400,18 @@ impl ControlSession {
     /// The frame right after a mode set restates the mode; on a dock that shares its pipes that
     /// restatement is the only report it wants at all, and the vendor sends it with the third
     /// frame of the stream rather than the first.
-    fn frame_report(&mut self, head: u8, mode: (u16, u16)) -> Result<Vec<u8>, String> {
+    fn frame_report(
+        &mut self,
+        head: u8,
+        mode: (u16, u16),
+        sequence: u32,
+    ) -> Result<Vec<u8>, String> {
         let head_index = usize::from(head);
         let Some((video_key, video_nonce)) = self.video_key(head_index) else {
             return Ok(Vec::new());
         };
         let restate = self.mode_restate_owed[head_index];
-        if restate && self.profile.video_on_ctrl_pipe() && self.frame_seq[head_index] < 2 {
+        if restate && self.profile.video_on_ctrl_pipe() && sequence < 2 {
             return Ok(Vec::new());
         }
         let report = kvino::stream_report(
@@ -391,19 +559,10 @@ impl ControlSession {
         )
         .map_err(build_error("video stream opening"))?;
 
-        let mode = kvino::set_mode_profile(
-            self.profile,
-            self.inner_counter,
-            head,
-            width16,
-            height16,
-            refresh16,
-        )
-        .map_err(build_error("mode profile"))?;
-
         // The bracket the timing is programmed inside. A connector arriving from a blank needs it
         // exactly as much as one being configured cold, because it is the sink that has to be
         // retrained onto the new timing.
+        self.unblank_owed[head_index] = self.profile.video_on_ctrl_pipe();
         self.send_marker(head, 0x2f, 1)?;
         if let Some(state) = self.profile.pre_mode_sink_state() {
             self.send_marker(head, 0x2e, state)?;
@@ -414,6 +573,16 @@ impl ControlSession {
                 kvino::clear_mode(self.inner_counter, head).map_err(build_error("clear mode"))?;
             self.send_control(0x48, &clear)?;
         }
+        // Build after the preceding markers/polls have advanced the inner counter.
+        let mode = kvino::set_mode_profile(
+            self.profile,
+            self.inner_counter,
+            head,
+            width16,
+            height16,
+            refresh16,
+        )
+        .map_err(build_error("mode profile"))?;
         self.send_control(0x48, &mode)?;
         // Anchor AFTER the first status poll, not before it. The whole activation bracket is paced
         // against this anchor over 125 ms, but the poll's USB write can block for far longer than
@@ -462,15 +631,18 @@ impl ControlSession {
         let mut carrier_seq: u32 = 0;
         // The frame that carries the stream's opening carries no report: the opening has just said
         // everything the report says, and a second copy spends a block the dock has accounted for.
-        let opening = prefix_frame(opening_profile, &prefix, &[], &prompt, head, carrier_seq);
-        self.submit_video(head, &opening)?;
-        for _ in 0..2 {
-            let commit = kvino::stream_commit(self.inner_counter, head)
-                .map_err(build_error("stream commit"))?;
-            self.send_control(0x16, &commit).map(|_| ())?;
+        self.frame_packets
+            .rebuild(opening_profile, &prefix, &[], &prompt, head, carrier_seq);
+        self.submit_video(head, self.frame_packets.chunks())?;
+        if !self.profile.video_on_ctrl_pipe() {
+            for _ in 0..2 {
+                let commit = kvino::stream_commit(self.inner_counter, head)
+                    .map_err(build_error("stream commit"))?;
+                self.send_control(0x16, &commit).map(|_| ())?;
+            }
         }
-        // A dock whose video shares the control pipe holds its bracket open instead of closing it:
-        // the closing markers are what its blank sends, and sending them here takes the sink down.
+        // Dedicated-pipe docks close here. Ella releases blanking after two picture
+        // presentations in present_rgb_with_encoder, matching the measured cold-start tail.
         if !self.profile.video_on_ctrl_pipe() {
             self.wait_mode_offset(anchor, 123);
             self.send_marker(head, 0x2f, 0)?;
@@ -485,7 +657,8 @@ impl ControlSession {
         // the carrier is bounded by the window it was measured over instead.
         let mut next_status = Instant::now();
         let deadline = anchor + Duration::from_millis(700);
-        let mut frames_left = self.profile.carrier_frames();
+        // The opening above already presented one carrier; the profile counts the whole burst.
+        let mut frames_left = self.profile.carrier_frames().map(|n| n.saturating_sub(1));
         // A stated count is sent in full. It walks the dock's ring by exactly as many slots as the
         // vendor walks it, so stopping short leaves the ring behind where the dock expects it and
         // the first picture is written to a slot it is not reading -- which it answers by not
@@ -496,9 +669,10 @@ impl ControlSession {
                 break;
             }
             carrier_seq = carrier_seq.wrapping_add(1);
-            let report = self.frame_report(head, (width16, height16))?;
-            let repeat = prefix_frame(opening_profile, &[], &report, &prompt, head, carrier_seq);
-            self.submit_video(head, &repeat)?;
+            let report = self.frame_report(head, (width16, height16), carrier_seq)?;
+            self.frame_packets
+                .rebuild(opening_profile, &[], &report, &prompt, head, carrier_seq);
+            self.submit_video(head, self.frame_packets.chunks())?;
             // Advanced behind the submission, never ahead of it: a sequence spent on a frame that
             // did not reach the dock leaves its ring a slot ahead of what it has been sent.
             self.frame_seq[head_index] = carrier_seq;
@@ -535,42 +709,198 @@ impl ControlSession {
         height: usize,
         rgb: &[u8],
     ) -> Result<(), String> {
+        self.present_rgb_with_encoder(
+            head,
+            width,
+            height,
+            rgb,
+            &mut crate::scanout::CpuStripEncoder,
+        )
+        .map(|_| ())
+    }
+
+    /// Present using the caller's persistent encoder; errors leave the presentation ledger owed.
+    pub fn present_rgb_with_encoder<E: crate::scanout::StripEncoder + ?Sized>(
+        &mut self,
+        head: u8,
+        width: usize,
+        height: usize,
+        rgb: &[u8],
+        encoder: &mut E,
+    ) -> Result<PresentStats, String>
+    where
+        E::Error: core::fmt::Display,
+    {
+        self.present_surface_with_encoder(
+            head,
+            crate::surface::SurfaceView::rgb(width, height, rgb)
+                .map_err(|_| "invalid padded RGB surface")?,
+            encoder,
+        )
+    }
+
+    /// Re-present pixels known to match this head's previous presentation input exactly.
+    ///
+    /// Includes pixels composited by the caller, such as a software cursor. New/resized
+    /// surfaces are still hashed; all required transmissions and failure recovery are retained.
+    pub fn present_unchanged_rgb_with_encoder<E: crate::scanout::StripEncoder + ?Sized>(
+        &mut self,
+        head: u8,
+        width: usize,
+        height: usize,
+        rgb: &[u8],
+        encoder: &mut E,
+    ) -> Result<PresentStats, String>
+    where
+        E::Error: core::fmt::Display,
+    {
+        self.present_unchanged_surface_with_encoder(
+            head,
+            crate::surface::SurfaceView::rgb(width, height, rgb)
+                .map_err(|_| "invalid padded RGB surface")?,
+            encoder,
+        )
+    }
+
+    /// Present a native or packed logical image with the supplied encoder.
+    pub fn present_surface_with_encoder<E: crate::scanout::StripEncoder + ?Sized>(
+        &mut self,
+        head: u8,
+        surface: crate::surface::SurfaceView<'_>,
+        encoder: &mut E,
+    ) -> Result<PresentStats, String>
+    where
+        E::Error: core::fmt::Display,
+    {
+        self.present_surface_inner(head, surface, false, None, encoder)
+    }
+
+    /// Re-present an unchanged logical image, retaining the existing retransmission ledger.
+    pub fn present_unchanged_surface_with_encoder<E: crate::scanout::StripEncoder + ?Sized>(
+        &mut self,
+        head: u8,
+        surface: crate::surface::SurfaceView<'_>,
+        encoder: &mut E,
+    ) -> Result<PresentStats, String>
+    where
+        E::Error: core::fmt::Display,
+    {
+        self.present_surface_inner(head, surface, true, None, encoder)
+    }
+
+    /// Present native pixels already compared exactly by the consuming thread. The previous
+    /// capture lease can be released before this call; only current pixels reach the GPU.
+    pub fn present_native_revisions_with_encoder<E: crate::scanout::StripEncoder + ?Sized>(
+        &mut self,
+        head: u8,
+        surface: crate::surface::NativeSurface<'_>,
+        changes: &crate::native_changes::NativeChanges,
+        encoder: &mut E,
+    ) -> Result<PresentStats, String>
+    where
+        E::Error: core::fmt::Display,
+    {
+        self.present_surface_inner(
+            head,
+            crate::surface::SurfaceView::Native(surface),
+            false,
+            Some(changes),
+            encoder,
+        )
+    }
+
+    fn present_surface_inner<E: crate::scanout::StripEncoder + ?Sized>(
+        &mut self,
+        head: u8,
+        surface: crate::surface::SurfaceView<'_>,
+        unchanged: bool,
+        native_changes: Option<&crate::native_changes::NativeChanges>,
+        encoder: &mut E,
+    ) -> Result<PresentStats, String>
+    where
+        E::Error: core::fmt::Display,
+    {
+        let (width, height) = (surface.width(), surface.height());
+        let started = Instant::now();
+        let mut stats = PresentStats::default();
+        let (sw, sh) = self.profile.strip_dims();
+        if width == 0
+            || height == 0
+            || width > 65535
+            || height > 65535
+            || !width.is_multiple_of(sw)
+            || !height.is_multiple_of(sh)
+            || !surface.is_valid()
+        {
+            return Err("invalid padded surface".into());
+        }
         let head_index = usize::from(head);
         if head_index >= self.connectors() {
             return Err(format!("invalid Vino head {head}"));
         }
-        let plan = self.scanout[head_index].plan(width, height, rgb);
+        let plan = if let Some(changes) = native_changes {
+            let crate::surface::SurfaceView::Native(native) = surface else {
+                return Err("native revisions require a native surface".into());
+            };
+            self.scanout[head_index]
+                .plan_native_revisions(native, changes)
+                .map_err(|_| "native revision geometry does not match the surface")?
+        } else if unchanged {
+            self.scanout[head_index].plan_unchanged_view(surface)
+        } else {
+            self.scanout[head_index].plan_view(surface)
+        };
+        (stats.changed_strips, stats.changed_bounds) = self.scanout[head_index].content_changes();
         let Some(frame) = self.scanout[head_index]
-            .encode(&plan, rgb, head)
-            .map_err(build_error("video frame"))?
+            .encode_view_with(&plan, surface, head, encoder)
+            .map_err(|e| format!("video frame: {e}"))?
         else {
             // Nothing moved and nothing is owed. DLM puts zero bytes on the wire here.
-            self.poll_status()?;
-            return Ok(());
+            stats.encode_time = started.elapsed();
+            if !self.profile.video_on_ctrl_pipe() {
+                self.poll_status()?;
+            }
+            return Ok(stats);
         };
 
         // Each presentation carries the same image with a freshly advanced trailer, whose phase
         // (`seq % dock_buffers`) is how the dock steps to the next buffer.
+        stats.encode_time = started.elapsed();
+        let usb_started = Instant::now();
         let sequence = self.frame_seq[head_index];
         let mode = self.programmed_mode[head_index];
-        for repeat in 0..frame.presentations {
-            let report = self.frame_report(head, mode)?;
-            let stream = prefix_frame(
-                self.profile,
-                &[],
-                &report,
-                &frame.records,
-                head,
-                sequence.wrapping_add(repeat),
-            );
-            self.submit_video(head, &stream)?;
-        }
-        self.frame_seq[head_index] = sequence.wrapping_add(frame.presentations);
+        let next_sequence = deliver_presentations(frame.presentations, sequence, |seq| {
+            // Native Ella separates ring copies by one display period on the shared pipe.
+            if seq != sequence && self.profile.video_on_ctrl_pipe() {
+                std::thread::sleep(Duration::from_millis(self.profile.frame_period_ms() as u64));
+            }
+            let report = self.frame_report(head, mode, seq)?;
+            self.frame_packets
+                .rebuild(self.profile, &[], &report, &frame.records, head, seq);
+            let sent = self.submit_video(head, self.frame_packets.chunks());
+            // Keep the original transfer error even if the device disappeared during diagnosis.
+            let _ = self.drain_pending_replies();
+            sent?;
+            stats.bytes += self.frame_packets.bytes;
+            let mut unblank_owed = self.unblank_owed[head_index];
+            finish_ella_activation(&mut unblank_owed, seq, |sub, state| {
+                self.send_marker(head, sub, state)
+            })?;
+            self.unblank_owed[head_index] = unblank_owed;
+            Ok(())
+        })?;
+        stats.usb_time = usb_started.elapsed();
+        stats.presentations = frame.presentations;
+        self.frame_seq[head_index] = next_sequence;
         // Published only now: every early return and transport error above deliberately leaves the
         // previous dock-visible state intact, so the next frame repairs it.
         self.scanout[head_index].presented(&plan);
-        self.poll_status()?;
-        Ok(())
+        // The live loop owns the profile's keepalive interval. An inline poll on Ella inserts a
+        // control transaction into every frame boundary, where its vendor leaves the pipe quiet.
+        if !self.profile.video_on_ctrl_pipe() {
+            self.poll_status()?;
+        }
+        Ok(stats)
     }
 
     /// Upload a complete cursor image for one head.
@@ -590,7 +920,9 @@ impl ControlSession {
             .map_err(build_error("cursor image"))?;
         self.send_control(0x1c, &image)?;
         if let Some(slot) = self.cursor_shot.get_mut(usize::from(head)) {
-            let (x, y, visible) = slot.as_ref().map_or((0, 0, true), |s| (s.x, s.y, s.visible));
+            let (x, y, visible) = slot
+                .as_ref()
+                .map_or((0, 0, true), |s| (s.x, s.y, s.visible));
             *slot = Some(CursorShot {
                 width,
                 height,
@@ -616,7 +948,12 @@ impl ControlSession {
         else {
             return Ok(());
         };
-        self.set_cursor(head, u32::from(shot.width), u32::from(shot.height), &shot.bgra)?;
+        self.set_cursor(
+            head,
+            u32::from(shot.width),
+            u32::from(shot.height),
+            &shot.bgra,
+        )?;
         if shot.visible {
             self.move_cursor(head, i32::from(shot.x), i32::from(shot.y))
         } else {
@@ -663,6 +1000,9 @@ impl ControlSession {
         }
         if let Some(active) = self.mode_active.get_mut(usize::from(head)) {
             *active = false;
+        }
+        if let Some(owed) = self.unblank_owed.get_mut(usize::from(head)) {
+            *owed = false;
         }
 
         // A dock that wants its bracket held gets two markers and then silence. Presenting black
@@ -729,6 +1069,14 @@ impl ControlSession {
     }
 
     fn send_control(&mut self, id: u16, content: &[u8]) -> Result<Option<Vec<u8>>, String> {
+        if std::env::var_os("VINO_SUPERVISED").is_some() {
+            eprintln!(
+                "chimera-control: tx id={id:04x} sub={:04x} counter={} blocks={}",
+                u16::from_le_bytes([content[2], content[3]]),
+                u16::from_le_bytes([content[4], content[5]]),
+                self.wire_seq
+            );
+        }
         let frame = kvino::seal_interactive(
             &self.keys.control_key,
             &self.keys.control_nonce,
@@ -744,7 +1092,11 @@ impl ControlSession {
             .wire_seq
             .wrapping_add(content.len().div_ceil(16) as u32);
         self.inner_counter = self.inner_counter.wrapping_add(1);
-        receive_optional(&self.dock, REPLY_TIMEOUT)
+        let reply = receive_optional(&self.dock, REPLY_TIMEOUT)?;
+        if let Some(frame) = reply.as_ref() {
+            trace_control_reply(&self.keys, frame);
+        }
+        Ok(reply)
     }
 
     /// Send a control message and return the reply that answers *this* one.
@@ -1022,10 +1374,7 @@ fn configure_control(
     let mut inner_counter = keys.next_counter;
     let mut acknowledgements = 0usize;
 
-    let mut first = [0u8; 32];
-    first[..2].copy_from_slice(&0x0014u16.to_le_bytes());
-    first[4..6].copy_from_slice(&inner_counter.to_le_bytes());
-    kvino::rng::fill(&mut first[22..]);
+    let first = kvino::session_hello(inner_counter);
     let body_len = first.len() + 16;
     let mut header = [0u8; 16];
     header[2..4].copy_from_slice(&((16 + body_len - 4) as u16).to_le_bytes());
@@ -1035,7 +1384,7 @@ fn configure_control(
     let frame = kvino::seal_livemac(&keys.control_key, &keys.control_nonce, &header, &first)
         .map_err(build_error("first encrypted control message"))?;
     send_plain_retry(dock, &frame)?;
-    acknowledgements += drain_acknowledgements(dock, 8);
+    acknowledgements += drain_acknowledgements(dock, keys, 8);
     inner_counter = inner_counter.wrapping_add(1);
     wire_seq += 2;
 
@@ -1065,7 +1414,7 @@ fn configure_control(
         kvino::rng::fill(&mut content[22..]);
         content[22..22 + prefix.len()].copy_from_slice(&prefix);
         send_interactive(dock, keys, id, wire_seq, &content)?;
-        acknowledgements += drain_acknowledgements(dock, 2);
+        acknowledgements += drain_acknowledgements(dock, keys, 2);
         inner_counter = inner_counter.wrapping_add(1);
         wire_seq += 2;
     }
@@ -1101,13 +1450,7 @@ fn configure_control(
     // Three finalization messages per head, head-major, exactly as the driver repeats
     // `CP_SETUP_FINALIZE_STEPS` for each connector that authenticated. A connector that never
     // authenticated has nothing to finalise.
-    let finalize = (0..dock.connectors() as u8)
-        .filter(|head| authenticated[*head as usize])
-        .flat_map(|head| {
-            kvino::CP_SETUP_FINALIZE_STEPS
-                .iter()
-                .map(move |&(id, sub)| (id, sub, head))
-        });
+    let finalize = setup_finalizers(profile, &authenticated);
     for (id, sub, selector) in finalize {
         let mut content = [0; 32];
         content[..2].copy_from_slice(&id.to_le_bytes());
@@ -1121,7 +1464,7 @@ fn configure_control(
             kvino::rng::fill(&mut content[23..]);
         }
         send_interactive(dock, keys, id, wire_seq, &content)?;
-        acknowledgements += drain_acknowledgements(dock, 2);
+        acknowledgements += drain_acknowledgements(dock, keys, 2);
         inner_counter = inner_counter.wrapping_add(1);
         wire_seq += 2;
     }
@@ -1132,13 +1475,9 @@ fn configure_control(
         dock.vendor_in(0x22, 1, 0, 28)
             .map_err(|e| format!("read encrypted session state: {e}"))?;
     }
-    acknowledgements += drain_acknowledgements(dock, 16);
-    // The other placement: a dock that wants its video engine brought up once the session is
-    // finalised gets it here. Skipping it entirely, which is what happened while only the boundary
-    // placement was implemented, leaves such a dock with its pipes never started.
-    if !profile.commits_video_before_connector_records() {
-        commit_video_engine(dock)?;
-    }
+    // Native setup commits once. Ella shares EP02 between control and video, so the extra
+    // video-endpoint clears also touched its live control pipe. Neither operation belongs here.
+    acknowledgements += drain_acknowledgements(dock, keys, 16);
 
     Ok((wire_seq, inner_counter, video_keys, acknowledgements))
 }
@@ -1218,6 +1557,7 @@ fn configure_head(
             // than failing the device -- aborting here took the whole dock down whenever a single
             // socket was empty, so a dock with a monitor on one connector never came up at all.
             let Some(rrx) = receiver_random else {
+                announce_content_stream(dock, profile, head)?;
                 return Ok(false);
             };
             let kd = kvino::derive_kd(&km, &rtx, &rrx).map_err(build_error("derive head kd"))?;
@@ -1321,7 +1661,10 @@ fn configure_head(
             if let Some((msg_id, payload)) =
                 kvino::perhead_push(&keys.control_key, &keys.control_nonce, &reply)
             {
-                if msg_id == kvino::ake::id::AKE_SEND_RRX && payload.len() >= 8 && receiver_random.is_none() {
+                if msg_id == kvino::ake::id::AKE_SEND_RRX
+                    && payload.len() >= 8
+                    && receiver_random.is_none()
+                {
                     let mut rrx = [0u8; 8];
                     rrx.copy_from_slice(&payload[..8]);
                     receiver_random = Some(rrx);
@@ -1332,14 +1675,17 @@ fn configure_head(
                 }
                 continue;
             }
-            if is_control_ack(&reply) {
+            trace_control_reply(keys, &reply);
+            if is_control_ack(keys, &reply) {
                 *acknowledgements += 1;
             }
         }
         if let (Some(want), None) = (expected, seen.filter(|id| expected == Some(*id))) {
             // Not fatal on its own: an empty connector answers nothing at all, and the caller
             // decides that from the missing Rrx rather than from any single step.
-            eprintln!("chimera: head {head} step {index} expected HDCP push {want:#04x}, none arrived");
+            eprintln!(
+                "chimera: head {head} step {index} expected HDCP push {want:#04x}, none arrived"
+            );
         }
         if index == 2 {
             // The dock computes H' before it will answer anything else, and the wait is the
@@ -1356,6 +1702,11 @@ fn configure_head(
         }
         *inner_counter = inner_counter.wrapping_add(1);
         *wire_seq = wire_seq.wrapping_add(content.len().div_ceil(16) as u32);
+        // Native setup places this between Stream_Manage (0x26) and stream-open (0x14).
+        // Moving it to mode activation is too late for Ella's shared control/video pipe.
+        if id == 0x0026 {
+            announce_content_stream(dock, profile, head)?;
+        }
     }
     if encrypted_session_key.is_none() || v_ack.is_none() {
         return Err(format!(
@@ -1365,6 +1716,13 @@ fn configure_head(
     Ok(true)
 }
 
+fn announce_content_stream(dock: &Dock, profile: DockProfile, head: u8) -> Result<(), String> {
+    if let Some(frame) = kvino::content_stream_announcement(profile, head) {
+        send_plain(dock, &frame)?;
+    }
+    Ok(())
+}
+
 fn send_interactive(
     dock: &Dock,
     keys: &SessionKeys,
@@ -1372,6 +1730,13 @@ fn send_interactive(
     wire_seq: u32,
     content: &[u8],
 ) -> Result<(), String> {
+    if std::env::var_os("VINO_SUPERVISED").is_some() {
+        eprintln!(
+            "chimera-setup: tx id={id:04x} sub={:04x} counter={} blocks={wire_seq}",
+            u16::from_le_bytes([content[2], content[3]]),
+            u16::from_le_bytes([content[4], content[5]]),
+        );
+    }
     let frame = kvino::seal_interactive(
         &keys.control_key,
         &keys.control_nonce,
@@ -1472,19 +1837,33 @@ fn receive_optional(dock: &Dock, timeout: Duration) -> Result<Option<Vec<u8>>, S
     }
 }
 
-fn drain_acknowledgements(dock: &Dock, limit: usize) -> usize {
+fn drain_acknowledgements(dock: &Dock, keys: &SessionKeys, limit: usize) -> usize {
     let mut acknowledgements = 0;
     for _ in 0..limit {
         let Ok(Some(reply)) = receive_optional(dock, Duration::from_millis(5)) else {
             break;
         };
-        acknowledgements += usize::from(is_control_ack(&reply));
+        trace_control_reply(keys, &reply);
+        acknowledgements += usize::from(is_control_ack(keys, &reply));
     }
     acknowledgements
 }
 
-fn is_control_ack(reply: &[u8]) -> bool {
-    reply.len() >= 10 && u16::from_le_bytes([reply[8], reply[9]]) == 0x45
+fn is_control_ack(keys: &SessionKeys, reply: &[u8]) -> bool {
+    kvino::decode_in_lenient(&keys.control_key, &keys.control_nonce, reply).is_some()
+}
+
+fn trace_control_reply(keys: &SessionKeys, reply: &[u8]) {
+    if std::env::var_os("VINO_SUPERVISED").is_some() {
+        eprintln!(
+            "chimera-setup: rx {} bytes, authenticated header {:?}",
+            reply.len(),
+            kvino::decode_in_lenient(&keys.control_key, &keys.control_nonce, reply),
+        );
+        if let Some(line) = kvino::dock_trace_line(&keys.control_key, &keys.control_nonce, reply) {
+            eprintln!("chimera-dock: {line}");
+        }
+    }
 }
 
 fn wait_until(start: Instant, duration: Duration) {
@@ -1497,35 +1876,471 @@ fn build_error(label: &'static str) -> impl FnOnce(crate::kshim::Error) -> Strin
     move |error| format!("build {label}: {error}")
 }
 
-/// Assemble one EP08 transfer stream: optional ARM prefix, the image, then the frame trailer.
+/// Assemble directly into retained USB chunks, without an intermediate full-frame copy.
 ///
-/// The trailer is not part of the codec output -- the kernel driver appends it per frame, and its
-/// phase comes from `seq % 3`, which is how the dock rotates buffers. Omitting it, or repeating one
-/// sequence, leaves the phase pinned.
-fn prefix_frame(
-    dock: DockProfile,
-    prefix: &[u8],
-    report: &[u8],
-    frames: &[Vec<u8>],
-    head: u8,
-    seq: u32,
-) -> Vec<Vec<u8>> {
+/// The active slice excludes chunks retained from a previous, larger frame. Storage grows only
+/// when a larger frame needs it and is released with the session. USB borrows the active chunks
+/// until all submissions, including cancellations and retries, have completed.
+#[derive(Default)]
+struct FramePackets {
+    storage: Vec<Vec<u8>>,
+    used: usize,
+    bytes: usize,
+}
+
+impl FramePackets {
     const TRANSFER_SIZE: usize = 65_536;
-    // The vendor's part order, which is also the dock's: whatever opens the stream, the record
-    // that names the ring slot this frame fills, the frame's report on the stream sub, the image
-    // records, then the trailer that closes the slot.
-    let opener = kvino::frame_opener(dock, head, seq).unwrap_or_default();
-    let trailer = kvino::frame_trailer(dock, head, seq);
-    let payload_len = frames.iter().map(Vec::len).sum::<usize>();
-    let mut stream = Vec::with_capacity(
-        prefix.len() + opener.len() + report.len() + payload_len + trailer.len(),
-    );
-    stream.extend_from_slice(prefix);
-    stream.extend_from_slice(&opener);
-    stream.extend_from_slice(report);
-    for frame in frames {
-        stream.extend_from_slice(frame);
+
+    fn chunks(&self) -> &[Vec<u8>] {
+        &self.storage[..self.used]
     }
-    stream.extend_from_slice(&trailer);
-    stream.chunks(TRANSFER_SIZE).map(<[u8]>::to_vec).collect()
+
+    fn next_chunk(&mut self) {
+        if self.used == self.storage.len() {
+            self.storage.push(Vec::with_capacity(Self::TRANSFER_SIZE));
+        } else {
+            self.storage[self.used].clear();
+        }
+        self.used += 1;
+    }
+
+    fn append(&mut self, mut bytes: &[u8]) {
+        self.bytes += bytes.len();
+        while !bytes.is_empty() {
+            if self.used == 0 || self.storage[self.used - 1].len() == Self::TRANSFER_SIZE {
+                self.next_chunk();
+            }
+            let chunk = &mut self.storage[self.used - 1];
+            let take = bytes.len().min(Self::TRANSFER_SIZE - chunk.len());
+            chunk.extend_from_slice(&bytes[..take]);
+            bytes = &bytes[take..];
+        }
+    }
+
+    fn rebuild(
+        &mut self,
+        dock: DockProfile,
+        prefix: &[u8],
+        report: &[u8],
+        frames: &[Vec<u8>],
+        head: u8,
+        seq: u32,
+    ) {
+        self.used = 0;
+        self.bytes = 0;
+        // Preserve the exact stream order, including a freshly advanced trailer on every
+        // presentation. Its phase selects the dock buffer, even for retransmitted images.
+        self.append(prefix);
+        self.append(&kvino::frame_opener(dock, head, seq).unwrap_or_default());
+        self.append(report);
+        for frame in frames {
+            self.append(frame);
+        }
+        self.append(&kvino::frame_trailer(dock, head, seq));
+        if dock.split_full_packet_frame()
+            && self.used != 0
+            && self.storage[self.used - 1].len().is_multiple_of(1024)
+        {
+            // Ella cannot end a frame on a full USB packet. Reuse another chunk for the final
+            // 16 bytes, retaining the original transfer boundaries and all bytes on the wire.
+            self.next_chunk();
+            let (previous, tail) = self.storage.split_at_mut(self.used - 1);
+            let last = previous.last_mut().unwrap();
+            let end = last.len() - 16;
+            tail[0].extend_from_slice(&last[end..]);
+            last.truncate(end);
+        }
+    }
+}
+
+/// Finish Ella's cold activation only after the carrier (sequence 0) and two pictures.
+/// Native drm_sink/timeline.rs::ELLA_DOCK_WIDE releases 0x2f after Stream(0, 2),
+/// then reasserts power state 0. Firmware trace on 12.3.37 identifies the commands
+/// as SetBlanking and SetPowerSaving. Keeping 0x2f asserted leaves a cold
+/// connector blanked even though it accepted the mode and enabled its output.
+///
+/// Call after a successful frame write. Keep the obligation on either marker error.
+fn finish_ella_activation(
+    pending: &mut bool,
+    sequence: u32,
+    mut marker: impl FnMut(u16, u8) -> Result<(), String>,
+) -> Result<(), String> {
+    if !*pending || sequence < 2 {
+        return Ok(());
+    }
+    marker(0x2f, 0)?;
+    marker(0x2e, 0)?;
+    *pending = false;
+    Ok(())
+}
+
+/// A complete frame only advances its ledger when every required presentation succeeds.
+fn deliver_presentations(
+    count: u32,
+    first: u32,
+    mut send: impl FnMut(u32) -> Result<(), String>,
+) -> Result<u32, String> {
+    for repeat in 0..count {
+        send(first.wrapping_add(repeat))?;
+    }
+    Ok(first.wrapping_add(count))
+}
+
+#[cfg(test)]
+mod delivery_tests {
+    use super::*;
+
+    #[test]
+    fn ella_unblanks_after_two_successful_pictures_and_only_once() {
+        let mut pending = true;
+        let mut events = Vec::new();
+        // Sequence 0 was the activation carrier. The first keyframe fills three buffers.
+        deliver_presentations(3, 1, |seq| {
+            events.push((seq, None));
+            finish_ella_activation(&mut pending, seq, |sub, state| {
+                events.push((seq, Some((sub, state))));
+                Ok(())
+            })
+        })
+        .unwrap();
+        assert_eq!(
+            events,
+            vec![
+                (1, None),
+                (2, None),
+                (2, Some((0x2f, 0))),
+                (2, Some((0x2e, 0))),
+                (3, None),
+            ]
+        );
+        assert!(!pending);
+    }
+
+    #[test]
+    fn ella_keeps_blanking_obligation_after_a_failed_frame_or_marker() {
+        for failure in [0, 1, 2] {
+            let mut pending = true;
+            let mut markers = 0;
+            let result = deliver_presentations(3, 1, |seq| {
+                if failure == 0 && seq == 2 {
+                    return Err("injected frame failure".into());
+                }
+                finish_ella_activation(&mut pending, seq, |_, _| {
+                    markers += 1;
+                    if markers == failure {
+                        Err("injected marker failure".into())
+                    } else {
+                        Ok(())
+                    }
+                })
+            });
+            assert!(result.is_err());
+            assert!(pending);
+            assert_eq!(markers, failure);
+        }
+        // The carrier alone must not unblank the output.
+        finish_ella_activation(&mut true, 0, |_, _| panic!("early unblank")).unwrap();
+        // Other dock families have no deferred Ella obligation.
+        finish_ella_activation(&mut false, 2, |_, _| panic!("non-Ella marker")).unwrap();
+    }
+
+    #[test]
+    fn ella_setup_matches_native_phase_order_and_vendor_poll_spacing() {
+        use SharedSetupStep::*;
+        let ella = DockProfile::for_family(kvino::Family::Ella).unwrap();
+        assert_eq!(
+            shared_setup_steps(ella),
+            vec![
+                Fetch(0),
+                Fetch(1),
+                Hello,
+                Engage(0),
+                Engage(1),
+                Poll,
+                Poll,
+                Open(0),
+                Poll,
+                Poll,
+                Poll,
+                Open(1),
+                Poll,
+                Poll,
+                Poll,
+                Capability(0),
+                Capability(1),
+            ],
+        );
+        // Ella's native/vendor transaction has no 0x16/0x4c or 0x15/0x4a finalizers.
+        assert_eq!(setup_finalizers(ella, &[true; MAX_CONNECTORS]).count(), 0);
+        // Dedicated-pipe docks still finalize exactly the heads which authenticated.
+        let ridge = DockProfile::for_family(kvino::Family::Ridge).unwrap();
+        let mut authenticated = [false; MAX_CONNECTORS];
+        authenticated[0] = true;
+        assert_eq!(
+            setup_finalizers(ridge, &authenticated).collect::<Vec<_>>(),
+            kvino::CP_SETUP_FINALIZE_STEPS
+                .into_iter()
+                .map(|(id, sub)| (id, sub, 0))
+                .collect::<Vec<_>>(),
+        );
+    }
+
+    #[test]
+    fn ella_full_packet_frames_split_the_tail_without_changing_the_wire_bytes() {
+        let ella = DockProfile::for_family(kvino::Family::Ella).unwrap();
+        let mut packets = FramePackets::default();
+        for bytes in [1024, 65536, 66560, 131072] {
+            let payload = vec![0x5a; bytes - 48];
+            let mut expected = payload.clone();
+            expected.extend_from_slice(&kvino::frame_trailer(ella, 0, 7));
+            packets.rebuild(ella, &[], &[], &[payload], 0, 7);
+            let chunks = packets.chunks();
+            assert_eq!(chunks.concat(), expected);
+            assert_eq!(chunks.last().unwrap().len(), 16);
+            assert_eq!(chunks.iter().map(Vec::len).sum::<usize>(), bytes);
+            assert!(chunks.iter().all(|c| !c.is_empty() && c.len() <= 65536));
+        }
+        // The split is harmful on Ridge, whose profile deliberately opts out.
+        let ridge = DockProfile::for_family(kvino::Family::Ridge).unwrap();
+        packets.rebuild(ridge, &[], &[], &[vec![0; 1024 - 96]], 0, 7);
+        assert_eq!(
+            packets.chunks().iter().map(Vec::len).collect::<Vec<_>>(),
+            vec![1024]
+        );
+    }
+
+    /// The original allocate/concatenate/split implementation, retained only as an independent
+    /// byte-and-boundary oracle and component benchmark baseline.
+    fn legacy_prefix_frame(
+        dock: DockProfile,
+        prefix: &[u8],
+        report: &[u8],
+        frames: &[Vec<u8>],
+        head: u8,
+        seq: u32,
+    ) -> Vec<Vec<u8>> {
+        let opener = kvino::frame_opener(dock, head, seq).unwrap_or_default();
+        let trailer = kvino::frame_trailer(dock, head, seq);
+        let payload_len = frames.iter().map(Vec::len).sum::<usize>();
+        let mut stream = Vec::with_capacity(
+            prefix.len() + opener.len() + report.len() + payload_len + trailer.len(),
+        );
+        stream.extend_from_slice(prefix);
+        stream.extend_from_slice(&opener);
+        stream.extend_from_slice(report);
+        for frame in frames {
+            stream.extend_from_slice(frame);
+        }
+        stream.extend_from_slice(&trailer);
+        let mut chunks: Vec<Vec<u8>> = stream.chunks(65_536).map(<[u8]>::to_vec).collect();
+        if dock.split_full_packet_frame() {
+            if let Some(last) = chunks.last_mut() {
+                if last.len().is_multiple_of(1024) {
+                    let tail = last.split_off(last.len() - 16);
+                    chunks.push(tail);
+                }
+            }
+        }
+        chunks
+    }
+
+    #[test]
+    fn retained_packets_match_original_bytes_and_boundaries_for_every_profile() {
+        use kvino::Family::*;
+        let mut packets = FramePackets::default();
+        for family in [Ella, Ridge, Navarro, Firefly] {
+            let Some(profile) = DockProfile::for_family(family) else {
+                continue;
+            };
+            for profile in [profile, profile.opening()] {
+                for head in 0..profile.connectors() {
+                    for seq in [0, 1, 2, 3, 254, 255, 256, u32::MAX - 1, 0] {
+                        for wire_bytes in
+                            [1023, 1024, 1025, 65535, 65536, 65537, 66560, 131072, 257]
+                        {
+                            let prefix = [0x13; 13];
+                            let report = [0x37; 23];
+                            let headers = prefix.len()
+                                + kvino::frame_opener(profile, head, seq)
+                                    .unwrap_or_default()
+                                    .len()
+                                + report.len()
+                                + kvino::frame_trailer(profile, head, seq).len();
+                            let payload: Vec<u8> =
+                                (0..wire_bytes - headers).map(|i| (i * 17) as u8).collect();
+                            // Fragment records independently of USB boundaries, with empty records.
+                            let mut frames = vec![Vec::new()];
+                            frames.extend(payload.chunks(997).map(<[u8]>::to_vec));
+                            frames.push(Vec::new());
+                            let expected =
+                                legacy_prefix_frame(profile, &prefix, &report, &frames, head, seq);
+                            packets.rebuild(profile, &prefix, &report, &frames, head, seq);
+                            assert_eq!(
+                                packets.chunks(),
+                                expected,
+                                "{family:?} head={head} seq={seq} wire_bytes={wire_bytes}"
+                            );
+                            assert_eq!(packets.bytes, wire_bytes);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn retained_packets_reuse_large_buffers_without_sending_stale_bytes() {
+        let profile = DockProfile::for_family(kvino::Family::Ella).unwrap();
+        let large = vec![vec![0xa5; 3 * 65_536 - 48]];
+        let small = vec![vec![0x3c; 17]];
+        let mut packets = FramePackets::default();
+        packets.rebuild(profile, &[], &[], &large, 0, 255);
+        let storage = packets.storage.as_ptr();
+        let buffers: Vec<_> = packets
+            .storage
+            .iter()
+            .map(|chunk| (chunk.as_ptr(), chunk.capacity()))
+            .collect();
+        // The largest frame ends with a split tail. Smaller frames must not leave that chunk,
+        // or any other retained large-frame bytes, in the submitted slice.
+        for (seq, frames) in [(0, &small), (1, &large), (2, &small), (3, &large)] {
+            packets.rebuild(profile, &[], &[], frames, 1, seq);
+            assert_eq!(
+                packets.chunks(),
+                legacy_prefix_frame(profile, &[], &[], frames, 1, seq)
+            );
+            assert_eq!(packets.storage.as_ptr(), storage);
+            assert_eq!(
+                packets
+                    .storage
+                    .iter()
+                    .map(|chunk| (chunk.as_ptr(), chunk.capacity()))
+                    .collect::<Vec<_>>(),
+                buffers
+            );
+        }
+        // A report/trailer-only presentation must also discard all prior image bytes.
+        packets.rebuild(profile, &[], &[], &[], 0, 4);
+        assert_eq!(
+            packets.chunks(),
+            legacy_prefix_frame(profile, &[], &[], &[], 0, 4)
+        );
+    }
+
+    #[cfg(target_os = "linux")]
+    #[test]
+    #[ignore = "manual packet assembly component benchmark; no USB or display access"]
+    fn packet_assembly_component_benchmark() {
+        use std::hint::black_box;
+        assert!(!cfg!(debug_assertions), "benchmark requires --release");
+        // /proc uses CLK_TCK units. Report raw ticks rather than assuming the host's frequency;
+        // CPU time belongs only to this test thread and excludes other test/compiler activity.
+        fn cpu_ticks() -> u64 {
+            let stat = std::fs::read_to_string("/proc/thread-self/stat").unwrap();
+            stat.rsplit_once(") ")
+                .unwrap()
+                .1
+                .split_whitespace()
+                .skip(11)
+                .take(2)
+                .map(|field| field.parse::<u64>().unwrap())
+                .sum()
+        }
+        let profile = DockProfile::for_family(kvino::Family::Ella).unwrap();
+        for (payload, iterations) in [(4096, 100_000), (65_536, 20_000), (3_300_000, 1024)] {
+            let data: Vec<u8> = (0..payload).map(|i| (i * 37) as u8).collect();
+            let frames: Vec<_> = data.chunks(12_017).map(<[u8]>::to_vec).collect();
+            let mut packets = FramePackets::default();
+            packets.rebuild(profile, &[], &[], &frames, 0, 7);
+            assert_eq!(
+                packets.chunks(),
+                legacy_prefix_frame(profile, &[], &[], &frames, 0, 7)
+            );
+            for round in 0..3 {
+                for retained in if round % 2 == 0 {
+                    [false, true]
+                } else {
+                    [true, false]
+                } {
+                    for seq in 0..8 {
+                        if retained {
+                            packets.rebuild(profile, &[], &[], black_box(&frames), 0, seq);
+                            black_box(packets.chunks());
+                        } else {
+                            black_box(legacy_prefix_frame(
+                                profile,
+                                &[],
+                                &[],
+                                black_box(&frames),
+                                0,
+                                seq,
+                            ));
+                        }
+                    }
+                    let cpu_start = cpu_ticks();
+                    let start = Instant::now();
+                    for seq in 0..iterations {
+                        if retained {
+                            packets.rebuild(profile, &[], &[], black_box(&frames), 0, seq);
+                            black_box(packets.chunks());
+                        } else {
+                            black_box(legacy_prefix_frame(
+                                profile,
+                                &[],
+                                &[],
+                                black_box(&frames),
+                                0,
+                                seq,
+                            ));
+                        }
+                    }
+                    let elapsed = start.elapsed();
+                    let cpu = cpu_ticks() - cpu_start;
+                    println!(
+                        "packet_bench payload={payload} frames={iterations} round={round} \
+                         retained={retained} cpu_ticks={cpu} wall_ns={}",
+                        elapsed.as_nanos()
+                    );
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn failed_submission_does_not_commit_or_continue_the_frame() {
+        let profile = DockProfile::for_family(kvino::Family::Ella).unwrap();
+        let mut scanout = crate::scanout::HeadScanout::new(profile);
+        let rgb = vec![42; 64 * 16 * 3];
+        let plan = scanout.plan(64, 16, &rgb);
+        let frame = scanout.encode(&plan, &rgb, 0).unwrap().unwrap();
+        let mut sequence = 7;
+        let mut sent = vec![];
+        let result = deliver_presentations(frame.presentations, sequence, |n| {
+            sent.push(n);
+            if n == 8 {
+                Err("injected USB error".into())
+            } else {
+                Ok(())
+            }
+        });
+        if let Ok(next) = result {
+            sequence = next;
+            scanout.presented(&plan);
+        }
+        assert_eq!(sequence, 7);
+        assert_eq!(sent, vec![7, 8]);
+        assert!(scanout.owes_retransmission());
+        assert_eq!(scanout.plan(64, 16, &rgb), crate::scanout::Plan::Keyframe);
+    }
+    #[test]
+    fn all_copies_advance_the_wrapping_sequence() {
+        let mut sent = vec![];
+        let next = deliver_presentations(3, u32::MAX - 1, |n| {
+            sent.push(n);
+            Ok(())
+        })
+        .unwrap();
+        assert_eq!(sent, vec![u32::MAX - 1, u32::MAX, 0]);
+        assert_eq!(next, 1);
+    }
 }

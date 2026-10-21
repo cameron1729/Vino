@@ -1,0 +1,199 @@
+{
+  "schema_version": 1,
+  "recorded_utc": "2026-10-18T07:08:08.666989+00:00",
+  "scope": "Offline component measurements; no EVDI/USB takeover, no live driver power or fan comparison",
+  "artifact_directory": "gpu-artifacts/capture-wait-2e8n9d9u",
+  "rust_toolchain": "1.99.1",
+  "rust_flags": "-C target-cpu=native",
+  "method": "Actual before/after wait_readable helpers extracted from safe.rs; an empty UnixStream; repeated 2 ms deadlines for two seconds per case; three alternating repetitions; CLOCK_THREAD_CPUTIME_ID includes userspace and kernel time for the benchmark thread",
+  "wait_summary": {
+    "current": {
+      "mean_cpu_cores": 0.47519549902412955,
+      "cpu_core_range": [
+        0.4743730080916766,
+        0.47572261177006836
+      ]
+    },
+    "fixed": {
+      "mean_cpu_cores": 0.004965129818596918,
+      "cpu_core_range": [
+        0.00472304564150055,
+        0.00516159999600879
+      ]
+    }
+  },
+  "wait_samples": [
+    {
+      "case": "current",
+      "waits": 1000,
+      "poll_calls": 2120040,
+      "elapsed_s": 2.000537024,
+      "cpu_s": 0.951700698,
+      "cpu_cores": 0.47572261177006836
+    },
+    {
+      "case": "fixed",
+      "waits": 971,
+      "poll_calls": 971,
+      "elapsed_s": 2.001200792,
+      "cpu_s": 0.01032939799999999,
+      "cpu_cores": 0.00516159999600879
+    },
+    {
+      "case": "fixed",
+      "waits": 971,
+      "poll_calls": 971,
+      "elapsed_s": 2.000737488,
+      "cpu_s": 0.010025182999999882,
+      "cpu_cores": 0.005010743818281413
+    },
+    {
+      "case": "current",
+      "waits": 1000,
+      "poll_calls": 2118608,
+      "elapsed_s": 2.00043092,
+      "cpu_s": 0.948950433,
+      "cpu_cores": 0.4743730080916766
+    },
+    {
+      "case": "current",
+      "waits": 1000,
+      "poll_calls": 2125496,
+      "elapsed_s": 2.000489794,
+      "cpu_s": 0.951214647,
+      "cpu_cores": 0.47549087721064376
+    },
+    {
+      "case": "fixed",
+      "waits": 971,
+      "poll_calls": 971,
+      "elapsed_s": 2.000191342,
+      "cpu_s": 0.009446995000000236,
+      "cpu_cores": 0.00472304564150055
+    }
+  ],
+  "conversion_method": "Three rotating synthetic 1920x1080 XRGB8888 inputs and reusable padded outputs; 1.5-second component samples after warmup; no Vulkan, capture ioctl or USB; the larger native copy is a candidate, not an implemented encoder path",
+  "conversion_samples": [
+    {
+      "stage": "rgb_conversion",
+      "iterations": 2688,
+      "cpu_ms_per_frame": 0.5605597020089286,
+      "wall_ms_per_frame": 0.5606635234375
+    },
+    {
+      "stage": "native_snapshot_copy_candidate",
+      "iterations": 2520,
+      "cpu_ms_per_frame": 0.5962415972222223,
+      "wall_ms_per_frame": 0.5962938928571428
+    },
+    {
+      "stage": "rgb_change_detection",
+      "iterations": 1464,
+      "cpu_ms_per_frame": 1.0415010273224041,
+      "wall_ms_per_frame": 1.041597150273224
+    },
+    {
+      "stage": "rgb_conversion",
+      "iterations": 2664,
+      "cpu_ms_per_frame": 0.5627189039039038,
+      "wall_ms_per_frame": 0.5636277147147147
+    },
+    {
+      "stage": "native_snapshot_copy_candidate",
+      "iterations": 2592,
+      "cpu_ms_per_frame": 0.5825690351080247,
+      "wall_ms_per_frame": 0.5830938125
+    },
+    {
+      "stage": "rgb_change_detection",
+      "iterations": 1560,
+      "cpu_ms_per_frame": 0.9736038474358971,
+      "wall_ms_per_frame": 0.9740783929487179
+    },
+    {
+      "stage": "rgb_conversion",
+      "iterations": 3216,
+      "cpu_ms_per_frame": 0.4681045018656714,
+      "wall_ms_per_frame": 0.46816741293532343
+    },
+    {
+      "stage": "native_snapshot_copy_candidate",
+      "iterations": 2928,
+      "cpu_ms_per_frame": 0.5119520529371584,
+      "wall_ms_per_frame": 0.5125281834016393
+    },
+    {
+      "stage": "rgb_change_detection",
+      "iterations": 1536,
+      "cpu_ms_per_frame": 0.9806617174479166,
+      "wall_ms_per_frame": 0.980709494140625
+    }
+  ],
+  "source_sha256": {
+    "safe-before.rs": "7acc2a1886900f33778bff79dda25275a0d82cb972ce1f76f9300b184202bae8",
+    "safe-after.rs": "8d26a56f46772673f3477d6d2c2a6bbe1cd00d0bf663ccb6f6a6c4dbdd3d33ff",
+    "src/wait_current.rs": "d5ab69abf4cf62781515a9fc895392b0e265d59531a238a0e9f19eabc42c32b2",
+    "src/wait_fixed.rs": "907b1076c327f33d8161d294e25c156f29081218422340e099822dfc624993e8",
+    "src/bin/wait_profile.rs": "d046cb1f696b7885e1f4ab01a45fd9fcb709cab9b31be3bed95cc86e0cb0f570",
+    "src/main.rs": "50ed9fcc921f208392d29e2ace0f86ff049189e7e71e8ae26e923e2c50a6d69e",
+    "vino-gpu-live-before": "37a4fa54520a351ac1018d2fa8be03ae22f3ee7b59382ccf6396d58f2af7d85f",
+    "vino-gpu-live-fixed": "2f998dc67fc962e1dac49997b4d349137a37a5a31b5d8285dcaa66f2a031b77a"
+  },
+  "validation": {
+    "regression_failed_before_fix": true,
+    "library_tests_passed": 7,
+    "chimera_tests_passed": 49,
+    "gpu_package_clippy": "passed",
+    "live_release_build": "passed",
+    "read_only_preflight": "passed",
+    "live_cpu_power_comparison": "Lower process CPU observed in the completed live trial; matched-workload total power/temperature comparison remains pending"
+  },
+  "live_observation": {
+    "runs": [
+      {
+        "trial": "vino-live-btnklf4h",
+        "elapsed_s": 902.409109205,
+        "process_cpu_s": 654.907780964,
+        "average_cpu_cores": 0.7257326796500951,
+        "captures_per_s": 70.07797168150483,
+        "submitted_batches_per_s": 55.85936521009655,
+        "gpu_dispatches_per_s": 88.8621349031432,
+        "encoded_strips_per_s": 8785.700320539352,
+        "last_health_bytes_per_s": 18772015.16591839,
+        "recovery": {
+          "service_result": "success",
+          "errors": [],
+          "restored": true
+        },
+        "ok": true,
+        "one_second_cpu_median": 0.7252267291643548,
+        "one_second_cpu_p90": 0.8039102713885935
+      },
+      {
+        "trial": "vino-live-1km11gf2",
+        "elapsed_s": 181.885925144,
+        "process_cpu_s": 69.815155652,
+        "average_cpu_cores": 0.38384034166869696,
+        "captures_per_s": 73.84848491913719,
+        "submitted_batches_per_s": 57.15670408125002,
+        "gpu_dispatches_per_s": 94.24588508664753,
+        "encoded_strips_per_s": 9422.785180563691,
+        "last_health_bytes_per_s": 18759829.907021053,
+        "recovery": {
+          "service_result": "success",
+          "errors": [],
+          "restored": true
+        },
+        "ok": true,
+        "one_second_cpu_median": 0.35465566567970813,
+        "one_second_cpu_p90": 0.5310251871347954
+      }
+    ],
+    "relative_process_cpu_reduction": 0.4710995488672747,
+    "vulkan_validation_enabled_in_both": true,
+    "user_observation": "I think it was better. Fan was still spinning a bit.",
+    "scope": "Exploratory observations from a 15-minute pre-fix trial and a three-minute post-fix trial; USB byte rates were similar, but exact video content, other desktop activity and starting thermal conditions were not controlled",
+    "power_and_temperature_recorded": false,
+    "monitor_presentation_timing_recorded": false
+  }
+}

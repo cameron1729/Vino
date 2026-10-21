@@ -1,0 +1,1733 @@
+{
+  "source_run": "/var/tmp/vino-compare-gkfla9l7",
+  "status": "Completed and restored; all six power pairs excluded for background load and mismatch",
+  "started": "2026-10-20T22:17:28.721130+08:00",
+  "finished": "2026-10-20T22:27:54.656058+08:00",
+  "duration_seconds": 625.9349284172058,
+  "samples": 12,
+  "qualified_power_pairs": 0,
+  "visual_observation": "User confirmed that both drivers looked similarly smooth on the Dell",
+  "checks": {
+    "cpu_power_activity_thermal_recomputed": true,
+    "raw_archive_hashes_verified": true,
+    "source_versions_match_prepared_build": true,
+    "guard_events": 626,
+    "guard_invalid_events": 0,
+    "both_vino_workers_exited_cleanly": true,
+    "desktop_recovery_verified": true,
+    "input_pacing_warnings": 0,
+    "vino_throughput_warnings": 0,
+    "vino_idle_video_bytes": 0
+  },
+  "per_sample": [
+    {
+      "block": "block-00",
+      "case": "idle",
+      "condition": "official-evdi-0",
+      "repeat": 0,
+      "driver_cpu_percent": 7.177124619634514,
+      "display_stack_cpu_percent": 11.2103481579271,
+      "amd_reported_watts": 25.612657779104143,
+      "background_cpu_cores": 1.659181632676446,
+      "background_cpu_cores_observed": 0.30633823232568513,
+      "unattributed_background_cpu_cores": 1.3528434003507608,
+      "background_groups_observed": {
+        "0::/system.slice/cron.service": 0.09389932773460691,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dkonsole@autostart.service": 0.05527407235441337,
+        "0::/": 0.04162204243557059,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dfirefox@autostart.service": 0.07025800763121214,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/pipewire-pulse.service": 0.009656313845048907,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/pipewire.service": 0.008657384826594658,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dtelegram\\x2dpersonal@autostart.service": 0.007991432147626185,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-org.kde.konsole-56c9eeac065c4679947e6b92f1593d1e.scope": 0.005327621431750632,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-plasmashell.service": 0.0023308343763909604,
+        "0::/user.slice/user-55937.slice/session-30808.scope": 0.003329763394844204,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/wireplumber.service": 0.0009989290184533027,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dthunderbird@autostart.service": 0.0009989290184533027,
+        "0::/system.slice/systemd-oomd.service": 0.0006659526789691839,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-slack-604030.scope": 0.0006659526789688881,
+        "0::/system.slice/system-postgresql.slice/postgresql@17-main.service": 0.0006659526789682375,
+        "0::/init.scope": 0.00033297633948601153,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/bgvd.service": 0.00033297633948444405,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dslack@autostart.service": 0.0006659526789687847,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/dbus.service": 0.0003329763394844219,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/xdg-desktop-portal.service": 0.0003329763394844219,
+        "0::/user.slice/user-55937.slice/user@55937.service/background.slice/plasma-powerdevil.service": 0.0003329763394844219,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-org.kde.discover.notifier@autostart.service": 0.0003329763394844219,
+        "0::/system.slice/wpa_supplicant.service": 0.00033297633948435536,
+        "0::/system.slice/dbus.service": 0.00033297633948411873,
+        "0::/system.slice/containerd.service": 0.00033297633948411873,
+        "0::/system.slice/systemd-udevd.service/udev": 0.00033297633948411873
+      },
+      "sampler_cpu_percent": 2.833256204585682,
+      "gpu_busy_percent": 2.167187369240135,
+      "cpu_temperature_c": 67.08933225788223,
+      "thinkpad_fan1_rpm": 3288.8722375221605,
+      "thinkpad_fan2_rpm": 3288.892638854303,
+      "changed_updates": null
+    },
+    {
+      "block": "block-00",
+      "case": "scroll",
+      "condition": "official-evdi-0",
+      "repeat": 0,
+      "driver_cpu_percent": 36.328098763230656,
+      "display_stack_cpu_percent": 44.061241669905854,
+      "amd_reported_watts": 23.639000467958084,
+      "background_cpu_cores": 1.8409980658935554,
+      "background_cpu_cores_observed": 0.32101514828931693,
+      "unattributed_background_cpu_cores": 1.5199829176042385,
+      "background_groups_observed": {
+        "0::/system.slice/cron.service": 0.12088018550727621,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dkonsole@autostart.service": 0.0646026335768927,
+        "0::/": 0.04662045722045554,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/pipewire-pulse.service": 0.012321120836829012,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/pipewire.service": 0.009990097975807384,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dfirefox@autostart.service": 0.04895148008146265,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-org.kde.konsole-56c9eeac065c4679947e6b92f1593d1e.scope": 0.00466204572204373,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dthunderbird@autostart.service": 0.0033300326586034076,
+        "0::/user.slice/user-55937.slice/session-30808.scope": 0.0029970293927423807,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/wireplumber.service": 0.000999009797580774,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-slack-604030.scope": 0.0006660065317205159,
+        "0::/system.slice/containerd.service": 0.0006660065317199244,
+        "0::/system.slice/php7.4-fpm.service": 0.0003330032658604354,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-plasmashell.service": 0.0003330032658603171,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-kded.service": 0.0003330032658602875,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dslack@autostart.service": 0.0003330032658602875,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/dbus.service": 0.00033300326586027277,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-ksmserver.service": 0.00033300326586026534,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-org.kde.discover.notifier@autostart.service": 0.00033300326586026534,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/bgvd.service": 0.00033300326586025797,
+        "0::/user.slice/user-55937.slice/user@55937.service/background.slice/plasma-krunner.service": 0.00033300326586025797,
+        "0::/system.slice/upower.service": 0.00033300326586019883,
+        "0::/init.scope": 0.0003330032658599622,
+        "0::/system.slice/dbus.service": 0.0003330032658599622,
+        "0::/system.slice/systemd-oomd.service": 0.0003330032658599622
+      },
+      "sampler_cpu_percent": 3.133256177704614,
+      "gpu_busy_percent": 4.118835678380511,
+      "cpu_temperature_c": 69.32491721093646,
+      "thinkpad_fan1_rpm": 3285.3613957536527,
+      "thinkpad_fan2_rpm": 3285.37499891418,
+      "changed_updates": null
+    },
+    {
+      "block": "block-00",
+      "case": "motion",
+      "condition": "official-evdi-0",
+      "repeat": 0,
+      "driver_cpu_percent": 20.11091876320143,
+      "display_stack_cpu_percent": 28.377335556479743,
+      "amd_reported_watts": 17.51613325467135,
+      "background_cpu_cores": 1.0901851130742137,
+      "background_cpu_cores_observed": 0.3103560464118935,
+      "unattributed_background_cpu_cores": 0.7798290666623202,
+      "background_groups_observed": {
+        "0::/system.slice/cron.service": 0.0809190121009473,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dfirefox@autostart.service": 0.06193800926245476,
+        "0::/": 0.04728600707136315,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dkonsole@autostart.service": 0.06826501020861829,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/pipewire-pulse.service": 0.013653002041723504,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/pipewire.service": 0.011322001693136772,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dthunderbird@autostart.service": 0.011322001693136772,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-org.kde.konsole-56c9eeac065c4679947e6b92f1593d1e.scope": 0.002997000448183347,
+        "0::/user.slice/user-55937.slice/session-30808.scope": 0.0026640003983850096,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-plasmashell.service": 0.000999000149394449,
+        "0::/system.slice/systemd-udevd.service/udev": 0.0006660000995966147,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/wireplumber.service": 0.000666000099596319,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/bgvd.service": 0.0006660000995962894,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dslack@autostart.service": 0.0013320001991925198,
+        "0::/init.scope": 0.0006660000995956683,
+        "0::/system.slice/dbus.service": 0.0006660000995956683,
+        "0::/system.slice/system-postgresql.slice/postgresql@17-main.service": 0.000333000049799727,
+        "0::/system.slice/systemd-oomd.service": 0.0003330000497987806,
+        "0::/system.slice/avahi-daemon.service": 0.00033300004979830737,
+        "0::/system.slice/containerd.service": 0.0006660000995961416,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-ksmserver.service": 0.0003330000497981373,
+        "0::/user.slice/user-55937.slice/user@55937.service/background.slice/plasma-powerdevil.service": 0.0003330000497981373,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-kded.service": 0.00033300004979812994,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-slack-604030.scope": 0.00033300004979812994,
+        "0::/system.slice/upower.service": 0.00033300004979807074,
+        "0::/system.slice/docker.service": 0.00033300004979783417,
+        "0::/system.slice/systemd-journald.service": 0.00033300004979783417,
+        "0::/system.slice/systemd-resolved.service": 0.00033300004979783417
+      },
+      "sampler_cpu_percent": 3.1332386232587273,
+      "gpu_busy_percent": 4.266599876912007,
+      "cpu_temperature_c": 65.09142492804521,
+      "thinkpad_fan1_rpm": 3286.4846479224416,
+      "thinkpad_fan2_rpm": 3286.4846479224416,
+      "changed_updates": null
+    },
+    {
+      "block": "block-01",
+      "case": "idle",
+      "condition": "gpu-evdi-128",
+      "repeat": 0,
+      "driver_cpu_percent": 0.8666448921707,
+      "display_stack_cpu_percent": 1.6332922967833028,
+      "amd_reported_watts": 10.31473981757874,
+      "background_cpu_cores": 0.696649163318106,
+      "background_cpu_cores_observed": 0.23807888567598187,
+      "unattributed_background_cpu_cores": 0.4585702776421241,
+      "background_groups_observed": {
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dfirefox@autostart.service": 0.07392099667143559,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/pipewire-pulse.service": 0.018313760436616627,
+        "0::/": 0.03263179132338915,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/pipewire.service": 0.015649940736745565,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dkonsole@autostart.service": 0.06992526712162839,
+        "0::/system.slice/cron.service": 0.00965634641203452,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-org.kde.konsole-56c9eeac065c4679947e6b92f1593d1e.scope": 0.003995729549807539,
+        "0::/user.slice/user-55937.slice/session-30808.scope": 0.0026638196998715943,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dthunderbird@autostart.service": 0.0013319098499355309,
+        "0::/system.slice/systemd-udevd.service/udev": 0.0006659549249682387,
+        "0::/system.slice/systemd-resolved.service": 0.0006659549249682387,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/wireplumber.service": 0.0006659549249678838,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-slack-604030.scope": 0.0006659549249678838,
+        "0::/system.slice/dbus.service": 0.0006659549249672923,
+        "0::/system.slice/containerd.service": 0.0006659549249672923,
+        "0::/system.slice/systemd-oomd.service": 0.00033297746248459254,
+        "0::/system.slice/system-postgresql.slice/postgresql@17-main.service": 0.00033297746248411934,
+        "0::/system.slice/udisks2.service": 0.00033297746248400105,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/dbus.service": 0.0006659549249678912,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/xdg-desktop-portal.service": 0.0003329774624839493,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-ksmserver.service": 0.0003329774624839493,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-org.kde.kdeconnect.daemon@autostart.service": 0.0003329774624839493,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-org.kde.discover.notifier@autostart.service": 0.0003329774624839493,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-kded.service": 0.0003329774624839419,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/bgvd.service": 0.0003329774624839419,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dslack@autostart.service": 0.0006659549249678246,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-plasmashell.service": 0.0003329774624838827,
+        "0::/init.scope": 0.00033297746248364614,
+        "0::/system.slice/clamav-realtime.service": 0.00033297746248364614,
+        "0::/system.slice/NetworkManager.service": 0.00033297746248364614,
+        "0::/system.slice/docker.service": 0.00033297746248364614
+      },
+      "sampler_cpu_percent": 3.099922114302887,
+      "gpu_busy_percent": 0.0,
+      "cpu_temperature_c": 53.80671672409903,
+      "thinkpad_fan1_rpm": 3070.201190114398,
+      "thinkpad_fan2_rpm": 3070.201190114398,
+      "changed_updates": 0
+    },
+    {
+      "block": "block-01",
+      "case": "scroll",
+      "condition": "gpu-evdi-128",
+      "repeat": 0,
+      "driver_cpu_percent": 29.632261206731776,
+      "display_stack_cpu_percent": 36.76533645784611,
+      "amd_reported_watts": 9.717570955770103,
+      "background_cpu_cores": 0.44498390002041377,
+      "background_cpu_cores_observed": 0.2700391887015258,
+      "unattributed_background_cpu_cores": 0.17494471131888795,
+      "background_groups_observed": {
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dfirefox@autostart.service": 0.10222198635186566,
+        "0::/": 0.04028944738951293,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/pipewire-pulse.service": 0.017314473258296485,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/pipewire.service": 0.014317737502052808,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dkonsole@autostart.service": 0.075584335185254,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-org.kde.konsole-56c9eeac065c4679947e6b92f1593d1e.scope": 0.003995647674991569,
+        "0::/user.slice/user-55937.slice/session-30808.scope": 0.0033297063958262884,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dthunderbird@autostart.service": 0.0013318825583302077,
+        "0::/system.slice/systemd-oomd.service": 0.0009989119187478923,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-plasmashell.service": 0.0009989119187477742,
+        "0::/system.slice/dbus.service": 0.000998911918746946,
+        "0::/system.slice/docker.service": 0.0006659412791665234,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/wireplumber.service": 0.0006659412791652813,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/bgvd.service": 0.0006659412791652518,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-kded.service": 0.0006659412791652222,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-slack-604030.scope": 0.0006659412791652222,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dslack@autostart.service": 0.0013318825583304443,
+        "0::/system.slice/NetworkManager.service": 0.0003329706395861008,
+        "0::/system.slice/clamav-realtime.service": 0.0003329706395832617,
+        "0::/system.slice/avahi-daemon.service": 0.0003329706395827885,
+        "0::/system.slice/php8.3-fpm.service": 0.0003329706395827885,
+        "0::/system.slice/upower.service": 0.0003329706395827885,
+        "0::/system.slice/containerd.service": 0.0006659412791651039,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/dbus.service": 0.0003329706395826259,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-org.kde.discover.notifier@autostart.service": 0.00033297063958261845,
+        "0::/user.slice/user-55937.slice/user@55937.service/background.slice/plasma-krunner.service": 0.0003329706395826111,
+        "0::/init.scope": 0.00033297063958231536,
+        "0::/system.slice/system-postgresql.slice/postgresql@17-main.service": 0.00033297063958231536
+      },
+      "sampler_cpu_percent": 3.3665448615072084,
+      "gpu_busy_percent": 18.985486422597788,
+      "cpu_temperature_c": 52.637499907228275,
+      "thinkpad_fan1_rpm": 2361.7680403541654,
+      "thinkpad_fan2_rpm": 2361.7680403541654,
+      "changed_updates": 600
+    },
+    {
+      "block": "block-01",
+      "case": "motion",
+      "condition": "gpu-evdi-128",
+      "repeat": 0,
+      "driver_cpu_percent": 23.632483652414578,
+      "display_stack_cpu_percent": 30.198914230024833,
+      "amd_reported_watts": 13.972140504305928,
+      "background_cpu_cores": 0.8619690088247154,
+      "background_cpu_cores_observed": 0.3432959663053934,
+      "unattributed_background_cpu_cores": 0.518673042519322,
+      "background_groups_observed": {
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dfirefox@autostart.service": 0.08657318257943804,
+        "0::/": 0.04195469617312246,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/pipewire-pulse.service": 0.015982741399281186,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dkonsole@autostart.service": 0.07425315275082388,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/pipewire.service": 0.012985977386915017,
+        "0::/system.slice/cron.service": 0.09190076304586335,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-org.kde.konsole-56c9eeac065c4679947e6b92f1593d1e.scope": 0.004328659128971672,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dthunderbird@autostart.service": 0.0016648688957587722,
+        "0::/user.slice/user-55937.slice/session-30808.scope": 0.002996764012365015,
+        "0::/system.slice/systemd-resolved.service": 0.00133189511660645,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/wireplumber.service": 0.000998921337455015,
+        "0::/init.scope": 0.0006659475583046446,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-slack-604030.scope": 0.0006659475583034024,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-ksmserver.service": 0.000665947558303358,
+        "0::/system.slice/dbus.service": 0.0006659475583027518,
+        "0::/system.slice/systemd-udevd.service/udev": 0.0003329737791523223,
+        "0::/system.slice/avahi-daemon.service": 0.0003329737791518491,
+        "0::/system.slice/php8.0-fpm.service": 0.0003329737791518491,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-kded.service": 0.0003329737791517012,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dslack@autostart.service": 0.000665947558303358,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/dbus.service": 0.0006659475583033507,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/xdg-desktop-portal.service": 0.000332973779151679,
+        "0::/user.slice/user-55937.slice/user@55937.service/background.slice/plasma-powerdevil.service": 0.000332973779151679,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/bgvd.service": 0.00033297377915167165,
+        "0::/system.slice/udisks2.service": 0.0003329737791516125,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-plasmashell.service": 0.0003329737791516125,
+        "0::/system.slice/docker-2ddd272217062b12c764634feedd54f6c30a4a9d5b91a400ea2c162a4f3af853.scope": 0.0003329737791516125,
+        "0::/system.slice/containerd.service": 0.0003329737791513759,
+        "0::/system.slice/system-postgresql.slice/postgresql@17-main.service": 0.0003329737791513759,
+        "0::/system.slice/systemd-oomd.service": 0.0003329737791513759
+      },
+      "sampler_cpu_percent": 3.2998813562609928,
+      "gpu_busy_percent": 16.433350201704865,
+      "cpu_temperature_c": 59.32065770788052,
+      "thinkpad_fan1_rpm": 2365.89589646824,
+      "thinkpad_fan2_rpm": 2365.9030956594925,
+      "changed_updates": 600
+    },
+    {
+      "block": "block-02",
+      "case": "scroll",
+      "condition": "gpu-evdi-128",
+      "repeat": 1,
+      "driver_cpu_percent": 30.96558901054235,
+      "display_stack_cpu_percent": 37.79868454031752,
+      "amd_reported_watts": 20.931328152790563,
+      "background_cpu_cores": 1.264955977338212,
+      "background_cpu_cores_observed": 0.30399161845747785,
+      "unattributed_background_cpu_cores": 0.9609643588807342,
+      "background_groups_observed": {
+        "0::/system.slice/cron.service": 0.07225211523030035,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dfirefox@autostart.service": 0.07558170579390909,
+        "0::/": 0.04161988204513605,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dkonsole@autostart.service": 0.06725772938488765,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/pipewire-pulse.service": 0.013984280367155441,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/pipewire.service": 0.011986526028989431,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-org.kde.konsole-56c9eeac065c4679947e6b92f1593d1e.scope": 0.004661426789051656,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dthunderbird@autostart.service": 0.003995508676329179,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-plasmashell.service": 0.0013318362254432965,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/wireplumber.service": 0.0009988771690824724,
+        "0::/system.slice/dbus.service": 0.0009988771690815851,
+        "0::/system.slice/containerd.service": 0.0009988771690891559,
+        "0::/system.slice/system-postgresql.slice/postgresql@17-main.service": 0.0009988771690839508,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-org.kde.kdeconnect.daemon@autostart.service": 0.000665918112721663,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-slack-604030.scope": 0.0006659181127216482,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dslack@autostart.service": 0.0009988771690823688,
+        "0::/system.slice/ollama.service": 0.00033295905636242105,
+        "0::/user.slice/user-55937.slice/session-30808.scope": 0.0006659181127217073,
+        "0::/system.slice/docker-2ddd272217062b12c764634feedd54f6c30a4a9d5b91a400ea2c162a4f3af853.scope": 0.00033295905636088327,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/bgvd.service": 0.00033295905636085367,
+        "0::/user.slice/user-55937.slice/user@55937.service/init.scope": 0.0003329590563608315,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/dbus.service": 0.0003329590563608315,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-ksmserver.service": 0.0003329590563608315,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-kded.service": 0.0003329590563608241,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dtelegram\\x2dpersonal@autostart.service": 0.000332959056360765,
+        "0::/system.slice/upower.service": 0.000332959056360765,
+        "0::/init.scope": 0.0003329590563605284,
+        "0::/system.slice/docker.service": 0.0003329590563605284,
+        "0::/system.slice/systemd-udevd.service/udev": 0.0003329590563605284,
+        "0::/system.slice/systemd-oomd.service": 0.0003329590563605284
+      },
+      "sampler_cpu_percent": 3.2332208116497387,
+      "gpu_busy_percent": 18.949791610916332,
+      "cpu_temperature_c": 68.88210969428019,
+      "thinkpad_fan1_rpm": 2885.9579729948514,
+      "thinkpad_fan2_rpm": 2885.9579729948514,
+      "changed_updates": 601
+    },
+    {
+      "block": "block-02",
+      "case": "motion",
+      "condition": "gpu-evdi-128",
+      "repeat": 1,
+      "driver_cpu_percent": 24.298910865301725,
+      "display_stack_cpu_percent": 31.06527424754624,
+      "amd_reported_watts": 13.869100351653854,
+      "background_cpu_cores": 0.7349670570282122,
+      "background_cpu_cores_observed": 0.23507869195859807,
+      "unattributed_background_cpu_cores": 0.4998883650696141,
+      "background_groups_observed": {
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dfirefox@autostart.service": 0.06492966704239339,
+        "0::/": 0.04195455408889789,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/pipewire-pulse.service": 0.015649714620475427,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/pipewire.service": 0.012985933408479186,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dkonsole@autostart.service": 0.07625073719338095,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-org.kde.konsole-56c9eeac065c4679947e6b92f1593d1e.scope": 0.003995671817993887,
+        "0::/system.slice/cron.service": 0.0029967538634953017,
+        "0::/user.slice/user-55937.slice/session-30808.scope": 0.0029967538634952675,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dthunderbird@autostart.service": 0.0016648632574977685,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/wireplumber.service": 0.0009989179544984718,
+        "0::/system.slice/dbus.service": 0.0006659453030059212,
+        "0::/init.scope": 0.000665945303000243,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-plasmashell.service": 0.00066594530299906,
+        "0::/system.slice/upower.service": 0.00066594530299906,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/dbus.service": 0.000998917954498435,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/bgvd.service": 0.0006659453029989417,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-slack-604030.scope": 0.0006659453029989417,
+        "0::/system.slice/containerd.service": 0.0006659453029983503,
+        "0::/system.slice/systemd-resolved.service": 0.0003329726515001215,
+        "0::/system.slice/avahi-daemon.service": 0.0003329726514996483,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dslack@autostart.service": 0.0006659453029991191,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/xdg-desktop-portal.service": 0.0003329726514994783,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-ksmserver.service": 0.0003329726514994783,
+        "0::/user.slice/user-55937.slice/user@55937.service/background.slice/plasma-powerdevil.service": 0.0003329726514994783,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-org.kde.discover.notifier@autostart.service": 0.0003329726514994783,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-kded.service": 0.00033297265149947086,
+        "0::/system.slice/bolt.service": 0.0003329726514994117,
+        "0::/system.slice/clamav-realtime.service": 0.00033297265149917515,
+        "0::/system.slice/php8.3-fpm.service": 0.00033297265149917515,
+        "0::/system.slice/system-postgresql.slice/postgresql@17-main.service": 0.00033297265149917515,
+        "0::/system.slice/systemd-udevd.service/udev": 0.00033297265149917515,
+        "0::/system.slice/systemd-oomd.service": 0.00033297265149917515
+      },
+      "sampler_cpu_percent": 3.2998520928187536,
+      "gpu_busy_percent": 16.30695180611128,
+      "cpu_temperature_c": 56.89774651645628,
+      "thinkpad_fan1_rpm": 3229.9276101809287,
+      "thinkpad_fan2_rpm": 3229.9276101809287,
+      "changed_updates": 600
+    },
+    {
+      "block": "block-02",
+      "case": "idle",
+      "condition": "gpu-evdi-128",
+      "repeat": 1,
+      "driver_cpu_percent": 1.19997718733332,
+      "display_stack_cpu_percent": 2.1999581767776983,
+      "amd_reported_watts": 14.746971630752254,
+      "background_cpu_cores": 0.9976477004777575,
+      "background_cpu_cores_observed": 0.2730567962282658,
+      "unattributed_background_cpu_cores": 0.7245909042494918,
+      "background_groups_observed": {
+        "0::/": 0.03230062101726895,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/pipewire-pulse.service": 0.01598381246214048,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dfirefox@autostart.service": 0.05993929673303108,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/pipewire.service": 0.014318831997334712,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dkonsole@autostart.service": 0.06893019124298322,
+        "0::/system.slice/cron.service": 0.058940308454144275,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dthunderbird@autostart.service": 0.004661945301457589,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-org.kde.konsole-56c9eeac065c4679947e6b92f1593d1e.scope": 0.003995953115534884,
+        "0::/user.slice/user-55937.slice/session-30808.scope": 0.0033299609296126593,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-plasmashell.service": 0.0009989882788838391,
+        "0::/system.slice/systemd-udevd.service/udev": 0.0006659921859228749,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/wireplumber.service": 0.00066599218592252,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-slack-604030.scope": 0.00066599218592252,
+        "0::/system.slice/dbus.service": 0.0006659921859219285,
+        "0::/system.slice/systemd-resolved.service": 0.0006659921859219285,
+        "0::/system.slice/avahi-daemon.service": 0.00033299609296143744,
+        "0::/system.slice/polkit.service": 0.00033299609296143744,
+        "0::/system.slice/php8.2-fpm.service": 0.00033299609296143744,
+        "0::/system.slice/systemd-journald.service": 0.00033299609296143744,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/bgvd.service": 0.00033299609296128955,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dslack@autostart.service": 0.0006659921859224904,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/dbus.service": 0.0006659921859225274,
+        "0::/user.slice/user-55937.slice/user@55937.service/background.slice/plasma-powerdevil.service": 0.0003329960929612674,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-ksmserver.service": 0.00033299609296126,
+        "0::/init.scope": 0.00033299609296096424,
+        "0::/system.slice/clamav-realtime.service": 0.00033299609296096424,
+        "0::/system.slice/NetworkManager.service": 0.00033299609296096424,
+        "0::/system.slice/php8.0-fpm.service": 0.00033299609296096424,
+        "0::/system.slice/containerd.service": 0.00033299609296096424,
+        "0::/system.slice/system-postgresql.slice/postgresql@17-main.service": 0.00033299609296096424,
+        "0::/system.slice/docker.service": 0.00033299609296096424,
+        "0::/system.slice/systemd-oomd.service": 0.00033299609296096424
+      },
+      "sampler_cpu_percent": 2.9999429683333063,
+      "gpu_busy_percent": 0.18873534525397265,
+      "cpu_temperature_c": 55.710668784674176,
+      "thinkpad_fan1_rpm": 2377.50396839086,
+      "thinkpad_fan2_rpm": 2377.50396839086,
+      "changed_updates": 0
+    },
+    {
+      "block": "block-03",
+      "case": "scroll",
+      "condition": "official-evdi-0",
+      "repeat": 1,
+      "driver_cpu_percent": 39.27528924843979,
+      "display_stack_cpu_percent": 47.87498108105861,
+      "amd_reported_watts": 15.032950210629053,
+      "background_cpu_cores": 0.7985377513092442,
+      "background_cpu_cores_observed": 0.24472480706792576,
+      "unattributed_background_cpu_cores": 0.5538129442413184,
+      "background_groups_observed": {
+        "0::/": 0.04062098838408429,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dfirefox@autostart.service": 0.06692474315734595,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/pipewire-pulse.service": 0.013651315768413315,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/pipewire.service": 0.011986521162509806,
+        "0::/system.slice/cron.service": 0.027968549379188495,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dkonsole@autostart.service": 0.06592586639379981,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-org.kde.konsole-56c9eeac065c4679947e6b92f1593d1e.scope": 0.0036625481329889496,
+        "0::/user.slice/user-55937.slice/session-30808.scope": 0.002996630290627333,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/wireplumber.service": 0.000998876763542484,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-plasmashell.service": 0.000998876763542484,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dslack@autostart.service": 0.0016647946059041004,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-slack-604030.scope": 0.0009988767635424247,
+        "0::/system.slice/systemd-oomd.service": 0.0006659178423619713,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dthunderbird@autostart.service": 0.0006659178423619713,
+        "0::/init.scope": 0.000665917842361025,
+        "0::/system.slice/dbus.service": 0.000665917842361025,
+        "0::/system.slice/system-postgresql.slice/postgresql@17-main.service": 0.00033295892118240516,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dtelegram\\x2dpersonal@autostart.service": 0.00033295892118098566,
+        "0::/system.slice/containerd.service": 0.00033295892118098566,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/dbus.service": 0.00033295892118082303,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/xdg-desktop-portal.service": 0.0003329589211808156,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-ksmserver.service": 0.0003329589211808156,
+        "0::/user.slice/user-55937.slice/user@55937.service/background.slice/plasma-powerdevil.service": 0.0003329589211808156,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-org.kde.kdeconnect.daemon@autostart.service": 0.0003329589211808156,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/bgvd.service": 0.00033295892118080823,
+        "0::/system.slice/NetworkManager.service": 0.0003329589211805125,
+        "0::/system.slice/systemd-udevd.service/udev": 0.0003329589211805125
+      },
+      "sampler_cpu_percent": 3.233217471953609,
+      "gpu_busy_percent": 4.91948046622957,
+      "cpu_temperature_c": 58.49313370607485,
+      "thinkpad_fan1_rpm": 2362.327904384432,
+      "thinkpad_fan2_rpm": 2362.321097492865,
+      "changed_updates": null
+    },
+    {
+      "block": "block-03",
+      "case": "motion",
+      "condition": "official-evdi-0",
+      "repeat": 1,
+      "driver_cpu_percent": 22.403594665035527,
+      "display_stack_cpu_percent": 31.669998549301837,
+      "amd_reported_watts": 10.525359334976494,
+      "background_cpu_cores": 0.6252733014415589,
+      "background_cpu_cores_observed": 0.25339984299773094,
+      "unattributed_background_cpu_cores": 0.37187345844382796,
+      "background_groups_observed": {
+        "0::/system.slice/cron.service": 0.028303530426821034,
+        "0::/": 0.04262178699564202,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/pipewire-pulse.service": 0.016649135545188844,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/pipewire.service": 0.013985273857958211,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dfirefox@autostart.service": 0.06526461133714045,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dkonsole@autostart.service": 0.07059233471160083,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-org.kde.konsole-56c9eeac065c4679947e6b92f1593d1e.scope": 0.0033298271090375794,
+        "0::/user.slice/user-55937.slice/session-30808.scope": 0.002663861687230158,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dthunderbird@autostart.service": 0.0013319308436148425,
+        "0::/system.slice/dbus.service": 0.000998948132710422,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-ksmserver.service": 0.0006659654218075543,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dslack@autostart.service": 0.0006659654218075543,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/wireplumber.service": 0.0006659654218075396,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-plasmashell.service": 0.0006659654218075396,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/bgvd.service": 0.0006659654218075396,
+        "0::/init.scope": 0.000665965421806948,
+        "0::/system.slice/clamav-realtime.service": 0.0003329827109044204,
+        "0::/system.slice/systemd-udevd.service/udev": 0.0003329827109044204,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/dbus.service": 0.00033298271090377715,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-kded.service": 0.0003329827109037698,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-slack-604030.scope": 0.0003329827109037698,
+        "0::/system.slice/rtkit-daemon.service": 0.0003329827109037698,
+        "0::/system.slice/docker-2ddd272217062b12c764634feedd54f6c30a4a9d5b91a400ea2c162a4f3af853.scope": 0.0003329827109037698,
+        "0::/system.slice/upower.service": 0.00033298271090371063,
+        "0::/system.slice/NetworkManager.service": 0.000332982710903474,
+        "0::/system.slice/containerd.service": 0.000332982710903474,
+        "0::/system.slice/system-postgresql.slice/postgresql@17-main.service": 0.000332982710903474
+      },
+      "sampler_cpu_percent": 3.333238807290039,
+      "gpu_busy_percent": 4.799006820728918,
+      "cpu_temperature_c": 53.07943657275249,
+      "thinkpad_fan1_rpm": 2360.633303792974,
+      "thinkpad_fan2_rpm": 2360.633303792974,
+      "changed_updates": null
+    },
+    {
+      "block": "block-03",
+      "case": "idle",
+      "condition": "official-evdi-0",
+      "repeat": 1,
+      "driver_cpu_percent": 1.5346084807892897,
+      "display_stack_cpu_percent": 2.2678964903582273,
+      "amd_reported_watts": 7.235325498431605,
+      "background_cpu_cores": 0.40429464431382767,
+      "background_cpu_cores_observed": 0.23641145451256954,
+      "unattributed_background_cpu_cores": 0.16788318980125813,
+      "background_groups_observed": {
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dfirefox@autostart.service": 0.07491912290890095,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/pipewire-pulse.service": 0.02064438053489741,
+        "0::/": 0.03196549244116915,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/pipewire.service": 0.017647615618541244,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dkonsole@autostart.service": 0.07392020127011652,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-org.kde.konsole-56c9eeac065c4679947e6b92f1593d1e.scope": 0.0036627126755462694,
+        "0::/user.slice/user-55937.slice/session-30808.scope": 0.0029967649163560495,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/wireplumber.service": 0.0009989216387853892,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-plasmashell.service": 0.0009989216387853892,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-ziran\\x2dthunderbird@autostart.service": 0.0009989216387856924,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/bgvd.service": 0.0006659477591902496,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-slack-604030.scope": 0.00066594775919022,
+        "0::/init.scope": 0.0006659477591896285,
+        "0::/system.slice/dbus.service": 0.0006659477591896285,
+        "0::/system.slice/containerd.service": 0.0009989216387844427,
+        "0::/system.slice/systemd-udevd.service/udev": 0.0003329738795957606,
+        "0::/system.slice/php8.2-fpm.service": 0.0003329738795952875,
+        "0::/system.slice/systemd-journald.service": 0.0003329738795952875,
+        "0::/system.slice/fwupd.service": 0.0003329738795952875,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/dbus.service": 0.0003329738795951174,
+        "0::/user.slice/user-55937.slice/user@55937.service/session.slice/plasma-ksmserver.service": 0.0003329738795951174,
+        "0::/user.slice/user-55937.slice/user@55937.service/app.slice/app-org.kde.discover.notifier@autostart.service": 0.0003329738795951174,
+        "0::/system.slice/apache2.service": 0.00033297387959505085,
+        "0::/system.slice/systemd-logind.service": 0.0003329738795948143,
+        "0::/system.slice/system-postgresql.slice/postgresql@17-main.service": 0.0003329738795948143,
+        "0::/system.slice/docker.service": 0.0003329738795948143,
+        "0::/system.slice/systemd-oomd.service": 0.0003329738795948143
+      },
+      "sampler_cpu_percent": 3.0664771309246643,
+      "gpu_busy_percent": 0.0,
+      "cpu_temperature_c": 52.06757007985886,
+      "thinkpad_fan1_rpm": 2355.0995622458836,
+      "thinkpad_fan2_rpm": 2355.0995622458836,
+      "changed_updates": null
+    }
+  ],
+  "summary": [
+    {
+      "case": "idle",
+      "observations": {
+        "official-evdi-0": {
+          "driver_cpu_percent": {
+            "mean": 4.355866550211902,
+            "min": 1.5346084807892897,
+            "max": 7.177124619634514
+          },
+          "display_stack_cpu_percent": {
+            "mean": 6.739122324142664,
+            "min": 2.2678964903582273,
+            "max": 11.2103481579271
+          },
+          "amd_reported_watts": {
+            "mean": 16.423991638767873,
+            "min": 7.235325498431605,
+            "max": 25.612657779104143
+          },
+          "background_cpu_cores": {
+            "mean": 1.0317381384951367,
+            "min": 0.40429464431382767,
+            "max": 1.659181632676446
+          },
+          "gpu_busy_percent": {
+            "mean": 1.0835936846200676,
+            "min": 0.0,
+            "max": 2.167187369240135
+          },
+          "cpu_temperature_c": {
+            "mean": 59.578451168870544,
+            "min": 52.06757007985886,
+            "max": 67.08933225788223
+          },
+          "thinkpad_fan1_rpm": {
+            "mean": 2821.985899884022,
+            "min": 2355.0995622458836,
+            "max": 3288.8722375221605
+          }
+        },
+        "gpu-evdi-128": {
+          "driver_cpu_percent": {
+            "mean": 1.03331103975201,
+            "min": 0.8666448921707,
+            "max": 1.19997718733332
+          },
+          "display_stack_cpu_percent": {
+            "mean": 1.9166252367805006,
+            "min": 1.6332922967833028,
+            "max": 2.1999581767776983
+          },
+          "amd_reported_watts": {
+            "mean": 12.530855724165498,
+            "min": 10.31473981757874,
+            "max": 14.746971630752254
+          },
+          "background_cpu_cores": {
+            "mean": 0.8471484318979318,
+            "min": 0.696649163318106,
+            "max": 0.9976477004777575
+          },
+          "gpu_busy_percent": {
+            "mean": 0.09436767262698632,
+            "min": 0.0,
+            "max": 0.18873534525397265
+          },
+          "cpu_temperature_c": {
+            "mean": 54.7586927543866,
+            "min": 53.80671672409903,
+            "max": 55.710668784674176
+          },
+          "thinkpad_fan1_rpm": {
+            "mean": 2723.852579252629,
+            "min": 2377.50396839086,
+            "max": 3070.201190114398
+          }
+        }
+      },
+      "vino_driver_cpu_reduction_percent": 76.27771586111282
+    },
+    {
+      "case": "scroll",
+      "observations": {
+        "official-evdi-0": {
+          "driver_cpu_percent": {
+            "mean": 37.80169400583522,
+            "min": 36.328098763230656,
+            "max": 39.27528924843979
+          },
+          "display_stack_cpu_percent": {
+            "mean": 45.96811137548223,
+            "min": 44.061241669905854,
+            "max": 47.87498108105861
+          },
+          "amd_reported_watts": {
+            "mean": 19.33597533929357,
+            "min": 15.032950210629053,
+            "max": 23.639000467958084
+          },
+          "background_cpu_cores": {
+            "mean": 1.3197679086013998,
+            "min": 0.7985377513092442,
+            "max": 1.8409980658935554
+          },
+          "gpu_busy_percent": {
+            "mean": 4.51915807230504,
+            "min": 4.118835678380511,
+            "max": 4.91948046622957
+          },
+          "cpu_temperature_c": {
+            "mean": 63.90902545850565,
+            "min": 58.49313370607485,
+            "max": 69.32491721093646
+          },
+          "thinkpad_fan1_rpm": {
+            "mean": 2823.8446500690425,
+            "min": 2362.327904384432,
+            "max": 3285.3613957536527
+          }
+        },
+        "gpu-evdi-128": {
+          "driver_cpu_percent": {
+            "mean": 30.298925108637064,
+            "min": 29.632261206731776,
+            "max": 30.96558901054235
+          },
+          "display_stack_cpu_percent": {
+            "mean": 37.282010499081814,
+            "min": 36.76533645784611,
+            "max": 37.79868454031752
+          },
+          "amd_reported_watts": {
+            "mean": 15.324449554280333,
+            "min": 9.717570955770103,
+            "max": 20.931328152790563
+          },
+          "background_cpu_cores": {
+            "mean": 0.8549699386793128,
+            "min": 0.44498390002041377,
+            "max": 1.264955977338212
+          },
+          "gpu_busy_percent": {
+            "mean": 18.96763901675706,
+            "min": 18.949791610916332,
+            "max": 18.985486422597788
+          },
+          "cpu_temperature_c": {
+            "mean": 60.75980480075423,
+            "min": 52.637499907228275,
+            "max": 68.88210969428019
+          },
+          "thinkpad_fan1_rpm": {
+            "mean": 2623.863006674508,
+            "min": 2361.7680403541654,
+            "max": 2885.9579729948514
+          }
+        }
+      },
+      "vino_driver_cpu_reduction_percent": 19.847705491822676
+    },
+    {
+      "case": "motion",
+      "observations": {
+        "official-evdi-0": {
+          "driver_cpu_percent": {
+            "mean": 21.257256714118476,
+            "min": 20.11091876320143,
+            "max": 22.403594665035527
+          },
+          "display_stack_cpu_percent": {
+            "mean": 30.02366705289079,
+            "min": 28.377335556479743,
+            "max": 31.669998549301837
+          },
+          "amd_reported_watts": {
+            "mean": 14.020746294823923,
+            "min": 10.525359334976494,
+            "max": 17.51613325467135
+          },
+          "background_cpu_cores": {
+            "mean": 0.8577292072578864,
+            "min": 0.6252733014415589,
+            "max": 1.0901851130742137
+          },
+          "gpu_busy_percent": {
+            "mean": 4.532803348820463,
+            "min": 4.266599876912007,
+            "max": 4.799006820728918
+          },
+          "cpu_temperature_c": {
+            "mean": 59.08543075039886,
+            "min": 53.07943657275249,
+            "max": 65.09142492804521
+          },
+          "thinkpad_fan1_rpm": {
+            "mean": 2823.558975857708,
+            "min": 2360.633303792974,
+            "max": 3286.4846479224416
+          }
+        },
+        "gpu-evdi-128": {
+          "driver_cpu_percent": {
+            "mean": 23.96569725885815,
+            "min": 23.632483652414578,
+            "max": 24.298910865301725
+          },
+          "display_stack_cpu_percent": {
+            "mean": 30.632094238785534,
+            "min": 30.198914230024833,
+            "max": 31.06527424754624
+          },
+          "amd_reported_watts": {
+            "mean": 13.920620427979891,
+            "min": 13.869100351653854,
+            "max": 13.972140504305928
+          },
+          "background_cpu_cores": {
+            "mean": 0.7984680329264637,
+            "min": 0.7349670570282122,
+            "max": 0.8619690088247154
+          },
+          "gpu_busy_percent": {
+            "mean": 16.37015100390807,
+            "min": 16.30695180611128,
+            "max": 16.433350201704865
+          },
+          "cpu_temperature_c": {
+            "mean": 58.109202112168404,
+            "min": 56.89774651645628,
+            "max": 59.32065770788052
+          },
+          "thinkpad_fan1_rpm": {
+            "mean": 2797.9117533245844,
+            "min": 2365.89589646824,
+            "max": 3229.9276101809287
+          }
+        }
+      },
+      "vino_driver_cpu_reduction_percent": -12.741251522548547
+    }
+  ],
+  "power_assessment": {
+    "criteria": {
+      "max_background_cpu_cores": 0.25,
+      "max_background_spread_cores": 0.1,
+      "max_starting_temperature_spread_c": 5,
+      "minimum_matched_repetitions": 2
+    },
+    "cases": [
+      {
+        "case": "idle",
+        "repetitions": [
+          {
+            "repeat": 0,
+            "included": false,
+            "reasons": [
+              "official-evdi-0: outside CPU 1.66 cores exceeds 0.25",
+              "gpu-evdi-128: outside CPU 0.70 cores exceeds 0.25",
+              "background CPU spread (cores) 0.963 exceeds 0.100"
+            ],
+            "samples": [
+              {
+                "block": "block-00",
+                "condition": "official-evdi-0"
+              },
+              {
+                "block": "block-01",
+                "condition": "gpu-evdi-128"
+              }
+            ]
+          },
+          {
+            "repeat": 1,
+            "included": false,
+            "reasons": [
+              "gpu-evdi-128: outside CPU 1.00 cores exceeds 0.25",
+              "official-evdi-0: outside CPU 0.40 cores exceeds 0.25",
+              "background CPU spread (cores) 0.593 exceeds 0.100"
+            ],
+            "samples": [
+              {
+                "block": "block-02",
+                "condition": "gpu-evdi-128"
+              },
+              {
+                "block": "block-03",
+                "condition": "official-evdi-0"
+              }
+            ]
+          }
+        ],
+        "retained_pairs": 0,
+        "repeated_comparison_available": false,
+        "matched_observations": []
+      },
+      {
+        "case": "scroll",
+        "repetitions": [
+          {
+            "repeat": 0,
+            "included": false,
+            "reasons": [
+              "official-evdi-0: outside CPU 1.84 cores exceeds 0.25",
+              "gpu-evdi-128: outside CPU 0.44 cores exceeds 0.25",
+              "background CPU spread (cores) 1.396 exceeds 0.100",
+              "starting AMD temperature spread (C) 12.000 exceeds 5.000"
+            ],
+            "samples": [
+              {
+                "block": "block-00",
+                "condition": "official-evdi-0"
+              },
+              {
+                "block": "block-01",
+                "condition": "gpu-evdi-128"
+              }
+            ]
+          },
+          {
+            "repeat": 1,
+            "included": false,
+            "reasons": [
+              "gpu-evdi-128: outside CPU 1.26 cores exceeds 0.25",
+              "official-evdi-0: outside CPU 0.80 cores exceeds 0.25",
+              "background CPU spread (cores) 0.466 exceeds 0.100",
+              "starting AMD temperature spread (C) 12.000 exceeds 5.000"
+            ],
+            "samples": [
+              {
+                "block": "block-02",
+                "condition": "gpu-evdi-128"
+              },
+              {
+                "block": "block-03",
+                "condition": "official-evdi-0"
+              }
+            ]
+          }
+        ],
+        "retained_pairs": 0,
+        "repeated_comparison_available": false,
+        "matched_observations": []
+      },
+      {
+        "case": "motion",
+        "repetitions": [
+          {
+            "repeat": 0,
+            "included": false,
+            "reasons": [
+              "official-evdi-0: outside CPU 1.09 cores exceeds 0.25",
+              "gpu-evdi-128: outside CPU 0.86 cores exceeds 0.25",
+              "background CPU spread (cores) 0.228 exceeds 0.100",
+              "starting AMD temperature spread (C) 8.000 exceeds 5.000"
+            ],
+            "samples": [
+              {
+                "block": "block-00",
+                "condition": "official-evdi-0"
+              },
+              {
+                "block": "block-01",
+                "condition": "gpu-evdi-128"
+              }
+            ]
+          },
+          {
+            "repeat": 1,
+            "included": false,
+            "reasons": [
+              "gpu-evdi-128: outside CPU 0.73 cores exceeds 0.25",
+              "official-evdi-0: outside CPU 0.63 cores exceeds 0.25",
+              "background CPU spread (cores) 0.110 exceeds 0.100"
+            ],
+            "samples": [
+              {
+                "block": "block-02",
+                "condition": "gpu-evdi-128"
+              },
+              {
+                "block": "block-03",
+                "condition": "official-evdi-0"
+              }
+            ]
+          }
+        ],
+        "retained_pairs": 0,
+        "repeated_comparison_available": false,
+        "matched_observations": []
+      }
+    ],
+    "all_cases_repeated": false,
+    "note": "Predeclared diagnostic screens, not proof of equal output, thermal equilibrium or isolated driver power. All observations remain in the raw summary. No background watts are subtracted."
+  },
+  "background_evidence": {
+    "ziran_log_events": [
+      {
+        "log": "baiyan.file.log",
+        "time": "2026-10-20 22:27:02",
+        "message": "start baiyan.file"
+      },
+      {
+        "log": "baiyan.file.log",
+        "time": "2026-10-20 22:27:14",
+        "message": "exit baiyan.file rc=0"
+      },
+      {
+        "log": "baiyan.scan.log",
+        "time": "2026-10-20 22:23:02",
+        "message": "start baiyan.scan"
+      },
+      {
+        "log": "baiyan.scan.log",
+        "time": "2026-10-20 22:23:22",
+        "message": "exit baiyan.scan rc=0"
+      },
+      {
+        "log": "baiyan.urgent.log",
+        "time": "2026-10-20 22:26:03",
+        "message": "start baiyan.urgent"
+      },
+      {
+        "log": "baiyan.urgent.log",
+        "time": "2026-10-20 22:26:04",
+        "message": "exit baiyan.urgent rc=0"
+      },
+      {
+        "log": "calendar.update.meetings.log",
+        "time": "2026-10-20 22:17:03",
+        "message": "start calendar.update.meetings"
+      },
+      {
+        "log": "calendar.update.meetings.log",
+        "time": "2026-10-20 22:17:03",
+        "message": "exit calendar.update.meetings rc=0"
+      },
+      {
+        "log": "calendar.update.meetings.log",
+        "time": "2026-10-20 22:18:03",
+        "message": "start calendar.update.meetings"
+      },
+      {
+        "log": "calendar.update.meetings.log",
+        "time": "2026-10-20 22:18:03",
+        "message": "exit calendar.update.meetings rc=0"
+      },
+      {
+        "log": "calendar.update.meetings.log",
+        "time": "2026-10-20 22:19:03",
+        "message": "start calendar.update.meetings"
+      },
+      {
+        "log": "calendar.update.meetings.log",
+        "time": "2026-10-20 22:19:03",
+        "message": "exit calendar.update.meetings rc=0"
+      },
+      {
+        "log": "calendar.update.meetings.log",
+        "time": "2026-10-20 22:20:03",
+        "message": "start calendar.update.meetings"
+      },
+      {
+        "log": "calendar.update.meetings.log",
+        "time": "2026-10-20 22:20:03",
+        "message": "exit calendar.update.meetings rc=0"
+      },
+      {
+        "log": "calendar.update.meetings.log",
+        "time": "2026-10-20 22:21:03",
+        "message": "start calendar.update.meetings"
+      },
+      {
+        "log": "calendar.update.meetings.log",
+        "time": "2026-10-20 22:21:03",
+        "message": "exit calendar.update.meetings rc=0"
+      },
+      {
+        "log": "calendar.update.meetings.log",
+        "time": "2026-10-20 22:22:02",
+        "message": "start calendar.update.meetings"
+      },
+      {
+        "log": "calendar.update.meetings.log",
+        "time": "2026-10-20 22:22:02",
+        "message": "exit calendar.update.meetings rc=0"
+      },
+      {
+        "log": "calendar.update.meetings.log",
+        "time": "2026-10-20 22:23:03",
+        "message": "start calendar.update.meetings"
+      },
+      {
+        "log": "calendar.update.meetings.log",
+        "time": "2026-10-20 22:23:03",
+        "message": "exit calendar.update.meetings rc=0"
+      },
+      {
+        "log": "calendar.update.meetings.log",
+        "time": "2026-10-20 22:24:03",
+        "message": "start calendar.update.meetings"
+      },
+      {
+        "log": "calendar.update.meetings.log",
+        "time": "2026-10-20 22:24:03",
+        "message": "exit calendar.update.meetings rc=0"
+      },
+      {
+        "log": "calendar.update.meetings.log",
+        "time": "2026-10-20 22:25:03",
+        "message": "start calendar.update.meetings"
+      },
+      {
+        "log": "calendar.update.meetings.log",
+        "time": "2026-10-20 22:25:03",
+        "message": "exit calendar.update.meetings rc=0"
+      },
+      {
+        "log": "calendar.update.meetings.log",
+        "time": "2026-10-20 22:26:03",
+        "message": "start calendar.update.meetings"
+      },
+      {
+        "log": "calendar.update.meetings.log",
+        "time": "2026-10-20 22:26:03",
+        "message": "exit calendar.update.meetings rc=0"
+      },
+      {
+        "log": "calendar.update.meetings.log",
+        "time": "2026-10-20 22:27:03",
+        "message": "start calendar.update.meetings"
+      },
+      {
+        "log": "calendar.update.meetings.log",
+        "time": "2026-10-20 22:27:03",
+        "message": "exit calendar.update.meetings rc=0"
+      },
+      {
+        "log": "calendar.update.refresh.log",
+        "time": "2026-10-20 22:20:03",
+        "message": "start calendar.update.refresh"
+      },
+      {
+        "log": "calendar.update.refresh.log",
+        "time": "2026-10-20 22:20:23",
+        "message": "exit calendar.update.refresh rc=0"
+      },
+      {
+        "log": "calendar.update.refresh.log",
+        "time": "2026-10-20 22:25:03",
+        "message": "start calendar.update.refresh"
+      },
+      {
+        "log": "calendar.update.refresh.log",
+        "time": "2026-10-20 22:25:24",
+        "message": "exit calendar.update.refresh rc=0"
+      },
+      {
+        "log": "calendar.update.wrms.log",
+        "time": "2026-10-20 22:21:04",
+        "message": "start calendar.update.wrms"
+      },
+      {
+        "log": "calendar.update.wrms.log",
+        "time": "2026-10-20 22:21:06",
+        "message": "exit calendar.update.wrms rc=0"
+      },
+      {
+        "log": "calendar.update.wrms.log",
+        "time": "2026-10-20 22:26:03",
+        "message": "start calendar.update.wrms"
+      },
+      {
+        "log": "calendar.update.wrms.log",
+        "time": "2026-10-20 22:26:06",
+        "message": "exit calendar.update.wrms rc=0"
+      },
+      {
+        "log": "devdocs.update.log",
+        "time": "2026-10-20 22:23:04",
+        "message": "start devdocs.update"
+      },
+      {
+        "log": "devdocs.update.log",
+        "time": "2026-10-20 22:23:08",
+        "message": "exit devdocs.update rc=0"
+      },
+      {
+        "log": "moodle.update.clients.log",
+        "time": "2026-10-20 22:26:05",
+        "message": "start moodle.update.clients"
+      },
+      {
+        "log": "moodle.update.clients.log",
+        "time": "2026-10-20 22:26:09",
+        "message": "refresh client remote mirrors: done (4s)"
+      },
+      {
+        "log": "moodle.update.clients.log",
+        "time": "2026-10-20 22:26:09",
+        "message": "probe broad-auto client submodule farms: done (0s)"
+      },
+      {
+        "log": "moodle.update.clients.log",
+        "time": "2026-10-20 22:26:09",
+        "message": "propagate pending submodule refs: done (0s)"
+      },
+      {
+        "log": "moodle.update.clients.log",
+        "time": "2026-10-20 22:26:10",
+        "message": "snap gitmodules clients: done (0s)"
+      },
+      {
+        "log": "moodle.update.clients.log",
+        "time": "2026-10-20 22:26:10",
+        "message": "discover gitmodules client gitlink changes: done (0s)"
+      },
+      {
+        "log": "moodle.update.clients.log",
+        "time": "2026-10-20 22:26:10",
+        "message": "moodle.update.clients: done (5s)"
+      },
+      {
+        "log": "moodle.update.clients.log",
+        "time": "2026-10-20 22:26:10",
+        "message": "exit moodle.update.clients rc=0"
+      },
+      {
+        "log": "moodle.update.colleagues.log",
+        "time": "2026-10-20 22:17:05",
+        "message": "start moodle.update.colleagues"
+      },
+      {
+        "log": "moodle.update.colleagues.log",
+        "time": "2026-10-20 22:17:33",
+        "message": "refresh colleague remote mirrors: done (28s)"
+      },
+      {
+        "log": "moodle.update.colleagues.log",
+        "time": "2026-10-20 22:17:33",
+        "message": "moodle.update.colleagues: done (28s)"
+      },
+      {
+        "log": "moodle.update.colleagues.log",
+        "time": "2026-10-20 22:17:33",
+        "message": "exit moodle.update.colleagues rc=0"
+      },
+      {
+        "log": "moodle.update.eassess-dev.log",
+        "time": "2026-10-20 22:20:05",
+        "message": "start moodle.update.eassess-dev"
+      },
+      {
+        "log": "moodle.update.eassess-dev.log",
+        "time": "2026-10-20 22:20:09",
+        "message": "refresh eAssess remote mirror: done (3s)"
+      },
+      {
+        "log": "moodle.update.eassess-dev.log",
+        "time": "2026-10-20 22:20:33",
+        "message": "refresh eAssess submodule farm: done (24s)"
+      },
+      {
+        "log": "moodle.update.eassess-dev.log",
+        "time": "2026-10-20 22:20:33",
+        "message": "propagate pending submodule refs: done (0s)"
+      },
+      {
+        "log": "moodle.update.eassess-dev.log",
+        "time": "2026-10-20 22:20:34",
+        "message": "moodle.update.eassess-dev: done (29s)"
+      },
+      {
+        "log": "moodle.update.eassess-dev.log",
+        "time": "2026-10-20 22:20:34",
+        "message": "exit moodle.update.eassess-dev rc=0"
+      },
+      {
+        "log": "moodle.update.eassess-dev.log",
+        "time": "2026-10-20 22:25:05",
+        "message": "start moodle.update.eassess-dev"
+      },
+      {
+        "log": "moodle.update.eassess-dev.log",
+        "time": "2026-10-20 22:25:08",
+        "message": "refresh eAssess remote mirror: done (2s)"
+      },
+      {
+        "log": "moodle.update.eassess-dev.log",
+        "time": "2026-10-20 22:25:33",
+        "message": "refresh eAssess submodule farm: done (25s)"
+      },
+      {
+        "log": "moodle.update.eassess-dev.log",
+        "time": "2026-10-20 22:25:33",
+        "message": "propagate pending submodule refs: done (0s)"
+      },
+      {
+        "log": "moodle.update.eassess-dev.log",
+        "time": "2026-10-20 22:25:34",
+        "message": "moodle.update.eassess-dev: done (29s)"
+      },
+      {
+        "log": "moodle.update.eassess-dev.log",
+        "time": "2026-10-20 22:25:34",
+        "message": "exit moodle.update.eassess-dev rc=0"
+      },
+      {
+        "log": "moodle.update.stables.log",
+        "time": "2026-10-20 22:18:06",
+        "message": "start moodle.update.stables"
+      },
+      {
+        "log": "moodle.update.stables.log",
+        "time": "2026-10-20 22:18:10",
+        "message": "refresh stable remote mirror: done (4s)"
+      },
+      {
+        "log": "moodle.update.stables.log",
+        "time": "2026-10-20 22:18:12",
+        "message": "install stable_main dependencies: done (2s)"
+      },
+      {
+        "log": "moodle.update.stables.log",
+        "time": "2026-10-20 22:18:13",
+        "message": "moodle.update.stables: done (7s)"
+      },
+      {
+        "log": "moodle.update.stables.log",
+        "time": "2026-10-20 22:18:13",
+        "message": "exit moodle.update.stables rc=0"
+      },
+      {
+        "log": "moodle.update.upstreams.log",
+        "time": "2026-10-20 22:22:06",
+        "message": "start moodle.update.upstreams"
+      },
+      {
+        "log": "moodle.update.upstreams.log",
+        "time": "2026-10-20 22:22:10",
+        "message": "refresh upstream remote mirrors: done (4s)"
+      },
+      {
+        "log": "moodle.update.upstreams.log",
+        "time": "2026-10-20 22:23:22",
+        "message": "sync upstream repos: done (4s)"
+      },
+      {
+        "log": "moodle.update.upstreams.log",
+        "time": "2026-10-20 22:23:33",
+        "message": "snap upstream repos: done (11s)"
+      },
+      {
+        "log": "moodle.update.upstreams.log",
+        "time": "2026-10-20 22:23:34",
+        "message": "discover changed upstream gitlinks: done (0s)"
+      },
+      {
+        "log": "moodle.update.upstreams.log",
+        "time": "2026-10-20 22:23:34",
+        "message": "propagate pending submodule refs: done (0s)"
+      },
+      {
+        "log": "moodle.update.upstreams.log",
+        "time": "2026-10-20 22:23:34",
+        "message": "record processed upstream heads: done (0s)"
+      },
+      {
+        "log": "moodle.update.upstreams.log",
+        "time": "2026-10-20 22:23:34",
+        "message": "exit moodle.update.upstreams rc=0"
+      },
+      {
+        "log": "picker.update.cache.log",
+        "time": "2026-10-20 22:17:41",
+        "message": "exit picker.update.cache rc=0"
+      },
+      {
+        "log": "picker.update.cache.log",
+        "time": "2026-10-20 22:18:06",
+        "message": "start picker.update.cache"
+      },
+      {
+        "log": "picker.update.cache.log",
+        "time": "2026-10-20 22:19:46",
+        "message": "exit picker.update.cache rc=0"
+      },
+      {
+        "log": "picker.update.cache.log",
+        "time": "2026-10-20 22:20:07",
+        "message": "start picker.update.cache"
+      },
+      {
+        "log": "picker.update.cache.log",
+        "time": "2026-10-20 22:20:07",
+        "message": "exit picker.update.cache rc=0"
+      },
+      {
+        "log": "picker.update.cache.log",
+        "time": "2026-10-20 22:21:07",
+        "message": "start picker.update.cache"
+      },
+      {
+        "log": "picker.update.cache.log",
+        "time": "2026-10-20 22:21:07",
+        "message": "exit picker.update.cache rc=0"
+      },
+      {
+        "log": "picker.update.cache.log",
+        "time": "2026-10-20 22:22:06",
+        "message": "start picker.update.cache"
+      },
+      {
+        "log": "picker.update.cache.log",
+        "time": "2026-10-20 22:22:06",
+        "message": "exit picker.update.cache rc=0"
+      },
+      {
+        "log": "picker.update.cache.log",
+        "time": "2026-10-20 22:23:07",
+        "message": "start picker.update.cache"
+      },
+      {
+        "log": "picker.update.cache.log",
+        "time": "2026-10-20 22:23:07",
+        "message": "exit picker.update.cache rc=0"
+      },
+      {
+        "log": "picker.update.cache.log",
+        "time": "2026-10-20 22:24:07",
+        "message": "start picker.update.cache"
+      },
+      {
+        "log": "picker.update.cache.log",
+        "time": "2026-10-20 22:24:07",
+        "message": "exit picker.update.cache rc=0"
+      },
+      {
+        "log": "picker.update.cache.log",
+        "time": "2026-10-20 22:25:06",
+        "message": "start picker.update.cache"
+      },
+      {
+        "log": "picker.update.cache.log",
+        "time": "2026-10-20 22:25:06",
+        "message": "exit picker.update.cache rc=0"
+      },
+      {
+        "log": "picker.update.cache.log",
+        "time": "2026-10-20 22:26:07",
+        "message": "start picker.update.cache"
+      },
+      {
+        "log": "picker.update.cache.log",
+        "time": "2026-10-20 22:26:07",
+        "message": "exit picker.update.cache rc=0"
+      },
+      {
+        "log": "picker.update.cache.log",
+        "time": "2026-10-20 22:27:07",
+        "message": "start picker.update.cache"
+      },
+      {
+        "log": "picker.update.cache.log",
+        "time": "2026-10-20 22:27:07",
+        "message": "exit picker.update.cache rc=0"
+      },
+      {
+        "log": "picker.update.mrs.log",
+        "time": "2026-10-20 22:17:07",
+        "message": "start picker.update.mrs"
+      },
+      {
+        "log": "picker.update.mrs.log",
+        "time": "2026-10-20 22:17:14",
+        "message": "exit picker.update.mrs rc=0"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:17:03",
+        "message": "launched job: calendar.update.meetings"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:17:05",
+        "message": "launched job: moodle.update.colleagues"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:17:06",
+        "message": "launched job: picker.update.cache"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:17:07",
+        "message": "launched job: picker.update.mrs"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:18:03",
+        "message": "launched job: calendar.update.meetings"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:18:06",
+        "message": "launched job: moodle.update.stables"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:18:06",
+        "message": "launched job: picker.update.cache"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:19:03",
+        "message": "launched job: calendar.update.meetings"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:19:06",
+        "message": "launched job: picker.update.cache"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:20:03",
+        "message": "launched job: calendar.update.meetings"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:20:03",
+        "message": "launched job: calendar.update.refresh"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:20:05",
+        "message": "launched job: moodle.update.eassess-dev"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:20:07",
+        "message": "launched job: picker.update.cache"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:21:03",
+        "message": "launched job: calendar.update.meetings"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:21:04",
+        "message": "launched job: calendar.update.wrms"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:21:07",
+        "message": "launched job: picker.update.cache"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:22:02",
+        "message": "launched job: calendar.update.meetings"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:22:06",
+        "message": "launched job: moodle.update.upstreams"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:22:06",
+        "message": "launched job: picker.update.cache"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:23:02",
+        "message": "launched job: baiyan.scan"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:23:03",
+        "message": "launched job: calendar.update.meetings"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:23:04",
+        "message": "launched job: devdocs.update"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:23:07",
+        "message": "launched job: picker.update.cache"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:24:03",
+        "message": "launched job: calendar.update.meetings"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:24:07",
+        "message": "launched job: picker.update.cache"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:25:03",
+        "message": "launched job: calendar.update.meetings"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:25:03",
+        "message": "launched job: calendar.update.refresh"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:25:05",
+        "message": "launched job: moodle.update.eassess-dev"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:25:06",
+        "message": "launched job: picker.update.cache"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:26:03",
+        "message": "launched job: baiyan.urgent"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:26:03",
+        "message": "launched job: calendar.update.meetings"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:26:03",
+        "message": "launched job: calendar.update.wrms"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:26:05",
+        "message": "launched job: moodle.update.clients"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:26:07",
+        "message": "launched job: picker.update.cache"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:27:02",
+        "message": "launched job: baiyan.file"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:27:03",
+        "message": "launched job: calendar.update.meetings"
+      },
+      {
+        "log": "scheduler.log",
+        "time": "2026-10-20 22:27:07",
+        "message": "launched job: picker.update.cache"
+      }
+    ],
+    "cron_command_events": [
+      {
+        "realtime_us": 1792505821931773,
+        "message": "(root) CMD (cd / && run-parts --report /etc/cron.hourly)"
+      },
+      {
+        "realtime_us": 1792505821932322,
+        "message": "(cameronball) CMD (/home/cameronball/.local/bin/ziran cron --run)"
+      },
+      {
+        "realtime_us": 1792505881311263,
+        "message": "(cameronball) CMD (/home/cameronball/.local/bin/ziran cron --run)"
+      },
+      {
+        "realtime_us": 1792505941530511,
+        "message": "(cameronball) CMD (/home/cameronball/.local/bin/ziran cron --run)"
+      },
+      {
+        "realtime_us": 1792506001568342,
+        "message": "(cameronball) CMD (/home/cameronball/.local/bin/ziran cron --run)"
+      },
+      {
+        "realtime_us": 1792506061816369,
+        "message": "(cameronball) CMD (/home/cameronball/.local/bin/ziran cron --run)"
+      },
+      {
+        "realtime_us": 1792506121044614,
+        "message": "(cameronball) CMD (/home/cameronball/.local/bin/ziran cron --run)"
+      },
+      {
+        "realtime_us": 1792506181669983,
+        "message": "(cameronball) CMD (/home/cameronball/.local/bin/ziran cron --run)"
+      },
+      {
+        "realtime_us": 1792506241691262,
+        "message": "(cameronball) CMD (/home/cameronball/.local/bin/ziran cron --run)"
+      },
+      {
+        "realtime_us": 1792506301358604,
+        "message": "(cameronball) CMD (/home/cameronball/.local/bin/ziran cron --run)"
+      },
+      {
+        "realtime_us": 1792506361535709,
+        "message": "(cameronball) CMD (/home/cameronball/.local/bin/ziran cron --run)"
+      },
+      {
+        "realtime_us": 1792506421866429,
+        "message": "(cameronball) CMD (/home/cameronball/.local/bin/ziran cron --run)"
+      },
+      {
+        "realtime_us": 1792506481422361,
+        "message": "(cameronball) CMD (/home/cameronball/.local/bin/ziran cron --run)"
+      }
+    ]
+  },
+  "limitations": [
+    "Observed CPU differences are from noisy samples and do not establish power/heat savings",
+    "This compares official normal copying with Vino plus EVDI batching, not GPU encoding alone",
+    "One-second process scans miss substantial short-lived work; cron activity is confirmed but not all residual CPU is attributed",
+    "AMD PPT is not whole-laptop/wall power; thermal/fan readings are not controlled steady-state outcomes",
+    "Matched 20 Hz synthetic input and visual smoothness do not prove equal codec quality or physical 60 FPS output"
+  ],
+  "analyzer_sha256": "a149ba088c8d6f1b45f631c70eed91d383b3a5cd458ff6b3faa14830217015ba"
+}

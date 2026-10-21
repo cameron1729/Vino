@@ -83,9 +83,9 @@ pub(crate) fn record_stats(chunks: &[KVec<u8>]) -> (usize, usize, usize) {
 /// The record stream is chunked internally into small record-aligned buffers. The sink streams
 /// those fragments directly into persistent 65536-byte URBs, so the internal boundaries are
 /// not USB framing. Complete record strides are limited to 4080 bytes.
-pub(crate) fn frame_records(
+pub(crate) fn frame_records<S: core::ops::Deref<Target = [u8]>>(
     geometry: Geometry,
-    strips: &[KVec<u8>],
+    strips: &[S],
     connector: u8,
 ) -> Result<KVec<KVec<u8>>> {
     frame_records_with_boundary(geometry, strips, connector, None)
@@ -144,9 +144,9 @@ pub(crate) const NAVARRO_ORDINARY_ROWS: &[u8] = &[
     163, 165, 167, 169, 171, 173, 175, 177, 179,
 ];
 
-pub(crate) fn frame_records_with_boundary(
+pub(crate) fn frame_records_with_boundary<S: core::ops::Deref<Target = [u8]>>(
     geometry: Geometry,
-    strips: &[KVec<u8>],
+    strips: &[S],
     connector: u8,
     navarro_ordinary: Option<bool>,
 ) -> Result<KVec<KVec<u8>>> {
@@ -219,7 +219,7 @@ pub(crate) fn frame_records_with_boundary(
         // itself rather than from an assumed full-surface layout. That is what lets a frame
         // carry a *subset* of the surface and still arrive in the order the dock expects --
         // which it must, because this dock will not take a whole surface in one frame.
-        let rank = |s: &KVec<u8>| -> usize {
+        let rank = |s: &S| -> usize {
             let band = (strip_y(s) >> geometry.strip_h_shift()) as u8;
             ELLA_ROWS_1080P
                 .iter()

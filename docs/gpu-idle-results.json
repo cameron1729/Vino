@@ -1,0 +1,670 @@
+{
+  "schema": 1,
+  "date": "2026-10-19",
+  "scope": "Offline component CPU and consumer-wait measurements; no live CPU, power, heat or fan improvement established",
+  "artifact_directory": "gpu-artifacts/idle-capture-os4aq012",
+  "baseline_live_binary_sha256": "2f998dc67fc962e1dac49997b4d349137a37a5a31b5d8285dcaa66f2a031b77a",
+  "component_method": "Three alternating old/new pairs, each 30-frame warmup followed by at least one second, native release build; actual mailbox delivery functions plus RGB conversion and unchanged scanout planner; excludes EVDI ioctls, GPU encoding, USB and compositor",
+  "component_runs": [
+    {
+      "round": 0,
+      "backend": "before",
+      "case": "idle",
+      "frames": 588,
+      "cpu_ms_per_frame": 1.7062900578231295,
+      "wall_ms_per_frame": 1.7204697125850341
+    },
+    {
+      "round": 0,
+      "backend": "after",
+      "case": "idle",
+      "frames": 1200,
+      "cpu_ms_per_frame": 0.8318600666666667,
+      "wall_ms_per_frame": 0.8373701375
+    },
+    {
+      "round": 0,
+      "backend": "before",
+      "case": "last_pixel",
+      "frames": 576,
+      "cpu_ms_per_frame": 1.756234666666667,
+      "wall_ms_per_frame": 1.7562629895833333
+    },
+    {
+      "round": 0,
+      "backend": "after",
+      "case": "last_pixel",
+      "frames": 504,
+      "cpu_ms_per_frame": 2.001398628968253,
+      "wall_ms_per_frame": 2.0159579246031747
+    },
+    {
+      "round": 0,
+      "backend": "before",
+      "case": "moving",
+      "frames": 564,
+      "cpu_ms_per_frame": 1.7685400992907803,
+      "wall_ms_per_frame": 1.7769012322695037
+    },
+    {
+      "round": 0,
+      "backend": "after",
+      "case": "moving",
+      "frames": 576,
+      "cpu_ms_per_frame": 1.7455497586805557,
+      "wall_ms_per_frame": 1.7456313055555557
+    },
+    {
+      "round": 1,
+      "backend": "after",
+      "case": "idle",
+      "frames": 1260,
+      "cpu_ms_per_frame": 0.7940642079365086,
+      "wall_ms_per_frame": 0.7941961777777777
+    },
+    {
+      "round": 1,
+      "backend": "before",
+      "case": "idle",
+      "frames": 576,
+      "cpu_ms_per_frame": 1.7453676076388875,
+      "wall_ms_per_frame": 1.7462011579861112
+    },
+    {
+      "round": 1,
+      "backend": "after",
+      "case": "last_pixel",
+      "frames": 504,
+      "cpu_ms_per_frame": 1.985924882936511,
+      "wall_ms_per_frame": 1.986417376984127
+    },
+    {
+      "round": 1,
+      "backend": "before",
+      "case": "last_pixel",
+      "frames": 600,
+      "cpu_ms_per_frame": 1.693115161666666,
+      "wall_ms_per_frame": 1.693502716666667
+    },
+    {
+      "round": 1,
+      "backend": "after",
+      "case": "moving",
+      "frames": 612,
+      "cpu_ms_per_frame": 1.648069426470588,
+      "wall_ms_per_frame": 1.6481743839869278
+    },
+    {
+      "round": 1,
+      "backend": "before",
+      "case": "moving",
+      "frames": 600,
+      "cpu_ms_per_frame": 1.670901606666666,
+      "wall_ms_per_frame": 1.6721601266666668
+    },
+    {
+      "round": 2,
+      "backend": "before",
+      "case": "idle",
+      "frames": 576,
+      "cpu_ms_per_frame": 1.7446993819444458,
+      "wall_ms_per_frame": 1.7456036805555555
+    },
+    {
+      "round": 2,
+      "backend": "after",
+      "case": "idle",
+      "frames": 1236,
+      "cpu_ms_per_frame": 0.8148184822006463,
+      "wall_ms_per_frame": 0.815054177184466
+    },
+    {
+      "round": 2,
+      "backend": "before",
+      "case": "last_pixel",
+      "frames": 576,
+      "cpu_ms_per_frame": 1.7593216475694444,
+      "wall_ms_per_frame": 1.7596760590277778
+    },
+    {
+      "round": 2,
+      "backend": "after",
+      "case": "last_pixel",
+      "frames": 480,
+      "cpu_ms_per_frame": 2.090876289583332,
+      "wall_ms_per_frame": 2.09153570625
+    },
+    {
+      "round": 2,
+      "backend": "before",
+      "case": "moving",
+      "frames": 540,
+      "cpu_ms_per_frame": 1.8625298222222209,
+      "wall_ms_per_frame": 1.8628180499999998
+    },
+    {
+      "round": 2,
+      "backend": "after",
+      "case": "moving",
+      "frames": 516,
+      "cpu_ms_per_frame": 1.9709611763565942,
+      "wall_ms_per_frame": 1.9713494980620154
+    }
+  ],
+  "component_summary": [
+    {
+      "case": "idle",
+      "cpu_ms_per_frame": {
+        "before": 1.7321190158021542,
+        "after": 0.8135809189346072
+      },
+      "relative_cpu_change_percent": -53.02973343561885
+    },
+    {
+      "case": "last_pixel",
+      "cpu_ms_per_frame": {
+        "before": 1.736223825300926,
+        "after": 2.026066600496032
+      },
+      "relative_cpu_change_percent": 16.69386002953106
+    },
+    {
+      "case": "moving",
+      "cpu_ms_per_frame": {
+        "before": 1.7673238427265556,
+        "after": 1.7881934538359125
+      },
+      "relative_cpu_change_percent": 1.1808594783149662
+    }
+  ],
+  "consumer_wait_runs": [
+    {
+      "backend": "before",
+      "stage": "idle_consumer_wait",
+      "wakeups": 969,
+      "seconds": 2.000808881,
+      "cpu_seconds": 0.012630018
+    },
+    {
+      "backend": "after",
+      "stage": "idle_consumer_wait",
+      "wakeups": 40,
+      "seconds": 2.002769851,
+      "cpu_seconds": 0.0007464629999999958
+    }
+  ],
+  "consumer_wait_method": "Removed two-millisecond sleep versus actual new CaptureWorker::wait with an empty mailbox and 50 ms maintenance deadline; two seconds each, no device or producer",
+  "validation": {
+    "chimera_tests": 54,
+    "gpu_tests": 5,
+    "python_live_tests": 42,
+    "clippy": true,
+    "release_build": true,
+    "hardware_preflight": true,
+    "live_trial": "completed successfully; user confirms movement still smooth; matched live CPU/power reduction unverified"
+  },
+  "limitations": [
+    "RGB conversion and kernel capture still run for each completed EVDI update",
+    "The exact comparison adds about 0.29 ms when a change occurs at the last pixel",
+    "Busy-image component timings varied across short samples; no established active speedup",
+    "Idle device clocks and AMD power are device-wide, with other desktop activity present",
+    "No capture-rate throttling or change to codec, display mode or required retransmissions"
+  ],
+  "final_sha256": {
+    "revdi/chimera/src/trial.rs": "7668f96f395e2ee89f33e0548dc8f66d840fa7618695c92341153050719d80eb",
+    "revdi/chimera/src/trial_capture.rs": "f2337427241011fc2907b976704e636b8969c22e4ba327a6363ce2704537d6e3",
+    "revdi/chimera/src/trial_cursor.rs": "f52d24c0ae7b1e65ecb76100672348c13fd81e6e8185f2d415186bbc99390939",
+    "revdi/gpu-encoder/src/live.rs": "ed9cfae832c2d36a917377787cf2fbc2515d185325ac126dafef9c14479d54ae",
+    "tools/gpu/compare-live.py": "45c3e20ae30c751eebc01a0d4e8e504ecb1f834d3893f8dd2563b3e78804e5e3",
+    "tools/gpu/test_live_comparison.py": "37c2ceff714c91671fb28b2910b39a04c27a50cc9c53089160ceebe4934c0e91",
+    "revdi/target/release/vino-gpu-live": "f544e88dcc9fe6af8b2fe9293eced169de96ac6c1f23565fc98b5e1039440d4e"
+  },
+  "live_trial": {
+    "source_run": "/var/tmp/vino-live-twxtuai4",
+    "date": "2026-10-19",
+    "user_observation": {
+      "quote": "Yes, still smooth",
+      "scope": "Dragging Konsole and scrolling during second minute"
+    },
+    "start": {
+      "capture_mode": "independent",
+      "card": 0,
+      "cursor_mode": "evdi",
+      "dock": "8-1.2",
+      "duration_s": 120,
+      "elapsed_s": 3.4715e-05,
+      "encoder": "gpu",
+      "event": "start",
+      "fps_cap": 60,
+      "head": 0,
+      "monotonic_ns": 1429531744774940,
+      "source": "desktop"
+    },
+    "exit": {
+      "captures": 4973,
+      "elapsed_s": 121.836766755,
+      "error": null,
+      "event": "exit",
+      "frames_submitted": 4642,
+      "monotonic_ns": 1429653581507180,
+      "ok": true,
+      "process_cpu_seconds": 26.161989307,
+      "superseded_captures": 1236
+    },
+    "gpu_totals": {
+      "dispatches": 5048,
+      "elapsed_s": 121.82993541,
+      "encoded_strips": 291393,
+      "event": "gpu_totals",
+      "monotonic_ns": 1429653574675414,
+      "stages": {
+        "pack_ms": 809.1020238650442,
+        "readback_ms": 82.68023800000007,
+        "submit_wait_ms": 2006.7241289999968,
+        "transform_ms": 294.6672714648638,
+        "upload_ms": 1376.1065260000025
+      }
+    },
+    "recovery": {
+      "service_result": "success",
+      "errors": [],
+      "restored": true
+    },
+    "windows": [
+      {
+        "label": "first_minute",
+        "window_elapsed_s": [
+          1.815479294,
+          61.101597205
+        ],
+        "seconds": 59.286117911,
+        "driver_cpu_percent_one_core": 8.02421194307502,
+        "counter_deltas": {
+          "captures": 742,
+          "unchanged_captures": 75,
+          "superseded_captures": 134,
+          "presentation_loop_iterations": 2085,
+          "capture_event_waits": 1583,
+          "frames_submitted": 1375,
+          "bytes": 21981152,
+          "rgb_conversion_ms": 511.85311400000006,
+          "rgb_comparison_ms": 125.38602500000002
+        },
+        "rates_per_second": {
+          "captures": 12.515577442832173,
+          "unchanged_captures": 1.2650516283186157,
+          "superseded_captures": 2.2602255759292604,
+          "presentation_loop_iterations": 35.16843526725752,
+          "capture_event_waits": 26.701023035044916,
+          "frames_submitted": 23.19261318584129,
+          "bytes": 370763.89506558666,
+          "rgb_conversion_ms": 8.633608204342055,
+          "rgb_comparison_ms": 2.1149306012619826
+        },
+        "sensors": {
+          "reported_watts": {
+            "time_weighted_mean": 17.730955109069974,
+            "minimum": 9.238,
+            "maximum": 19.146
+          },
+          "temperature_c": {
+            "time_weighted_mean": 53.25875296964171,
+            "minimum": 51.0,
+            "maximum": 56.0
+          },
+          "gpu_clock_mhz": {
+            "time_weighted_mean": 800.0,
+            "minimum": 800.0,
+            "maximum": 800.0
+          },
+          "gpu_busy_percent": {
+            "time_weighted_mean": 2.2535168004601513,
+            "minimum": 1.0,
+            "maximum": 13.0
+          }
+        },
+        "threads": [
+          {
+            "tid": 404802,
+            "name": "worker",
+            "user_cpu_percent": 4.233706116106301,
+            "system_cpu_percent": 0.2530103256637232
+          },
+          {
+            "tid": 404855,
+            "name": "worker:disk$0",
+            "user_cpu_percent": 0.0,
+            "system_cpu_percent": 0.0
+          },
+          {
+            "tid": 404856,
+            "name": "worker:disk$0",
+            "user_cpu_percent": 0.0,
+            "system_cpu_percent": 0.0
+          },
+          {
+            "tid": 404914,
+            "name": "worker",
+            "user_cpu_percent": 0.0,
+            "system_cpu_percent": 0.0
+          },
+          {
+            "tid": 405263,
+            "name": "vino-capture",
+            "user_cpu_percent": 0.8939698173451552,
+            "system_cpu_percent": 2.6313073869027206
+          }
+        ],
+        "frame_records": {
+          "total": 1375,
+          "new_content": 544,
+          "retransmit_only": 831,
+          "duplicate_capture_with_owed_presentation": 21
+        },
+        "encode_wall_ms_total": 2499.918025
+      },
+      {
+        "label": "quiet_subwindow",
+        "window_elapsed_s": [
+          30.558574187,
+          59.084045424
+        ],
+        "seconds": 28.525471237,
+        "driver_cpu_percent_one_core": 5.871737928828521,
+        "counter_deltas": {
+          "captures": 208,
+          "unchanged_captures": 2,
+          "superseded_captures": 0,
+          "presentation_loop_iterations": 943,
+          "capture_event_waits": 653,
+          "frames_submitted": 605,
+          "bytes": 6014816,
+          "rgb_conversion_ms": 144.66034499999995,
+          "rgb_comparison_ms": 6.379500000000007
+        },
+        "rates_per_second": {
+          "captures": 7.2917287946572475,
+          "unchanged_captures": 0.07011277687170431,
+          "superseded_captures": 0.0,
+          "presentation_loop_iterations": 33.05817429500858,
+          "capture_event_waits": 22.891821648611455,
+          "frames_submitted": 21.209115003690552,
+          "bytes": 210857.7260661785,
+          "rgb_conversion_ms": 5.07126924558438,
+          "rgb_comparison_ms": 0.22364223002651906
+        },
+        "sensors": {
+          "reported_watts": {
+            "time_weighted_mean": 17.72020363870466,
+            "minimum": 10.199,
+            "maximum": 19.138
+          },
+          "temperature_c": {
+            "time_weighted_mean": 53.21412468955385,
+            "minimum": 51.0,
+            "maximum": 56.0
+          },
+          "gpu_clock_mhz": {
+            "time_weighted_mean": 800.0,
+            "minimum": 800.0,
+            "maximum": 800.0
+          },
+          "gpu_busy_percent": {
+            "time_weighted_mean": 1.0537706649701366,
+            "minimum": 1.0,
+            "maximum": 2.0
+          }
+        },
+        "threads": [
+          {
+            "tid": 404802,
+            "name": "worker",
+            "user_cpu_percent": 3.5406952320210676,
+            "system_cpu_percent": 0.1752819421792607
+          },
+          {
+            "tid": 404855,
+            "name": "worker:disk$0",
+            "user_cpu_percent": 0.0,
+            "system_cpu_percent": 0.0
+          },
+          {
+            "tid": 404856,
+            "name": "worker:disk$0",
+            "user_cpu_percent": 0.0,
+            "system_cpu_percent": 0.0
+          },
+          {
+            "tid": 404914,
+            "name": "worker",
+            "user_cpu_percent": 0.0,
+            "system_cpu_percent": 0.0
+          },
+          {
+            "tid": 405263,
+            "name": "vino-capture",
+            "user_cpu_percent": 0.5258458265377822,
+            "system_cpu_percent": 1.612593868049199
+          }
+        ],
+        "frame_records": {
+          "total": 605,
+          "new_content": 206,
+          "retransmit_only": 399,
+          "duplicate_capture_with_owed_presentation": 2
+        },
+        "encode_wall_ms_total": 1032.569026
+      },
+      {
+        "label": "second_minute",
+        "window_elapsed_s": [
+          62.15031969,
+          120.918814193
+        ],
+        "seconds": 58.768494503,
+        "driver_cpu_percent_one_core": 35.45572431489857,
+        "counter_deltas": {
+          "captures": 4149,
+          "unchanged_captures": 1124,
+          "superseded_captures": 1085,
+          "presentation_loop_iterations": 3390,
+          "capture_event_waits": 3788,
+          "frames_submitted": 3188,
+          "bytes": 261248368,
+          "rgb_conversion_ms": 2745.180634,
+          "rgb_comparison_ms": 1193.9560830000003
+        },
+        "rates_per_second": {
+          "captures": 70.5990520105667,
+          "unchanged_captures": 19.125894061189918,
+          "superseded_captures": 18.46227318184258,
+          "presentation_loop_iterations": 57.68396874326852,
+          "capture_event_waits": 64.45630489660802,
+          "frames_submitted": 54.246752906648986,
+          "bytes": 4445381.325646582,
+          "rgb_conversion_ms": 46.71177400775282,
+          "rgb_comparison_ms": 20.31626117186057
+        },
+        "sensors": {
+          "reported_watts": {
+            "time_weighted_mean": 19.149702518449367,
+            "minimum": 19.131,
+            "maximum": 19.173
+          },
+          "temperature_c": {
+            "time_weighted_mean": 55.08566495317049,
+            "minimum": 54.0,
+            "maximum": 56.0
+          },
+          "gpu_clock_mhz": {
+            "time_weighted_mean": 800.0,
+            "minimum": 800.0,
+            "maximum": 800.0
+          },
+          "gpu_busy_percent": {
+            "time_weighted_mean": 17.65851735229536,
+            "minimum": 2.0,
+            "maximum": 34.0
+          }
+        },
+        "threads": [
+          {
+            "tid": 404802,
+            "name": "worker",
+            "user_cpu_percent": 13.357497186863066,
+            "system_cpu_percent": 0.7997482392134575
+          },
+          {
+            "tid": 404855,
+            "name": "worker:disk$0",
+            "user_cpu_percent": 0.0,
+            "system_cpu_percent": 0.0
+          },
+          {
+            "tid": 404856,
+            "name": "worker:disk$0",
+            "user_cpu_percent": 0.0,
+            "system_cpu_percent": 0.0
+          },
+          {
+            "tid": 404914,
+            "name": "worker",
+            "user_cpu_percent": 0.0,
+            "system_cpu_percent": 0.0
+          },
+          {
+            "tid": 405263,
+            "name": "vino-capture",
+            "user_cpu_percent": 4.832521275247275,
+            "system_cpu_percent": 16.454394623817304
+          }
+        ],
+        "frame_records": {
+          "total": 3188,
+          "new_content": 1940,
+          "retransmit_only": 1248,
+          "duplicate_capture_with_owed_presentation": 999
+        },
+        "encode_wall_ms_total": 8061.652503
+      },
+      {
+        "label": "whole_steady_run",
+        "window_elapsed_s": [
+          1.815479294,
+          120.918814193
+        ],
+        "seconds": 119.103334899,
+        "driver_cpu_percent_one_core": 21.561848885068972,
+        "counter_deltas": {
+          "captures": 4908,
+          "unchanged_captures": 1199,
+          "superseded_captures": 1223,
+          "presentation_loop_iterations": 5513,
+          "capture_event_waits": 5402,
+          "frames_submitted": 4588,
+          "bytes": 283508416,
+          "rgb_conversion_ms": 3266.789936,
+          "rgb_comparison_ms": 1320.5147880000002
+        },
+        "rates_per_second": {
+          "captures": 41.20791415422582,
+          "unchanged_captures": 10.06688856375647,
+          "superseded_captures": 10.268394256442171,
+          "presentation_loop_iterations": 46.28753682401119,
+          "capture_event_waits": 45.35557299533983,
+          "frames_submitted": 38.52117158508314,
+          "bytes": 2380356.6561794095,
+          "rgb_conversion_ms": 27.42819870468151,
+          "rgb_comparison_ms": 11.087135294068808
+        },
+        "sensors": {
+          "reported_watts": {
+            "time_weighted_mean": 18.44339337435432,
+            "minimum": 9.238,
+            "maximum": 19.173
+          },
+          "temperature_c": {
+            "time_weighted_mean": 54.16672275387032,
+            "minimum": 51.0,
+            "maximum": 56.0
+          },
+          "gpu_clock_mhz": {
+            "time_weighted_mean": 800.0,
+            "minimum": 800.0,
+            "maximum": 800.0
+          },
+          "gpu_busy_percent": {
+            "time_weighted_mean": 9.852488082395855,
+            "minimum": 1.0,
+            "maximum": 34.0
+          }
+        },
+        "threads": [
+          {
+            "tid": 404802,
+            "name": "worker",
+            "user_cpu_percent": 8.731913349713702,
+            "system_cpu_percent": 0.5205563727713938
+          },
+          {
+            "tid": 404855,
+            "name": "worker:disk$0",
+            "user_cpu_percent": 0.0,
+            "system_cpu_percent": 0.0
+          },
+          {
+            "tid": 404856,
+            "name": "worker:disk$0",
+            "user_cpu_percent": 0.0,
+            "system_cpu_percent": 0.0
+          },
+          {
+            "tid": 404914,
+            "name": "worker",
+            "user_cpu_percent": 0.0,
+            "system_cpu_percent": 0.0
+          },
+          {
+            "tid": 405263,
+            "name": "vino-capture",
+            "user_cpu_percent": 2.8462679091855243,
+            "system_cpu_percent": 9.453975415170797
+          }
+        ],
+        "frame_records": {
+          "total": 4588,
+          "new_content": 2497,
+          "retransmit_only": 2091,
+          "duplicate_capture_with_owed_presentation": 1020
+        },
+        "encode_wall_ms_total": 10605.33533
+      }
+    ],
+    "last_health_totals": {
+      "captures": 4920,
+      "unchanged_captures": 1199,
+      "superseded_captures": 1223,
+      "frames_submitted": 4589,
+      "presentation_loop_iterations": 5514,
+      "capture_event_waits": 5404
+    },
+    "source_sha256": {
+      "events.jsonl": "2ef7d120eb48619c9246b5cdc17bfe71bdc3fce0c0615ca07eea33ee006a2908",
+      "recovery.json": "b5c39d489950c6a24b8f6d04584d31531c16af4d08d6d892bf3220bb74985e92"
+    },
+    "interpretation": {
+      "functional_trial_passed": true,
+      "idle_cpu_reduction_established_by_matched_live_comparison": false,
+      "power_or_heat_improvement_established": false,
+      "notes": [
+        "First minute was a normal desktop with small changing regions, not the previous static-image replay",
+        "During the quiet subwindow there were about seven new captures and 21 USB presentations per second, including required retransmissions",
+        "The unchanged-capture counter includes duplicates that still owe retransmissions; it is not the number of hashing passes skipped",
+        "Health counters precede the current presentation, so comparisons against emitted frame counts can differ at a window boundary",
+        "GPU/power sensors cover the whole AMD device and the run has no matched power baseline",
+        "Source stage timings changed: capture_ms now excludes readiness waiting",
+        "Root-owned staged worker and helper were not readable for independent hashing"
+      ]
+    }
+  }
+}

@@ -45,3 +45,6 @@ __pycache__/
 
 # Local build/verify helpers, not part of the project.
 /scratchpad/
+
+# GPU prototype research inputs and machine-specific measurements.
+/gpu-artifacts/

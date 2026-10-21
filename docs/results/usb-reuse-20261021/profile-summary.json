@@ -1,0 +1,1978 @@
+{
+  "date": "2026-10-21",
+  "source_run": "gpu-artifacts/usb-reuse-20261021/live-p0v63e_b",
+  "scope": "Direct capture + 128-row EVDI batching + reusable USB packets/transfers; profiled manual desktop use, not a matched before/after comparison",
+  "configuration": {
+    "event": "cpu-clock",
+    "frequency_hz": 199,
+    "call_graph": "dwarf,8192",
+    "clock": "CLOCK_MONOTONIC",
+    "scope": "worker and inherited threads/children; user and kernel CPU",
+    "perf_version": "perf version 7.0.14",
+    "kernel": "7.0.0-34-generic",
+    "worker_sha256": "35c15420bdc39111334f3e2f3d8bf301e50b1592408bc9be6c8be33b6ea5daf5",
+    "preflight_passed": true,
+    "note": "Sampling adds overhead; this run diagnoses CPU costs, not an unprofiled CPU/power comparison"
+  },
+  "start": {
+    "capture_mode": "independent",
+    "capture_storage": "direct",
+    "card": 0,
+    "cursor_mode": "client",
+    "dock": "8-1.2",
+    "duration_s": 120,
+    "elapsed_s": 4.3943e-05,
+    "encoder": "gpu",
+    "event": "start",
+    "fps_cap": 60,
+    "head": 0,
+    "monotonic_ns": 1608633592290479,
+    "source": "desktop"
+  },
+  "exit": {
+    "captures": 5538,
+    "elapsed_s": 121.846182887,
+    "error": null,
+    "event": "exit",
+    "frames_submitted": 5106,
+    "monotonic_ns": 1608755438424764,
+    "ok": true,
+    "process_cpu_seconds": 18.128510407,
+    "superseded_captures": 346
+  },
+  "recovery": {
+    "service_result": "success",
+    "errors": [],
+    "restored": true,
+    "evdi_copy_rows_restored": 0
+  },
+  "window": {
+    "elapsed_s": [
+      1.819967892,
+      121.274870697
+    ],
+    "monotonic_ns": [
+      1608635412209478,
+      1608754867112494
+    ],
+    "seconds": 119.454902805,
+    "process_cpu_seconds": 17.846259979000003,
+    "cpu_percent_one_core": 14.939746766302683
+  },
+  "threads": [
+    {
+      "name": "worker",
+      "user_seconds": 10.940000000000001,
+      "kernel_seconds": 0.6200000000000001,
+      "cpu_percent_one_core": 9.677292206976821
+    },
+    {
+      "name": "worker:disk$0",
+      "user_seconds": 0.0,
+      "kernel_seconds": 0.0,
+      "cpu_percent_one_core": 0.0
+    },
+    {
+      "name": "worker:disk$0",
+      "user_seconds": 0.0,
+      "kernel_seconds": 0.0,
+      "cpu_percent_one_core": 0.0
+    },
+    {
+      "name": "worker",
+      "user_seconds": 0.0,
+      "kernel_seconds": 0.0,
+      "cpu_percent_one_core": 0.0
+    },
+    {
+      "name": "vino-capture",
+      "user_seconds": 0.18,
+      "kernel_seconds": 6.090000000000001,
+      "cpu_percent_one_core": 5.248842745479642
+    }
+  ],
+  "counters": {
+    "captures": 5498,
+    "superseded_captures": 345,
+    "unchanged_captures": 2941,
+    "frames_submitted": 5072,
+    "bytes": 228989728,
+    "rgb_conversion_ms": 0.0,
+    "rgb_comparison_ms": 3927.13228,
+    "presentation_loop_iterations": 8060,
+    "capture_event_waits": 7326
+  },
+  "rates_per_second": {
+    "captures": 46.02573750342436,
+    "superseded_captures": 2.888119214019899,
+    "unchanged_captures": 24.620169879514556,
+    "frames_submitted": 42.45953812611283,
+    "bytes": 1916955.4586956243,
+    "rgb_conversion_ms": 0.0,
+    "rgb_comparison_ms": 32.87543824308919,
+    "presentation_loop_iterations": 67.47316192753735,
+    "capture_event_waits": 61.3285836577095
+  },
+  "superseded_capture_fraction": 0.06275009094216079,
+  "frames": {
+    "records": 5077,
+    "new_content": 2831,
+    "retransmit_only": 2246,
+    "duplicate_capture_presented": 1663,
+    "recorded_captures": 3879,
+    "recorded_fullscreen_damage": 3879
+  },
+  "profile": {
+    "sample_count": 3509,
+    "lost_samples": 0,
+    "unknown_leaf_samples": 0,
+    "samples_without_unwound_stack": 53,
+    "period_ns": 17633163625,
+    "sampled_cpu_seconds": 17.633163625,
+    "sampled_vs_process_cpu_difference_percent": -1.1940672961772147,
+    "categories": [
+      {
+        "name": "Strip change detection and hashing",
+        "period_ns": 5949748000,
+        "share_percent": 33.74180678255914
+      },
+      {
+        "name": "EVDI capture ioctls: copies, cache flushes and buffer checks",
+        "period_ns": 5809044500,
+        "share_percent": 32.9438586491878
+      },
+      {
+        "name": "Exact native-image comparison",
+        "period_ns": 3924622625,
+        "share_percent": 22.25705329153605
+      },
+      {
+        "name": "Other CPU work",
+        "period_ns": 1763818875,
+        "share_percent": 10.00284981476204
+      },
+      {
+        "name": "Userspace memory copies (caller sometimes unavailable)",
+        "period_ns": 185929625,
+        "share_percent": 1.054431461954973
+      }
+    ],
+    "capture_stack_details": [
+      {
+        "name": "_copy_to_user",
+        "period_ns": 4618089875,
+        "share_percent": 26.189797663151893
+      },
+      {
+        "name": "drm_clflush_virt_range",
+        "period_ns": 1005025000,
+        "share_percent": 5.699629524080935
+      },
+      {
+        "name": "__check_object_size",
+        "period_ns": 155778875,
+        "share_percent": 0.883442576232545
+      }
+    ],
+    "main_kernel_leaves": [
+      {
+        "name": "_raw_spin_unlock_irq",
+        "period_ns": 135678375,
+        "share_percent": 0.7694499857509262
+      },
+      {
+        "name": "delay_halt_mwaitx",
+        "period_ns": 40201000,
+        "share_percent": 0.2279851809632374
+      },
+      {
+        "name": "__kmalloc_noprof",
+        "period_ns": 35175875,
+        "share_percent": 0.19948703334283271
+      },
+      {
+        "name": "amdgpu_device_rreg",
+        "period_ns": 20100500,
+        "share_percent": 0.1139925904816187
+      },
+      {
+        "name": "kfree",
+        "period_ns": 15075375,
+        "share_percent": 0.08549444286121402
+      },
+      {
+        "name": "__kvmalloc_node_noprof",
+        "period_ns": 15075375,
+        "share_percent": 0.08549444286121402
+      },
+      {
+        "name": "_copy_from_user",
+        "period_ns": 10050250,
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "name": "drm_syncobj_find",
+        "period_ns": 10050250,
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "name": "srso_alias_safe_ret",
+        "period_ns": 10050250,
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "name": "amdgpu_drm_ioctl",
+        "period_ns": 10050250,
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "name": "_raw_spin_unlock_irqrestore",
+        "period_ns": 10050250,
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "name": "amdgpu_gmc_get_pde_for_bo",
+        "period_ns": 10050250,
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "name": "mutex_lock",
+        "period_ns": 10050250,
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "name": "do_syscall_64",
+        "period_ns": 10050250,
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "name": "amdgpu_ctx_wait_prev_fence",
+        "period_ns": 10050250,
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "name": "findintfep",
+        "period_ns": 10050250,
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "name": "ttm_resource_compatible",
+        "period_ns": 10050250,
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "name": "__schedule",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "amdgpu_vram_mgr_compatible",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "usbdev_do_ioctl",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "amdgpu_cs_p2_syncobj_timeline_signal.isra.0",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "amdgpu_cs_vm_handling",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "get_itimerspec64",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "xas_load",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "do_dentry_open",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "__pi_memset",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "ttm_resource_move_to_lru_tail",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "futex_hash",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "seq_read_iter",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "mntput",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "dma_fence_release",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "amdgpu_sync_fence",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "do_timerfd_settime",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "finish_task_switch.isra.0",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "schedule",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "propagate_protected_usage",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "amdgpu_sync_resv",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "kernel_init_pages",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "kmem_cache_alloc_noprof",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "drm_ioctl",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "alloc_frozen_pages_noprof",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "drm_gem_object_lookup",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "amdgpu_vm_bo_update",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "futex_wait_setup",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "kmem_cache_free",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "rcu_cblist_dequeue",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "rmqueue.isra.0",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "__kmalloc_cache_noprof",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "__task_pid_nr_ns",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "set_nlink",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "tlb_remove_table_rcu",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "amdgpu_ttm_tt_get_usermm",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "_raw_spin_unlock",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "sched_balance_update_blocked_averages",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "security_file_ioctl",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "ksys_read",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "fdget",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "[unknown]",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "do_poll.constprop.0",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "idr_get_free",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "name": "queue_work_on",
+        "period_ns": 5025125,
+        "share_percent": 0.028498147620404674
+      }
+    ],
+    "capture_stack_details_note": "Inclusive stacks; do not add these to the exclusive categories",
+    "leaves": [
+      {
+        "samples": 1184,
+        "period": 5949748000,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] <vino_chimera::scanout::HeadScanout>::plan_surface",
+        "share_percent": 33.74180678255914
+      },
+      {
+        "samples": 919,
+        "period": 4618089875,
+        "comm": "vino-capture",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] _copy_to_user",
+        "share_percent": 26.189797663151893
+      },
+      {
+        "samples": 781,
+        "period": 3924622625,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] vino_chimera::surface::xrgb8888_eq",
+        "share_percent": 22.25705329153605
+      },
+      {
+        "samples": 200,
+        "period": 1005025000,
+        "comm": "vino-capture",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] drm_clflush_virt_range",
+        "share_percent": 5.699629524080935
+      },
+      {
+        "samples": 35,
+        "period": 175879375,
+        "comm": "worker",
+        "dso": "libc.so.6",
+        "symbol": "[.] __memmove_avx512_unaligned_erms",
+        "share_percent": 0.9974351667141637
+      },
+      {
+        "samples": 27,
+        "period": 135678375,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] _raw_spin_unlock_irq",
+        "share_percent": 0.7694499857509262
+      },
+      {
+        "samples": 27,
+        "period": 135678375,
+        "comm": "worker",
+        "dso": "libc.so.6",
+        "symbol": "[.] _int_malloc",
+        "share_percent": 0.7694499857509262
+      },
+      {
+        "samples": 26,
+        "period": 130653250,
+        "comm": "vino-capture",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] find_vmap_area",
+        "share_percent": 0.7409518381305216
+      },
+      {
+        "samples": 12,
+        "period": 60301500,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] vino_chimera::kvino::kernel_tree::video::haar::damage_strip_coords",
+        "share_percent": 0.3419777714448561
+      },
+      {
+        "samples": 8,
+        "period": 40201000,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] delay_halt_mwaitx",
+        "share_percent": 0.2279851809632374
+      },
+      {
+        "samples": 8,
+        "period": 40201000,
+        "comm": "vino-capture",
+        "dso": "worker",
+        "symbol": "[.] vino_chimera::trial_capture::capture_direct",
+        "share_percent": 0.2279851809632374
+      },
+      {
+        "samples": 8,
+        "period": 40201000,
+        "comm": "worker",
+        "dso": "libc.so.6",
+        "symbol": "[.] _int_free_merge_chunk",
+        "share_percent": 0.2279851809632374
+      },
+      {
+        "samples": 8,
+        "period": 40201000,
+        "comm": "worker",
+        "dso": "libc.so.6",
+        "symbol": "[.] malloc",
+        "share_percent": 0.2279851809632374
+      },
+      {
+        "samples": 7,
+        "period": 35175875,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] __kmalloc_noprof",
+        "share_percent": 0.19948703334283271
+      },
+      {
+        "samples": 6,
+        "period": 30150750,
+        "comm": "vino-capture",
+        "dso": "worker",
+        "symbol": "[.] <vino_chimera::capture_pool::WriteLease>::complete_grab",
+        "share_percent": 0.17098888572242804
+      },
+      {
+        "samples": 5,
+        "period": 25125625,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] <vino_chimera::scanout::HeadScanout>::content_changes",
+        "share_percent": 0.14249073810202337
+      },
+      {
+        "samples": 5,
+        "period": 25125625,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] <vino_chimera::session::ControlSession>::owes_repaint",
+        "share_percent": 0.14249073810202337
+      },
+      {
+        "samples": 5,
+        "period": 25125625,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] <vino_chimera::surface::NativeSurface>::rgb_at",
+        "share_percent": 0.14249073810202337
+      },
+      {
+        "samples": 4,
+        "period": 20100500,
+        "comm": "worker",
+        "dso": "[amdgpu]",
+        "symbol": "[k] amdgpu_device_rreg",
+        "share_percent": 0.1139925904816187
+      },
+      {
+        "samples": 4,
+        "period": 20100500,
+        "comm": "vino-capture",
+        "dso": "libc.so.6",
+        "symbol": "[.] __poll",
+        "share_percent": 0.1139925904816187
+      },
+      {
+        "samples": 4,
+        "period": 20100500,
+        "comm": "vino-capture",
+        "dso": "worker",
+        "symbol": "[.] evdi_handle_events",
+        "share_percent": 0.1139925904816187
+      },
+      {
+        "samples": 4,
+        "period": 20100500,
+        "comm": "worker",
+        "dso": "libc.so.6",
+        "symbol": "[.] malloc_consolidate",
+        "share_percent": 0.1139925904816187
+      },
+      {
+        "samples": 4,
+        "period": 20100500,
+        "comm": "worker",
+        "dso": "libc.so.6",
+        "symbol": "[.] unlink_chunk.isra.0",
+        "share_percent": 0.1139925904816187
+      },
+      {
+        "samples": 4,
+        "period": 20100500,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] core::slice::sort::unstable::quicksort::quicksort::<((usize, u16), usize), <((usize, u16), usize) as core::cmp::PartialOrd>::lt>",
+        "share_percent": 0.1139925904816187
+      },
+      {
+        "samples": 3,
+        "period": 15075375,
+        "comm": "vino-capture",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] futex_wake_mark",
+        "share_percent": 0.08549444286121402
+      },
+      {
+        "samples": 3,
+        "period": 15075375,
+        "comm": "vino-capture",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] vfs_read",
+        "share_percent": 0.08549444286121402
+      },
+      {
+        "samples": 3,
+        "period": 15075375,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] __kvmalloc_node_noprof",
+        "share_percent": 0.08549444286121402
+      },
+      {
+        "samples": 3,
+        "period": 15075375,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] kfree",
+        "share_percent": 0.08549444286121402
+      },
+      {
+        "samples": 3,
+        "period": 15075375,
+        "comm": "vino-capture",
+        "dso": "[vdso]",
+        "symbol": "[.] 0x0000000000000940",
+        "share_percent": 0.08549444286121402
+      },
+      {
+        "samples": 3,
+        "period": 15075375,
+        "comm": "vino-capture",
+        "dso": "libc.so.6",
+        "symbol": "[.] __GI___ioctl",
+        "share_percent": 0.08549444286121402
+      },
+      {
+        "samples": 3,
+        "period": 15075375,
+        "comm": "vino-capture",
+        "dso": "worker",
+        "symbol": "[.] <evdi::safe::Device>::try_next_external_frame",
+        "share_percent": 0.08549444286121402
+      },
+      {
+        "samples": 3,
+        "period": 15075375,
+        "comm": "worker",
+        "dso": "libc.so.6",
+        "symbol": "[.] _int_realloc",
+        "share_percent": 0.08549444286121402
+      },
+      {
+        "samples": 3,
+        "period": 15075375,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] <vino_gpu_live::Log as vino_chimera::trial::Observer>::progress",
+        "share_percent": 0.08549444286121402
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "vino-capture",
+        "dso": "[evdi]",
+        "symbol": "[k] evdi_painter_grabpix_ioctl",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "vino-capture",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] __check_object_size",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "vino-capture",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] _raw_spin_lock",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "vino-capture",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] _raw_spin_unlock_irqrestore",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "vino-capture",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] begin_current_label_crit_section",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "vino-capture",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] x64_sys_call",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "worker",
+        "dso": "[amdgpu]",
+        "symbol": "[k] amdgpu_ctx_wait_prev_fence",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "worker",
+        "dso": "[amdgpu]",
+        "symbol": "[k] amdgpu_drm_ioctl",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "worker",
+        "dso": "[amdgpu]",
+        "symbol": "[k] amdgpu_gmc_get_pde_for_bo",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] _copy_from_user",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] _raw_spin_unlock_irqrestore",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] do_syscall_64",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] drm_syncobj_find",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] findintfep",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] mutex_lock",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] srso_alias_safe_ret",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "worker",
+        "dso": "[ttm]",
+        "symbol": "[k] ttm_resource_compatible",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "vino-capture",
+        "dso": "libc.so.6",
+        "symbol": "[.] __memmove_avx512_unaligned_erms",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "vino-capture",
+        "dso": "libc.so.6",
+        "symbol": "[.] cfree@GLIBC_2.2.5",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "vino-capture",
+        "dso": "worker",
+        "symbol": "[.] <evdi::safe::Device>::events",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "vino-capture",
+        "dso": "worker",
+        "symbol": "[.] <vino_chimera::capture_pool::WriteLease as core::ops::drop::Drop>::drop",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "vino-capture",
+        "dso": "worker",
+        "symbol": "[.] evdi::safe::update_ready",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "worker",
+        "dso": "libc.so.6",
+        "symbol": "[.] _int_free",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "worker",
+        "dso": "libc.so.6",
+        "symbol": "[.] cfree@GLIBC_2.2.5",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "worker",
+        "dso": "libc.so.6",
+        "symbol": "[.] clock_gettime@@GLIBC_2.17",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] <&mut <vino_chimera::scanout::HeadScanout>::encode_view_with<vino_gpu_encoder::gpu::GpuEncoder>::{closure#0} as core::ops::function::FnMut<(&(usize, usize),)>>::call_mut",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] <core::iter::adapters::map::Map<core::iter::adapters::enumerate::Enumerate<core::iter::adapters::map::Map<core::slice::iter::Iter<&alloc::vec::Vec<u8>>, vino_chimera::scanout::order_strips_for_framing<&alloc::vec::Vec<u8>>::{closure#0}>>, <[&alloc::vec::Vec<u8>]>::sort_by_cached_key<(usize, u16), vino_chimera::scanout::order_strips_for_framing<&alloc::vec::Vec<u8>>::{closure#0}>::{closure#1}> as core::iter::traits::iterator::Iterator>::fold::<(), core::iter::traits::iterator::Iterator::for_each::call<((usize, u16), usize), <alloc::vec::Vec<((usize, u16), usize)>>::extend_trusted<core::iter::adapters::map::Map<core::iter::adapters::enumerate::Enumerate<core::iter::adapters::map::Map<core::slice::iter::Iter<&alloc::vec::Vec<u8>>, vino_chimera::scanout::order_strips_for_framing<&alloc::vec::Vec<u8>>::{closure#0}>>, <[&alloc::vec::Vec<u8>]>::sort_by_cached_key<(usize, u16), vino_chimera::scanout::order_strips_for_framing<&alloc::vec::Vec<u8>>::{closure#0}>::{closure#1}>>::{closure#0}>::{closure#0}>",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] <vino_chimera::capture_pool::FrameLease as core::ops::drop::Drop>::drop",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] <vino_chimera::kvino::kernel_tree::api::DockProfile>::strip_dims",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] <vino_chimera::scanout::HeadScanout>::encode_view_with::<vino_gpu_encoder::gpu::GpuEncoder>",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] <vino_chimera::trial_capture::CaptureWorker>::diagnostics",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] log_v",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] reap_for_handle",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] vino_chimera::kvino::kernel_tree::video::haar::records::frame_records_with_boundary::<&[u8]>::{closure#1}",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] vino_chimera::scanout::order_strips_for_framing::<&alloc::vec::Vec<u8>>",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 2,
+        "period": 10050250,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] vino_driver::usb::out_complete",
+        "share_percent": 0.05699629524080935
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "[amdgpu]",
+        "symbol": "[k] amdgpu_dma_buf_begin_cpu_access",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] __srcu_read_unlock",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] _raw_spin_unlock_irq",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] check_heap_object",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] check_stack_object",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] dma_buf_end_cpu_access",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] do_poll.constprop.0",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] do_sys_poll",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] do_syscall_64",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] fdget_pos",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] fput",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] ktime_get_ts64",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] mutex_unlock",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] poll_freewait",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] set_normalized_timespec64",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] srso_alias_safe_ret",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] timespec64_add_safe",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[amdgpu]",
+        "symbol": "[k] amdgpu_cs_p2_syncobj_timeline_signal.isra.0",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[amdgpu]",
+        "symbol": "[k] amdgpu_cs_vm_handling",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[amdgpu]",
+        "symbol": "[k] amdgpu_sync_fence",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[amdgpu]",
+        "symbol": "[k] amdgpu_sync_resv",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[amdgpu]",
+        "symbol": "[k] amdgpu_ttm_tt_get_usermm",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[amdgpu]",
+        "symbol": "[k] amdgpu_vm_bo_update",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[amdgpu]",
+        "symbol": "[k] amdgpu_vram_mgr_compatible",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] __kmalloc_cache_noprof",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] __pi_memset",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] __schedule",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] __task_pid_nr_ns",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] _raw_spin_unlock",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] alloc_frozen_pages_noprof",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] dma_fence_release",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] do_dentry_open",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] do_poll.constprop.0",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] do_timerfd_settime",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] drm_gem_object_lookup",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] drm_ioctl",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] fdget",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] finish_task_switch.isra.0",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] futex_hash",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] futex_wait_setup",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] get_itimerspec64",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] idr_get_free",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] kernel_init_pages",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] kmem_cache_alloc_noprof",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] kmem_cache_free",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] ksys_read",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] mntput",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] propagate_protected_usage",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] queue_work_on",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] rcu_cblist_dequeue",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] rmqueue.isra.0",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] sched_balance_update_blocked_averages",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] schedule",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] security_file_ioctl",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] seq_read_iter",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] set_nlink",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] tlb_remove_table_rcu",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] usbdev_do_ioctl",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[kernel.kallsyms]",
+        "symbol": "[k] xas_load",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[ttm]",
+        "symbol": "[k] ttm_resource_move_to_lru_tail",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "libc.so.6",
+        "symbol": "[.] __memset_avx512_unaligned_erms",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "libc.so.6",
+        "symbol": "[.] clock_gettime@@GLIBC_2.17",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "libc.so.6",
+        "symbol": "[.] malloc",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "worker",
+        "symbol": "[.] <alloc::raw_vec::RawVecInner<_>>::reserve::do_reserve_and_handle::<alloc::alloc::Global>",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "worker",
+        "symbol": "[.] <evdi::safe::Device>::poll_events",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "worker",
+        "symbol": "[.] <std::sync::nonpoison::condvar::Condvar>::notify_one",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "worker",
+        "symbol": "[.] <vino_chimera::capture_pool::CapturePool>::acquire",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "worker",
+        "symbol": "[.] <vino_gpu_encoder::gpu::CaptureAllocation as vino_chimera::capture_pool::CaptureStorage>::mapped_ptr",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "worker",
+        "symbol": "[.] __rustc::__rdl_alloc",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "worker",
+        "symbol": "[.] __rustc::__rust_dealloc",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "worker",
+        "symbol": "[.] evdi::grab_pixels_checked",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "vino-capture",
+        "dso": "worker",
+        "symbol": "[.] evdi::safe::cursor_move",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "[vdso]",
+        "symbol": "[.] 0x000000000000099a",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "libc.so.6",
+        "symbol": "[.] __memcmp_evex_movbe",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "libc.so.6",
+        "symbol": "[.] __memset_avx512_unaligned_erms",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "libc.so.6",
+        "symbol": "[.] __strchrnul_evex",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "libc.so.6",
+        "symbol": "[.] pthread_setspecific@GLIBC_2.2.5",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "libc.so.6",
+        "symbol": "[.] realloc",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "libc.so.6",
+        "symbol": "[.] timerfd_settime",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "libdrm.so.2.125.0",
+        "symbol": "[.] ioctl@plt",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "libgcc_s.so.1",
+        "symbol": "[.] __popcountdi2",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "libvulkan_radeon.so",
+        "symbol": "[.] __popcountdi2@plt",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "libvulkan_radeon.so",
+        "symbol": "[.] 0x00000000000f1ed1",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "libvulkan_radeon.so",
+        "symbol": "[.] 0x0000000000105a26",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "libvulkan_radeon.so",
+        "symbol": "[.] 0x00000000001065d2",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "libvulkan_radeon.so",
+        "symbol": "[.] 0x0000000000180004",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "libvulkan_radeon.so",
+        "symbol": "[.] 0x0000000000180041",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "libvulkan_radeon.so",
+        "symbol": "[.] 0x0000000000192dde",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "libvulkan_radeon.so",
+        "symbol": "[.] 0x00000000001e4f41",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "libvulkan_radeon.so",
+        "symbol": "[.] 0x00000000002b2c74",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] <alloc::collections::btree::map::BTreeMap<alloc::string::String, serde_json::value::Value>>::insert",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] <alloc::collections::btree::node::Handle<alloc::collections::btree::node::NodeRef<alloc::collections::btree::node::marker::Mut, alloc::string::String, serde_json::value::Value, alloc::collections::btree::node::marker::Leaf>, alloc::collections::btree::node::marker::Edge>>::insert_recursing::<alloc::alloc::Global, <alloc::collections::btree::map::entry::VacantEntry<alloc::string::String, serde_json::value::Value>>::insert_entry::{closure#0}>",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] <alloc::raw_vec::RawVecInner<_>>::reserve::do_reserve_and_handle::<alloc::alloc::Global>",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] <alloc::raw_vec::RawVecInner>::finish_grow",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] <alloc::raw_vec::RawVecInner>::try_allocate_in",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] <core::fmt::Formatter>::pad_integral",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] <std::sys::sync::condvar::futex::Condvar>::wait_optional_timeout",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] <str>::trim_matches::<<char>::is_whitespace>",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] <vino_chimera::kvino::kernel_tree::api::DockProfile>::frame_band_order",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] <vino_chimera::scanout::HeadScanout>::plan_view",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] <vino_chimera::session::FramePackets>::append",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] <vino_chimera::session::FramePackets>::rebuild",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] <vino_chimera::trial_capture::CaptureWorker>::check",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] <vino_driver::usb::AsyncOut>::reap",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] <vino_driver::usb::Dock>::recv_frame_raw_timeout",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] <vino_gpu_live::Log as vino_chimera::trial::Observer>::frame",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] <vino_gpu_live::Log>::emit",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] __rustc::__rdl_alloc",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] __rustc::__rust_realloc",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] libusb_unref_device",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] op_submit_transfer",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] submit_bulk_transfer",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] vino_chimera::kvino::kernel_tree::api::frames_out",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] vino_chimera::kvino::kernel_tree::video::haar::records::frame_records_with_boundary::<&[u8]>",
+        "share_percent": 0.028498147620404674
+      },
+      {
+        "samples": 1,
+        "period": 5025125,
+        "comm": "worker",
+        "dso": "worker",
+        "symbol": "[.] vino_chimera::session::receive_optional",
+        "share_percent": 0.028498147620404674
+      }
+    ]
+  },
+  "input_sha256": {
+    "profile.data": "d7d8cd4b8aeed38a788cf743ac3d79f561f944b3deacaef05a010e1100975297",
+    "profile-kallsyms": "66d7c42a1915c79134f7860ecface9416f808322e6c33662526296f66ba8ae26",
+    "profile.json": "4fe6f12cde33e52bf372551e06b0ae443e746c79df07e8eeb93ddbfa4159b051",
+    "events.jsonl": "e821f0549ce99608b6df58a02b907dd49bd11b8bd334f213f21fdbb727d02e61",
+    "recovery.json": "0a28c5ba39fc88b788b51bc5cef50e6a68e6ba89ee62d6049636a627ed059f72",
+    "worker": "35c15420bdc39111334f3e2f3d8bf301e50b1592408bc9be6c8be33b6ea5daf5"
+  },
+  "analysis_sha256": "0d27e7f11390020dd3ccd96c44ce7a79692d1cb07370b2e597c3a79e795580f8",
+  "limitations": [
+    "This is a sampled CPU attribution, not an estimate of removable CPU or an unprofiled benchmark",
+    "Percentages in profile categories are shares of worker CPU, not percentages of a CPU core",
+    "User call stacks sometimes end early despite recognized leaf symbols; unspecified memory copies/comparisons are not assigned to a single caller",
+    "The retained CPU-clock periods agree with process CPU within 2%; sampling and timer accounting are not identical",
+    "No equal-work before/after trial or power/fan conclusion is made",
+    "Captures replaced in the mailbox still perform necessary EVDI acknowledgements; they cannot simply be dropped before grabbing",
+    "Full-screen damage counts cover emitted frame records, not all captures"
+  ]
+}

@@ -1,0 +1,772 @@
+--- a/evdi_drm.h
++++ b/evdi_drm.h
+@@ -136,4 +136,6 @@
+ #define DRM_IOCTL_EVDI_ENABLE_CURSOR_EVENTS DRM_IOWR(DRM_COMMAND_BASE +  \
+ 	DRM_EVDI_ENABLE_CURSOR_EVENTS, struct drm_evdi_enable_cursor_events)
+ 
++#include "evdi_shared_capture.h"
++
+ #endif /* __EVDI_UAPI_DRM_H__ */
+--- a/evdi_drm_drv.h
++++ b/evdi_drm_drv.h
+@@ -164,6 +164,11 @@
+ int evdi_painter_enable_cursor_events_ioctl(struct drm_device *drm_dev, void *data,
+ 					  struct drm_file *file);
+ 
++int evdi_painter_acquire_frame_ioctl(struct drm_device *drm_dev, void *data,
++				   struct drm_file *file);
++int evdi_painter_release_frame_ioctl(struct drm_device *drm_dev, void *data,
++				   struct drm_file *file);
++
+ int evdi_painter_init(struct evdi_device *evdi);
+ void evdi_painter_cleanup(struct evdi_painter *painter);
+ void evdi_painter_set_scanout_buffer(struct evdi_painter *painter,
+--- a/evdi_drm_drv.c
++++ b/evdi_drm_drv.c
+@@ -48,6 +48,8 @@
+ 	DRM_IOCTL_DEF_DRV(EVDI_GRABPIX, evdi_painter_grabpix_ioctl, EVDI_DRM_UNLOCKED),
+ 	DRM_IOCTL_DEF_DRV(EVDI_DDCCI_RESPONSE, evdi_painter_ddcci_response_ioctl, EVDI_DRM_UNLOCKED),
+ 	DRM_IOCTL_DEF_DRV(EVDI_ENABLE_CURSOR_EVENTS, evdi_painter_enable_cursor_events_ioctl, EVDI_DRM_UNLOCKED),
++	DRM_IOCTL_DEF_DRV(EVDI_ACQUIRE_FRAME, evdi_painter_acquire_frame_ioctl, EVDI_DRM_UNLOCKED),
++	DRM_IOCTL_DEF_DRV(EVDI_RELEASE_FRAME, evdi_painter_release_frame_ioctl, EVDI_DRM_UNLOCKED),
+ };
+ 
+ #if defined(EVDI_HAVE_IOSYS_MAP) || defined(EVDI_HAVE_DMA_BUF_MAP)
+--- a/evdi_painter.c
++++ b/evdi_painter.c
+@@ -36,6 +36,13 @@
+ #include <linux/vt_kern.h>
+ #include <linux/vmalloc.h>
+ #include <linux/overflow.h>
++#include <linux/dma-resv.h>
++#include <linux/dma-fence.h>
++#include <linux/sync_file.h>
++#include <linux/file.h>
++#include <linux/timer.h>
++#include <drm/drm_prime.h>
++#include <linux/dma-mapping.h>
+ #ifdef EVDI_HAVE_COMPILER_ATTRIBUTES_H
+ #include <linux/compiler_attributes.h>
+ #endif
+@@ -102,6 +109,12 @@
+ MODULE_PARM_DESC(copy_batch_rows,
+ 	"Maximum contiguous full-width rows per capture copy (0/1: per-row)");
+ 
++static unsigned int evdi_shared_capture_abi = DRM_EVDI_SHARED_CAPTURE_VERSION;
++module_param_named(shared_capture_abi, evdi_shared_capture_abi, uint, 0444);
++MODULE_PARM_DESC(shared_capture_abi, "Experimental shared capture ABI version");
++
++struct evdi_shared_capture;
++
+ struct evdi_painter {
+ 	bool is_connected;
+ 	struct edid *edid;
+@@ -111,6 +124,11 @@
+ 	struct drm_clip_rect dirty_rects[MAX_DIRTS];
+ 	int num_dirts;
+ 	struct evdi_framebuffer *scanout_fb;
++	struct evdi_shared_capture *shared_capture;
++	u64 shared_next_token;
++	bool shared_powered;
++	struct dma_buf *shared_proxies[4];
++	u32 shared_proxy_next;
+ 
+ 	struct drm_file *drm_filp;
+ 	struct drm_device *drm_device;
+@@ -749,6 +767,557 @@
+ 	painter->vblank = NULL;
+ }
+ 
++/* BEGIN VINO_SHARED_CAPTURE_IMPLEMENTATION */
++/* SPDX-License-Identifier: GPL-2.0-only */
++/* EVDI's original static DMA-buf import already pins these system pages. The
++ * alias has its own reservation, so importing it for the GPU read does not
++ * make amdgpu wait on our READ guard on the producer's original reservation.
++ */
++struct evdi_shared_fence;
++static void evdi_shared_proxy_retired(struct evdi_shared_fence *guard);
++
++struct evdi_shared_proxy {
++	struct evdi_shared_fence *guard;
++	struct evdi_gem_object *source;
++	struct page **pages;
++	unsigned int npages;
++};
++
++static struct sg_table *evdi_shared_proxy_map(struct dma_buf_attachment *attach,
++					    enum dma_data_direction direction)
++{
++	struct evdi_shared_proxy *proxy = attach->dmabuf->priv;
++	struct sg_table *sg;
++	int ret;
++
++	sg = kzalloc(sizeof(*sg), GFP_KERNEL);
++	if (!sg)
++		return ERR_PTR(-ENOMEM);
++	ret = sg_alloc_table_from_pages_segment(sg, proxy->pages, proxy->npages,
++			0, proxy->source->base.size,
++			round_down(dma_get_max_seg_size(attach->dev), PAGE_SIZE),
++			GFP_KERNEL);
++	if (ret) {
++		kfree(sg);
++		return ERR_PTR(ret);
++	}
++	ret = dma_map_sgtable(attach->dev, sg, direction, 0);
++	if (ret) {
++		sg_free_table(sg);
++		kfree(sg);
++		return ERR_PTR(ret);
++	}
++	return sg;
++}
++
++static void evdi_shared_proxy_unmap(struct dma_buf_attachment *attach,
++				   struct sg_table *sg,
++				   enum dma_data_direction direction)
++{
++	dma_unmap_sgtable(attach->dev, sg, direction, 0);
++	sg_free_table(sg);
++	kfree(sg);
++}
++
++static void evdi_shared_proxy_release(struct dma_buf *dmabuf)
++{
++	struct evdi_shared_proxy *proxy = dmabuf->priv;
++	struct drm_device *dev = proxy->source->base.dev;
++
++	/* This releases the original static attachment only after all Vulkan
++	 * imports and exported fds of the proxy are gone, even after eviction.
++	 */
++	if (proxy->guard)
++		evdi_shared_proxy_retired(proxy->guard);
++	drm_gem_object_put(&proxy->source->base);
++	drm_dev_put(dev);
++	kvfree(proxy->pages);
++	kfree(proxy);
++}
++
++static const struct dma_buf_ops evdi_shared_proxy_ops = {
++	.map_dma_buf = evdi_shared_proxy_map,
++	.unmap_dma_buf = evdi_shared_proxy_unmap,
++	.release = evdi_shared_proxy_release,
++};
++
++/* Returns a new reference. Painter cache owns an independent reference. */
++static struct dma_buf *evdi_shared_proxy_get(struct evdi_painter *painter,
++					   struct evdi_gem_object *source)
++{
++	DEFINE_DMA_BUF_EXPORT_INFO(info);
++	struct evdi_shared_proxy *proxy;
++	struct dma_buf *dmabuf;
++	struct scatterlist *sg;
++	unsigned int i, slot;
++	size_t pages;
++	u64 total = 0;
++	int ret;
++
++	for (i = 0; i < ARRAY_SIZE(painter->shared_proxies); ++i) {
++		dmabuf = painter->shared_proxies[i];
++		if (dmabuf && ((struct evdi_shared_proxy *)dmabuf->priv)->source == source) {
++			get_dma_buf(dmabuf);
++			return dmabuf;
++		}
++	}
++	/* Fail closed outside system-memory, whole-page static PRIME imports.
++	 * Native EVDI allocations, VRAM/P2P pages and partial SG pages are not
++	 * supported by this experimental alias exporter.
++	 */
++	if (!source->base.import_attach || !source->sg ||
++	    !source->base.size || !IS_ALIGNED(source->base.size, PAGE_SIZE) ||
++	    source->base.size != source->base.import_attach->dmabuf->size ||
++	    (source->base.size >> PAGE_SHIFT) > INT_MAX)
++		return ERR_PTR(-EOPNOTSUPP);
++	for_each_sg(source->sg->sgl, sg, source->sg->orig_nents, i) {
++		if (sg->offset || !IS_ALIGNED(sg->length, PAGE_SIZE) ||
++		    check_add_overflow(total, (u64)sg->length, &total))
++			return ERR_PTR(-EOPNOTSUPP);
++	}
++	if (total != source->base.size)
++		return ERR_PTR(-EOPNOTSUPP);
++	pages = source->base.size >> PAGE_SHIFT;
++	proxy = kzalloc(sizeof(*proxy), GFP_KERNEL);
++	if (!proxy)
++		return ERR_PTR(-ENOMEM);
++	proxy->pages = kvmalloc_array(pages, sizeof(*proxy->pages), GFP_KERNEL);
++	if (!proxy->pages) {
++		kfree(proxy);
++		return ERR_PTR(-ENOMEM);
++	}
++	/* EVDI can replace/free source->pages during vmap/vunmap. Own our
++	 * pointer array instead; its static imported SG stays pinned by GEM.
++	 */
++	ret = drm_prime_sg_to_page_array(source->sg, proxy->pages, pages);
++	if (ret)
++		goto err_pages;
++	for (i = 0; i < pages; ++i) {
++		if (!proxy->pages[i] || is_zone_device_page(proxy->pages[i])) {
++			ret = -EOPNOTSUPP;
++			goto err_pages;
++		}
++	}
++	proxy->npages = pages;
++	proxy->source = source;
++	drm_gem_object_get(&source->base);
++	drm_dev_get(source->base.dev);
++	info.ops = &evdi_shared_proxy_ops;
++	info.size = source->base.size;
++	info.flags = O_RDWR;
++	info.priv = proxy;
++	/* NULL resv deliberately gives this alias a separate reservation. */
++	dmabuf = dma_buf_export(&info);
++	if (IS_ERR(dmabuf)) {
++		drm_dev_put(source->base.dev);
++		drm_gem_object_put(&source->base);
++		ret = PTR_ERR(dmabuf);
++		goto err_pages;
++	}
++	slot = painter->shared_proxy_next++ % ARRAY_SIZE(painter->shared_proxies);
++	if (painter->shared_proxies[slot])
++		dma_buf_put(painter->shared_proxies[slot]);
++	painter->shared_proxies[slot] = dmabuf;
++	get_dma_buf(dmabuf);
++	return dmabuf;
++
++err_pages:
++	kvfree(proxy->pages);
++	kfree(proxy);
++	return ERR_PTR(ret);
++}
++
++static void evdi_shared_proxies_clear(struct evdi_painter *painter)
++{
++	unsigned int i;
++
++	for (i = 0; i < ARRAY_SIZE(painter->shared_proxies); ++i) {
++		if (painter->shared_proxies[i])
++			dma_buf_put(painter->shared_proxies[i]);
++		painter->shared_proxies[i] = NULL;
++	}
++}
++
++static void evdi_shared_proxy_evict(struct evdi_painter *painter,
++				    struct dma_buf *proxy)
++{
++	unsigned int i;
++
++	for (i = 0; i < ARRAY_SIZE(painter->shared_proxies); ++i) {
++		if (painter->shared_proxies[i] == proxy) {
++			painter->shared_proxies[i] = NULL;
++			dma_buf_put(proxy);
++		}
++	}
++}
++
++/* SPDX-License-Identifier: GPL-2.0-only */
++/* Experimental implicit-sync GPU capture. Included after the painter's ACK helper. */
++
++#define EVDI_SHARED_CAPTURE_TIMEOUT_MS 1000
++
++struct evdi_shared_fence {
++	struct dma_fence base;
++	spinlock_t lock;
++	struct timer_list timeout;
++	int lease_error;
++	struct drm_crtc *crtc;
++	struct drm_pending_vblank_event *vblank;
++};
++
++struct evdi_shared_capture {
++	struct evdi_framebuffer *fb;
++	struct evdi_shared_fence *guard;
++	struct dma_buf *proxy;
++	u64 token;
++};
++
++/* A completed guard can remain in amdgpu's reservation after EVDI closes.
++ * Reuse the kernel's immutable passive fence operations so that such a guard
++ * retains no EVDI function pointer (including no module-local destructor).
++ * This kernel's stub operations only provide constant names. Fail closed if
++ * they ever acquire behavior that would be wrong for a fresh unsignaled fence.
++ * We copy no stub state: context, sequence, flags and lock are all fresh.
++ */
++static int evdi_shared_fence_init(struct evdi_shared_fence *guard)
++{
++	struct dma_fence *stub = dma_fence_get_stub();
++	const struct dma_fence_ops *ops = stub->ops;
++
++	if (ops->enable_signaling || ops->signaled || ops->wait || ops->release ||
++	    ops->set_deadline) {
++		dma_fence_put(stub);
++		return -EOPNOTSUPP;
++	}
++	spin_lock_init(&guard->lock);
++	dma_fence_init(&guard->base, ops, &guard->lock,
++		       dma_fence_context_alloc(1), 1);
++	dma_fence_put(stub);
++	return 0;
++}
++
++/* Expiry is independent of painter/reservation locks. It invalidates the
++ * lease and returns its ACK, but MUST NOT release the producer READ guard
++ * while an imported proxy could still be read by an outstanding GPU job.
++ * The supervisor must terminate a stalled consumer; proxy retirement then
++ * releases the guard. A timed-out snapshot is always discarded.
++ */
++static void evdi_shared_fence_complete(struct evdi_shared_fence *guard, int error,
++				       bool signal)
++{
++	struct drm_crtc *crtc;
++	struct drm_pending_vblank_event *vblank;
++	unsigned long flags;
++
++	spin_lock_irqsave(&guard->lock, flags);
++	if (error && !guard->lease_error)
++		guard->lease_error = error;
++	/* Revocation failure belongs to the lease, not subsequent GPU writes. */
++	if (signal && !dma_fence_is_signaled_locked(&guard->base))
++		dma_fence_signal_locked(&guard->base);
++	crtc = guard->crtc;
++	vblank = guard->vblank;
++	guard->crtc = NULL;
++	guard->vblank = NULL;
++	spin_unlock_irqrestore(&guard->lock, flags);
++	evdi_send_vblank(crtc, vblank);
++}
++
++static void evdi_shared_capture_timeout(struct timer_list *timer)
++{
++	struct evdi_shared_fence *guard = timer_container_of(guard, timer, timeout);
++
++	evdi_shared_fence_complete(guard, -ETIMEDOUT, false);
++}
++
++/* Called only with the painter lock held. */
++static void evdi_shared_capture_cancel(struct evdi_painter *painter, int error)
++{
++	struct evdi_shared_capture *capture = painter->shared_capture;
++
++	if (!capture)
++		return;
++	painter->shared_capture = NULL;
++	timer_shutdown_sync(&capture->guard->timeout);
++	if (capture->guard->lease_error)
++		error = capture->guard->lease_error;
++	evdi_shared_fence_complete(capture->guard, error, !error);
++	if (error) {
++		/* Final proxy release owns signaling; imports can outlive the file. */
++		evdi_shared_proxy_evict(painter, capture->proxy);
++	} else {
++		struct evdi_shared_proxy *proxy = capture->proxy->priv;
++
++		proxy->guard = NULL;
++		dma_fence_put(&capture->guard->base);
++	}
++	drm_framebuffer_put(&capture->fb->base);
++	dma_buf_put(capture->proxy);
++	dma_fence_put(&capture->guard->base);
++	kfree(capture);
++}
++
++/* Proxy->guard is deliberately one-way. A guard never retains its proxy or
++ * source GEM, avoiding a source-reservation -> guard -> source reference cycle.
++ */
++static void evdi_shared_proxy_retired(struct evdi_shared_fence *guard)
++{
++	evdi_shared_fence_complete(guard, 0, true);
++	dma_fence_put(&guard->base);
++}
++
++int evdi_painter_acquire_frame_ioctl(struct drm_device *drm_dev, void *data,
++				   struct drm_file *file)
++{
++	struct evdi_device *evdi = drm_dev->dev_private;
++	struct evdi_painter *painter = evdi->painter;
++	struct drm_evdi_acquire_frame *cmd = data;
++	struct evdi_shared_capture *capture = NULL;
++	struct evdi_shared_fence *guard = NULL;
++	struct evdi_framebuffer *efb;
++	struct drm_framebuffer *fb;
++	struct dma_buf *dmabuf = NULL;
++	struct dma_buf *proxy = NULL;
++	struct dma_fence *ready = NULL;
++	struct sync_file *sync = NULL;
++	u64 end, rows;
++	int buffer_fd = -1, ready_fd = -1;
++	int ret;
++
++	if (cmd->version != DRM_EVDI_SHARED_CAPTURE_VERSION || cmd->flags ||
++	    cmd->reserved[0] || cmd->reserved[1])
++		return -EINVAL;
++	if (!painter)
++		return -ENODEV;
++
++	painter_lock(painter);
++	if (!painter->is_connected || painter->drm_filp != file) {
++		ret = -EACCES;
++		goto out;
++	}
++	if (painter->shared_capture) {
++		ret = -EBUSY;
++		goto out;
++	}
++	if (!evdi->cursor_events_enabled) {
++		ret = -EOPNOTSUPP;
++		goto out;
++	}
++	efb = painter->scanout_fb;
++	if (!efb || !painter->shared_powered || painter->num_dirts <= 0) {
++		ret = -EAGAIN;
++		goto out;
++	}
++	fb = &efb->base;
++	/* CPU mmap writes and explicit-sync producers cannot be frozen by a
++	 * reservation READ fence. This opt-in prototype only supports the
++	 * current imported amdgpu, implicit-sync Xorg scanout path. The exporter
++	 * check narrows compatibility; it is not a claim that all amdgpu users
++	 * participate in implicit synchronization.
++	 */
++	if (!efb->obj || !efb->obj->base.import_attach ||
++	    fb->format->format != DRM_FORMAT_XRGB8888 ||
++	    fb->format->num_planes != 1 || fb->modifier != DRM_FORMAT_MOD_LINEAR ||
++	    !fb->width || !fb->height || fb->width > U32_MAX / 4 ||
++	    fb->pitches[0] < fb->width * 4) {
++		ret = -EOPNOTSUPP;
++		goto out;
++	}
++	dmabuf = efb->obj->base.import_attach->dmabuf;
++	if (!dmabuf->owner || strcmp(dmabuf->owner->name, "amdgpu")) {
++		dmabuf = NULL;
++		ret = -EOPNOTSUPP;
++		goto out;
++	}
++	get_dma_buf(dmabuf);
++	if (check_mul_overflow((u64)fb->pitches[0], (u64)fb->height - 1, &rows) ||
++	    check_add_overflow(rows, (u64)fb->width * 4, &end) ||
++	    check_add_overflow(end, (u64)fb->offsets[0], &end) || end > dmabuf->size) {
++		ret = -EINVAL;
++		goto out;
++	}
++	proxy = evdi_shared_proxy_get(painter, efb->obj);
++	if (IS_ERR(proxy)) {
++		ret = PTR_ERR(proxy);
++		proxy = NULL;
++		goto out;
++	}
++	if (painter->shared_next_token == U64_MAX) {
++		ret = -EOVERFLOW;
++		goto out;
++	}
++	capture = kzalloc(sizeof(*capture), GFP_KERNEL);
++	guard = kzalloc(sizeof(*guard), GFP_KERNEL);
++	if (!capture || !guard) {
++		kfree(guard);
++		guard = NULL;
++		ret = -ENOMEM;
++		goto out;
++	}
++	ret = evdi_shared_fence_init(guard);
++	if (ret) {
++		kfree(guard);
++		guard = NULL;
++		goto out;
++	}
++	timer_setup(&guard->timeout, evdi_shared_capture_timeout, 0);
++	buffer_fd = get_unused_fd_flags(O_CLOEXEC);
++	if (buffer_fd < 0) {
++		ret = buffer_fd;
++		goto out;
++	}
++	ready_fd = get_unused_fd_flags(O_CLOEXEC);
++	if (ready_fd < 0) {
++		ret = ready_fd;
++		goto out;
++	}
++
++	/* Never wait for a reservation lock under painter->lock: an importer
++	 * might be committing KMS state under the opposite lock order. Retrying
++	 * leaves dirty rectangles and pending flip ACKs intact.
++	 */
++	if (!dma_resv_trylock(dmabuf->resv)) {
++		ret = -EAGAIN;
++		goto out;
++	}
++	if (!dma_resv_trylock(proxy->resv)) {
++		ret = -EAGAIN;
++		dma_resv_unlock(dmabuf->resv);
++		goto out;
++	}
++	ret = dma_resv_reserve_fences(proxy->resv, 1);
++	if (ret)
++		goto unlock_resv;
++	ret = dma_resv_reserve_fences(dmabuf->resv, 1);
++	if (ret)
++		goto unlock_resv;
++	/* Snapshot old writers BEFORE adding our reader. Exporting a later
++	 * reservation snapshot could include a writer that waits on this lease
++	 * and create a userspace self-dependency.
++	 */
++	ret = dma_resv_get_singleton(dmabuf->resv, DMA_RESV_USAGE_WRITE, &ready);
++	if (ret)
++		goto unlock_resv;
++	if (!ready)
++		ready = dma_fence_get_stub();
++	sync = sync_file_create(ready);
++	if (!sync) {
++		ret = -ENOMEM;
++		goto unlock_resv;
++	}
++	/* The alias receives the pre-lease writers, never the reader guard. */
++	dma_resv_add_fence(proxy->resv, ready, DMA_RESV_USAGE_WRITE);
++	dma_fence_put(ready);
++	ready = NULL;
++	dma_resv_add_fence(dmabuf->resv, &guard->base, DMA_RESV_USAGE_READ);
++	dma_resv_unlock(proxy->resv);
++	dma_resv_unlock(dmabuf->resv);
++
++	/* No fallible operations after the reader is installed. The framebuffer
++	 * and fd independently retain the allocation through mode changes.
++	 */
++	drm_framebuffer_get(fb);
++	capture->fb = efb;
++	capture->guard = guard;
++	capture->proxy = proxy;
++	get_dma_buf(proxy);
++	((struct evdi_shared_proxy *)proxy->priv)->guard = guard;
++	dma_fence_get(&guard->base);
++	capture->token = ++painter->shared_next_token;
++	guard->crtc = painter->crtc;
++	guard->vblank = painter->vblank;
++	painter->crtc = NULL;
++	painter->vblank = NULL;
++	painter->num_dirts = 0;
++	painter->shared_capture = capture;
++	cmd->dmabuf_fd = buffer_fd;
++	cmd->ready_fence_fd = ready_fd;
++	cmd->width = fb->width;
++	cmd->height = fb->height;
++	cmd->pitch = fb->pitches[0];
++	cmd->format = fb->format->format;
++	cmd->offset = fb->offsets[0];
++	cmd->modifier = fb->modifier;
++	cmd->size = dmabuf->size;
++	cmd->token = capture->token;
++	fd_install(buffer_fd, proxy->file);
++	dma_buf_put(dmabuf);
++	fd_install(ready_fd, sync->file);
++	mod_timer(&guard->timeout,
++		  jiffies + msecs_to_jiffies(EVDI_SHARED_CAPTURE_TIMEOUT_MS));
++	painter_unlock(painter);
++	return 0;
++
++unlock_resv:
++	dma_resv_unlock(proxy->resv);
++	dma_resv_unlock(dmabuf->resv);
++out:
++	if (sync)
++		fput(sync->file);
++	dma_fence_put(ready);
++	if (ready_fd >= 0)
++		put_unused_fd(ready_fd);
++	if (buffer_fd >= 0)
++		put_unused_fd(buffer_fd);
++	if (guard)
++		dma_fence_put(&guard->base);
++	kfree(capture);
++	if (proxy)
++		dma_buf_put(proxy);
++	if (dmabuf)
++		dma_buf_put(dmabuf);
++	painter_unlock(painter);
++	return ret;
++}
++
++int evdi_painter_release_frame_ioctl(struct drm_device *drm_dev, void *data,
++				   struct drm_file *file)
++{
++	struct evdi_device *evdi = drm_dev->dev_private;
++	struct evdi_painter *painter = evdi->painter;
++	struct drm_evdi_release_frame *cmd = data;
++	struct evdi_shared_capture *capture;
++	int ret = 0;
++
++	if (!cmd->token || cmd->flags || cmd->reserved)
++		return -EINVAL;
++	if (!painter)
++		return -ENODEV;
++	painter_lock(painter);
++	if (painter->drm_filp != file) {
++		ret = -EACCES;
++		goto out;
++	}
++	capture = painter->shared_capture;
++	if (!capture || capture->token != cmd->token) {
++		ret = -ESTALE;
++		goto out;
++	}
++	/* Verify every alias job has retired, including explicit-sync BOOKKEEP
++	 * users. An early RELEASE must never unfreeze the producer underneath a
++	 * submitted GPU read. Leave timer and lease intact on EBUSY.
++	 */
++	if (!dma_resv_trylock(capture->proxy->resv)) {
++		ret = -EBUSY;
++		goto out;
++	}
++	if (!dma_resv_test_signaled(capture->proxy->resv, DMA_RESV_USAGE_BOOKKEEP)) {
++		dma_resv_unlock(capture->proxy->resv);
++		ret = -EBUSY;
++		goto out;
++	}
++	/* Stop the timer before deciding success, excluding expiry races. */
++	timer_shutdown_sync(&capture->guard->timeout);
++	if (capture->guard->lease_error)
++		ret = -ESTALE;
++	dma_resv_unlock(capture->proxy->resv);
++	evdi_shared_capture_cancel(painter, ret);
++out:
++	painter_unlock(painter);
++	return ret;
++}
++/* END VINO_SHARED_CAPTURE_IMPLEMENTATION */
++
+ void evdi_painter_set_vblank(
+ 	struct evdi_painter *painter,
+ 	struct drm_crtc *crtc,
+@@ -810,6 +1379,12 @@
+ 
+ 	if (!painter->is_connected)
+ 		return;
++
++	painter_lock(painter);
++	painter->shared_powered = mode == DRM_MODE_DPMS_ON;
++	if (!painter->shared_powered)
++		evdi_shared_capture_cancel(painter, -ESTALE);
++	painter_unlock(painter);
+ 
+ 	switch (mode) {
+ 	case DRM_MODE_DPMS_ON:
+@@ -856,7 +1431,8 @@
+ 		return;
+ 
+ 	painter_lock(painter);
+-	fb = &painter->scanout_fb->base;
++	evdi_shared_capture_cancel(painter, -ESTALE);
++	fb = painter->scanout_fb ? &painter->scanout_fb->base : NULL;
+ 	if (fb == NULL) {
+ 		painter_unlock(painter);
+ 		return;
+@@ -1050,6 +1626,9 @@
+ 
+ 	painter_lock(painter);
+ 
++	/* Reconnecting may replace the owner without an intervening close. */
++	evdi_shared_capture_cancel(painter, -ESTALE);
++	evdi_shared_proxies_clear(painter);
+ 	was_connected = painter->is_connected;
+ 	evdi->pixel_area_limit = pixel_area_limit;
+ 	evdi->pixel_per_second_limit = pixel_per_second_limit;
+@@ -1091,12 +1670,16 @@
+ 		return -EFAULT;
+ 	}
+ 
++	evdi_shared_capture_cancel(painter, -ESTALE);
++	evdi_shared_proxies_clear(painter);
++
+ 	if (painter->scanout_fb) {
+ 		drm_framebuffer_put(&painter->scanout_fb->base);
+ 		painter->scanout_fb = NULL;
+ 	}
+ 
+ 	painter->is_connected = false;
++	painter->shared_powered = false;
+ 
+ 	evdi_log_process(buf, sizeof(buf));
+ 	EVDI_INFO("(card%d) Disconnected from %s\n", evdi->dev_index, buf);
+@@ -1195,6 +1778,11 @@
+ 		return -ENODEV;
+ 
+ 	painter_lock(painter);
++
++	if (painter->shared_capture) {
++		err = -EBUSY;
++		goto err_painter;
++	}
+ 
+ 	if (painter->was_update_requested) {
+ 		EVDI_WARN("(card%d) Update ready not sent,",
+@@ -1465,6 +2053,8 @@
+ #ifdef EVDI_HAVE_DRM_DEBUGFS_ROOT
+ 	debugfs_lookup_and_remove("measure_copy_fb", painter->drm_device->debugfs_root);
+ #endif
++	evdi_shared_capture_cancel(painter, -ESTALE);
++	evdi_shared_proxies_clear(painter);
+ 	evdi_painter_unregister_from_vt(painter);
+ 	kfree(painter->edid);
+ 	painter->edid_length = 0;
+@@ -1492,6 +2082,8 @@
+ 
+ 	painter_lock(painter);
+ 
++	if (!newfb)
++		evdi_shared_capture_cancel(painter, -ESTALE);
+ 	oldfb = painter->scanout_fb;
+ 	painter->scanout_fb = newfb;
+ 
+@@ -1633,7 +2225,11 @@
+ 	struct evdi_device *evdi = drm_dev->dev_private;
+ 	struct drm_evdi_enable_cursor_events *cmd = data;
+ 
++	painter_lock(evdi->painter);
++	if (!cmd->enable)
++		evdi_shared_capture_cancel(evdi->painter, -ESTALE);
+ 	evdi->cursor_events_enabled = cmd->enable;
++	painter_unlock(evdi->painter);
+ 
+ 	return 0;
+ }
+--- /dev/null
++++ b/evdi_shared_capture.h
+@@ -0,0 +1,44 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++#ifndef EVDI_SHARED_CAPTURE_H
++#define EVDI_SHARED_CAPTURE_H
++
++#include <linux/types.h>
++#ifdef __KERNEL__
++#include <drm/drm.h>
++#else
++#include <libdrm/drm.h>
++#endif
++
++/* Experimental Vino ABI: not an upstream EVDI interface. */
++#define DRM_EVDI_SHARED_CAPTURE_VERSION 1
++#define DRM_EVDI_ACQUIRE_FRAME 0x05
++#define DRM_EVDI_RELEASE_FRAME 0x06
++
++struct drm_evdi_acquire_frame {
++	__u32 version;
++	__u32 flags;
++	__s32 dmabuf_fd;
++	__s32 ready_fence_fd;
++	__u32 width;
++	__u32 height;
++	__u32 pitch;
++	__u32 format;
++	__u64 offset;
++	__u64 modifier;
++	__u64 size;
++	__u64 token;
++	__u64 reserved[2];
++};
++
++struct drm_evdi_release_frame {
++	__u64 token;
++	__u32 flags;
++	__u32 reserved;
++};
++
++#define DRM_IOCTL_EVDI_ACQUIRE_FRAME DRM_IOWR(DRM_COMMAND_BASE + \
++	DRM_EVDI_ACQUIRE_FRAME, struct drm_evdi_acquire_frame)
++#define DRM_IOCTL_EVDI_RELEASE_FRAME DRM_IOWR(DRM_COMMAND_BASE + \
++	DRM_EVDI_RELEASE_FRAME, struct drm_evdi_release_frame)
++
++#endif

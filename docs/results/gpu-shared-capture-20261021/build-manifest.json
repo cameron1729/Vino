@@ -1,0 +1,27 @@
+{
+  "build_command": "RUSTFLAGS='-C target-cpu=native' cargo build --manifest-path revdi/Cargo.toml -p vino-gpu-encoder --features live --release --offline --locked",
+  "binaries": {
+    "vino-gpu": "99e7fd1af284fea33b52cf8bcf98c6e69c0afbdddc036ea60a0dde540e32dc58",
+    "vino-gpu-live": "5c21e786a1e935227821f58d5a2301930daa724b4f5a0efd4c5e5ab962a0bd85"
+  },
+  "source_sha256": {
+    "revdi/chimera/src/native_changes.rs": "28f96f5b8769f707f6f0c742c8cbb905b2e6a5cc3976571a98b811fa04ebb736",
+    "revdi/chimera/src/shared_capture.rs": "00d40e5513b26911b7ee819866f4ab8ba6bb081125aa927158e64db9a356096e",
+    "revdi/chimera/src/trial.rs": "5f87ad51c80e0efde06e1b51832317cb41b1dad1072e504766647dfc02845b3f",
+    "revdi/chimera/src/trial_capture.rs": "cb02ae9fd1ff5bf3805ccdc0e24bd91eff346e367f07d92d88facf1f711be087",
+    "revdi/chimera/src/capture_pool.rs": "81b08c18783f5f5ab7f3b87cedfd4eff031fc0ee75c6a9a2505cf6bdeefdb2a7",
+    "revdi/chimera/src/scanout.rs": "8cc09cfcb9afcbc2af641fb12b43bd3559ab30a454c8301364211d1374eeaa8e",
+    "revdi/gpu-encoder/src/gpu.rs": "926ce1ea818586b62596ca39e09c6fa182e12d38e4a7b1eda9ba87f810b0c236",
+    "revdi/gpu-encoder/src/gpu/comparison.rs": "890b32afb12b7899dee19e246f98b5cb0e525f8da9313b3e31f131a74b96f235",
+    "revdi/gpu-encoder/src/gpu/shared_capture.rs": "db6f7e7016e25a9c252394c7e0c3c57fa70968c8d0bfa93fb6b2cbb0faa4a7a7",
+    "revdi/gpu-encoder/src/capture_benchmark.rs": "59dbe203ddec694060664b9979c59c7b1150fac88dfa31eda398649abbe97932",
+    "revdi/gpu-encoder/src/live.rs": "814e4bf13b75aea8115d88590600266c568ccffe0d445b017ca2a4819d2e6494",
+    "revdi/gpu-encoder/src/main.rs": "26d31a415ba483243f00a6898b5a76b3de78734cc8f769140a30b517c3ea0b57",
+    "revdi/library/src/safe.rs": "84f428baee90d3b5144f3ae63fc487073d2f671a0ef66ba8b38bd6cbc8c7c7cd",
+    "revdi/library/src/safe/shared_capture.rs": "a81c6b20b41543523d994eb4c4cb3575824f160bea24f970ead8882497c2ca17",
+    "tools/gpu/live-trial.py": "2d546e37fb88a12ee2c9d9ce68ba3a3aaec676cecf11a3c0a393df7d050f376d",
+    "tools/gpu/evdi-module-trial.py": "2c1b0e54474e3a24fbf166fd0935aeb055acf6bfbab4ef1f25c9c98960437568",
+    "revdi/gpu-encoder/shaders/compare.comp": "9f5365ce9c59900de062baa068ef904d22d08a53f2279596be750d7ce89fa7ff"
+  },
+  "scope": "Final userspace build. Private replay timings were collected before adding the GPU-producer test fixture; live capture is not tested yet."
+}

@@ -1,0 +1,22 @@
+{
+  "device": {
+    "index": 0,
+    "name": "AMD Radeon 780M Graphics (RADV PHOENIX)",
+    "vendor_id": 4098,
+    "device_id": 6400,
+    "device_type": "INTEGRATED_GPU",
+    "api_version": 4211006,
+    "driver_version": 104865800
+  },
+  "validation_enabled": true,
+  "cases": 3,
+  "copied_frames": 28,
+  "imported_allocations": 3,
+  "copied_bytes": 99803136,
+  "validation_errors": 0,
+  "full_hd_copy_cpu_ms": 0.0833578,
+  "full_hd_copy_wall_ms": 0.597383,
+  "checked_native_encodes": 2,
+  "checked_native_comparisons": 22,
+  "checked_gpu_producer_copies": 4
+}

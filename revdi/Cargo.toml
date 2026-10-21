@@ -17,7 +17,10 @@ members = [
     "kernel-shim",
     "vino-driver",
     "vino-hdcp",
+    "gpu-encoder",
 ]
+# Keep normal CPU/driver builds independent of the prototype's GLSL toolchain.
+default-members = ["chimera", "kernel-shim", "vino-driver", "vino-hdcp"]
 exclude = ["library"]
 
 [workspace.package]

@@ -53,9 +53,12 @@ const RT_CLASS_OUT_DEV: u8 = 0x20; //   OUT | Class    | Device
 const PIPELINE_DEPTH: usize = 8;
 
 pub struct Dock {
+    /// Idle video OUT transfers retained between frames. Both async pools must drop before
+    /// `handle` and `ctx`: cancelling/draining callbacks still needs a live libusb context.
+    video_out: Mutex<AsyncOut>,
     /// EP 0x84 bulk IN — dock → host responses (persistently queued async).
     ///
-    /// DECLARED FIRST on purpose so it DROPS FIRST. Rust drops struct fields in declaration order;
+    /// Declared before handle/context on purpose. Rust drops fields in declaration order;
     /// `AsyncIn::drop` cancels its in-flight transfers and then pumps libusb events
     /// (`pump_events(self.ctx)`) to drain the completion callbacks before freeing the transfers --
     /// which requires the libusb context to still be alive. If `handle` (device close) and `ctx`
@@ -82,11 +85,14 @@ pub struct Dock {
     /// How many connectors this device actually backs, which is what loops must use.
     connectors: u8,
     has_intr: bool,
+    /// A trial may only claim display/control interfaces, without detaching drivers.
+    strict_display_only: bool,
 }
 
 #[derive(Debug)]
 pub enum Error {
     DeviceNotFound,
+    UnsafeDevice(String),
     /// Transfer timed out.
     Timeout,
     /// Endpoint STALL / halt condition (libusb `Pipe`).
@@ -126,6 +132,7 @@ fn map_err(e: rusb::Error) -> Error {
 impl std::fmt::Display for Error {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
+            Error::UnsafeDevice(reason) => write!(f, "refusing USB takeover: {reason}"),
             Error::DeviceNotFound => write!(f, "DisplayLink D6000 (17e9:6006) not found"),
             Error::Timeout => write!(f, "USB transfer timed out"),
             Error::Stall => write!(f, "endpoint stalled (Pipe)"),
@@ -199,15 +206,25 @@ unsafe impl Send for AsyncIn {}
 
 impl AsyncIn {
     fn new(handle: *mut libusb_device_handle, ctx: *mut libusb_context, ep: u8) -> AsyncIn {
+        Self::with_depth(handle, ctx, ep, RECV_QUEUE_DEPTH)
+    }
+
+    fn with_depth(
+        handle: *mut libusb_device_handle,
+        ctx: *mut libusb_context,
+        ep: u8,
+        depth: usize,
+    ) -> AsyncIn {
+        assert!(depth > 0 && depth <= RECV_QUEUE_DEPTH);
         let shared = Box::new(InShared {
             ready: Mutex::new(VecDeque::new()),
             inflight: AtomicI32::new(0),
             closing: AtomicBool::new(false),
         });
         let shared_ptr = &*shared as *const InShared as *mut c_void;
-        let mut buffers: Vec<Box<[u8]>> = Vec::with_capacity(RECV_QUEUE_DEPTH);
-        let mut transfers: Vec<*mut libusb_transfer> = Vec::with_capacity(RECV_QUEUE_DEPTH);
-        for _ in 0..RECV_QUEUE_DEPTH {
+        let mut buffers: Vec<Box<[u8]>> = Vec::with_capacity(depth);
+        let mut transfers: Vec<*mut libusb_transfer> = Vec::with_capacity(depth);
+        for _ in 0..depth {
             let mut buf = vec![0u8; RECV_BUF_LEN].into_boxed_slice();
             let bptr = buf.as_mut_ptr();
             // SAFETY: alloc a bulk transfer (0 iso packets) and fill its fields;
@@ -305,6 +322,262 @@ fn status_to_err(status: c_int) -> Error {
         rusb::constants::LIBUSB_TRANSFER_NO_DEVICE => Error::Disconnected,
         _ => Error::Usb(rusb::Error::Other),
     }
+}
+
+// ---------------------------------------------------------------------------
+// Persistent async OUT pool. Frame buffers remain borrowed only for one call.
+// ---------------------------------------------------------------------------
+
+/// The only operations the OUT scheduler needs from libusb. Keeping this boundary small lets
+/// tests deliver real callbacks without opening a device or submitting a USB transfer.
+trait OutBackend {
+    fn alloc(&mut self) -> *mut libusb_transfer;
+    fn free(&mut self, transfer: *mut libusb_transfer);
+    fn submit(&mut self, transfer: *mut libusb_transfer) -> c_int;
+    fn cancel(&mut self, transfer: *mut libusb_transfer);
+    fn pump(&mut self);
+}
+
+struct LibusbOut {
+    ctx: *mut libusb_context,
+}
+
+impl OutBackend for LibusbOut {
+    fn alloc(&mut self) -> *mut libusb_transfer {
+        // SAFETY: allocate an unsubmitted bulk transfer, with no isochronous descriptors.
+        unsafe { libusb_alloc_transfer(0) }
+    }
+
+    fn free(&mut self, transfer: *mut libusb_transfer) {
+        // SAFETY: AsyncOut frees its transfers only after all callbacks have been drained.
+        unsafe { libusb_free_transfer(transfer) };
+    }
+
+    fn submit(&mut self, transfer: *mut libusb_transfer) -> c_int {
+        // SAFETY: the idle transfer has been filled with a buffer borrowed until cancellation
+        // or completion is drained, and stable callback state owned by AsyncOut.
+        unsafe { libusb_submit_transfer(transfer) }
+    }
+
+    fn cancel(&mut self, transfer: *mut libusb_transfer) {
+        // SAFETY: the pool owns the transfer. NOT_FOUND is harmless if a callback is queued.
+        unsafe { libusb_cancel_transfer(transfer) };
+    }
+
+    fn pump(&mut self) {
+        pump_events(self.ctx, Duration::from_millis(20));
+    }
+}
+
+type OutCompletion = (*mut libusb_transfer, c_int, c_int);
+type OutCompletions = Mutex<VecDeque<OutCompletion>>;
+
+struct OutSlot {
+    transfer: *mut libusb_transfer,
+    /// Submitted successfully, but its completion has not yet been consumed by the scheduler.
+    pending: bool,
+}
+
+struct AsyncOut<B: OutBackend = LibusbOut> {
+    backend: B,
+    handle: *mut libusb_device_handle,
+    slots: Vec<OutSlot>,
+    /// The allocation stays fixed even when the pool moves. At most one completion per slot
+    /// can be queued, so its initial capacity covers every frame without queue allocations.
+    completions: Box<OutCompletions>,
+}
+
+// SAFETY: Dock serialises all pool operations through `video_out`; libusb permits using its
+// handle/context from different threads. Concurrent callbacks touch only the boxed mutex.
+unsafe impl Send for AsyncOut<LibusbOut> {}
+
+impl AsyncOut {
+    fn new(handle: *mut libusb_device_handle, ctx: *mut libusb_context) -> Result<Self, Error> {
+        Self::with_backend(handle, LibusbOut { ctx })
+    }
+}
+
+impl<B: OutBackend> AsyncOut<B> {
+    fn with_backend(handle: *mut libusb_device_handle, backend: B) -> Result<Self, Error> {
+        let mut pool = Self {
+            backend,
+            handle,
+            slots: Vec::with_capacity(PIPELINE_DEPTH),
+            completions: Box::new(Mutex::new(VecDeque::with_capacity(PIPELINE_DEPTH))),
+        };
+        for _ in 0..PIPELINE_DEPTH {
+            let transfer = pool.backend.alloc();
+            if transfer.is_null() {
+                // `pool` drops and frees every slot already allocated; nothing was submitted.
+                return Err(Error::Usb(rusb::Error::NoMem));
+            }
+            pool.slots.push(OutSlot {
+                transfer,
+                pending: false,
+            });
+        }
+        Ok(pool)
+    }
+
+    fn write(&mut self, ep: u8, chunks: &[Vec<u8>], timeout: Duration) -> Result<usize, Error> {
+        if chunks.is_empty() {
+            return Ok(0);
+        }
+        if chunks.iter().any(|chunk| chunk.len() > c_int::MAX as usize) {
+            return Err(Error::Usb(rusb::Error::InvalidParam));
+        }
+        // The guard drains while `chunks` are still borrowed, including during Rust unwinding.
+        // The persistent pool cannot retain pointers into a caller's frame after this returns.
+        let mut frame = OutFrame { pool: self };
+        frame.run(ep, chunks, timeout)
+    }
+
+    fn submit(
+        &mut self,
+        slot: usize,
+        ep: u8,
+        chunk: &[u8],
+        timeout: Duration,
+    ) -> Result<(), Error> {
+        let transfer = self.slots[slot].transfer;
+        debug_assert!(!self.slots[slot].pending);
+        // SAFETY: only an idle slot is modified. OutFrame keeps the chunk alive and immutable
+        // through its completion, including timeout/error cancellation.
+        unsafe {
+            let tr = &mut *transfer;
+            tr.dev_handle = self.handle;
+            tr.endpoint = ep;
+            tr.transfer_type = LIBUSB_TRANSFER_TYPE_BULK;
+            tr.timeout = timeout.as_millis().min(c_uint::MAX as u128) as c_uint;
+            tr.buffer = chunk.as_ptr() as *mut u8;
+            tr.length = chunk.len() as c_int;
+            tr.callback = out_complete;
+            tr.user_data = &*self.completions as *const OutCompletions as *mut c_void;
+            tr.flags = 0;
+            tr.num_iso_packets = 0;
+        }
+        let result = self.backend.submit(transfer);
+        if result != 0 {
+            return Err(submit_error(result));
+        }
+        self.slots[slot].pending = true;
+        Ok(())
+    }
+
+    fn reap(&mut self) -> Option<(usize, c_int, c_int)> {
+        let (transfer, status, actual) = self.completions.lock().unwrap().pop_front()?;
+        let slot = self
+            .slots
+            .iter()
+            .position(|slot| slot.transfer == transfer)
+            .expect("completion belongs to this OUT pool");
+        debug_assert!(self.slots[slot].pending);
+        self.slots[slot].pending = false;
+        Some((slot, status, actual))
+    }
+
+    fn has_pending(&self) -> bool {
+        self.slots.iter().any(|slot| slot.pending)
+    }
+
+    fn cancel_and_drain(&mut self) {
+        for slot in &self.slots {
+            if slot.pending {
+                self.backend.cancel(slot.transfer);
+            }
+        }
+        // A deadline cannot make borrowed buffers safe to free. Cancellation is asynchronous:
+        // account for every submitted transfer, even if the device disappeared or a callback
+        // arrives late. This also protects the callback queue during pool destruction.
+        while self.has_pending() {
+            if self.reap().is_none() {
+                self.backend.pump();
+            }
+        }
+        for slot in &self.slots {
+            // SAFETY: every transfer is idle. Do not retain dangling caller-buffer pointers.
+            unsafe {
+                (*slot.transfer).buffer = std::ptr::null_mut();
+                (*slot.transfer).length = 0;
+            }
+        }
+    }
+}
+
+impl<B: OutBackend> Drop for AsyncOut<B> {
+    fn drop(&mut self) {
+        self.cancel_and_drain();
+        for slot in &self.slots {
+            self.backend.free(slot.transfer);
+        }
+    }
+}
+
+/// Per-call cleanup is necessary even though the transfer objects themselves persist.
+struct OutFrame<'a, B: OutBackend> {
+    pool: &'a mut AsyncOut<B>,
+}
+
+impl<B: OutBackend> OutFrame<'_, B> {
+    fn run(&mut self, ep: u8, chunks: &[Vec<u8>], timeout: Duration) -> Result<usize, Error> {
+        let mut next = 0;
+        let mut total = 0;
+        for slot in 0..PIPELINE_DEPTH.min(chunks.len()) {
+            self.pool.submit(slot, ep, &chunks[next], timeout)?;
+            next += 1;
+        }
+
+        let deadline = Instant::now() + timeout + Duration::from_millis(500);
+        while self.pool.has_pending() {
+            let Some((slot, status, actual)) = self.pool.reap() else {
+                if Instant::now() >= deadline {
+                    return Err(Error::Timeout);
+                }
+                self.pool.backend.pump();
+                continue;
+            };
+            if status != LIBUSB_TRANSFER_COMPLETED {
+                return Err(status_to_err(status));
+            }
+            // SAFETY: this transfer has completed; only this scheduler refills its fields.
+            let wanted = unsafe { (*self.pool.slots[slot].transfer).length as usize };
+            let wrote = actual.max(0) as usize;
+            if wrote != wanted {
+                return Err(Error::ShortWrite { wrote, wanted });
+            }
+            total += wrote;
+            if next < chunks.len() {
+                self.pool.submit(slot, ep, &chunks[next], timeout)?;
+                next += 1;
+            }
+        }
+        Ok(total)
+    }
+}
+
+impl<B: OutBackend> Drop for OutFrame<'_, B> {
+    fn drop(&mut self) {
+        self.pool.cancel_and_drain();
+    }
+}
+
+fn submit_error(code: c_int) -> Error {
+    use rusb::constants::*;
+    map_err(match code {
+        LIBUSB_ERROR_IO => rusb::Error::Io,
+        LIBUSB_ERROR_INVALID_PARAM => rusb::Error::InvalidParam,
+        LIBUSB_ERROR_ACCESS => rusb::Error::Access,
+        LIBUSB_ERROR_NO_DEVICE => rusb::Error::NoDevice,
+        LIBUSB_ERROR_NOT_FOUND => rusb::Error::NotFound,
+        LIBUSB_ERROR_BUSY => rusb::Error::Busy,
+        LIBUSB_ERROR_TIMEOUT => rusb::Error::Timeout,
+        LIBUSB_ERROR_OVERFLOW => rusb::Error::Overflow,
+        LIBUSB_ERROR_PIPE => rusb::Error::Pipe,
+        LIBUSB_ERROR_INTERRUPTED => rusb::Error::Interrupted,
+        LIBUSB_ERROR_NO_MEM => rusb::Error::NoMem,
+        LIBUSB_ERROR_NOT_SUPPORTED => rusb::Error::NotSupported,
+        _ => rusb::Error::Other,
+    })
 }
 
 impl Dock {
@@ -421,10 +694,12 @@ impl Dock {
             }
         }
 
+        let video_out = AsyncOut::new(handle.as_raw(), ctx.as_raw())?;
         // Bring up the persistent async EP 0x84 IN pool.
         let ep84 = AsyncIn::new(handle.as_raw(), ctx.as_raw(), EP_IN_CTRL);
 
         Ok(Self {
+            video_out: Mutex::new(video_out),
             handle,
             ctx,
             timeout: Duration::from_millis(2000),
@@ -435,6 +710,96 @@ impl Dock {
             video,
             connectors,
             has_intr,
+            strict_display_only: false,
+        })
+    }
+
+    /// Open the explicitly selected Ella dock without touching its audio/network functions.
+    /// `port` is a Linux physical USB path (e.g. `8-1.2`), not a volatile device address.
+    pub fn open_ella_at(port: &str, placement: Placement) -> Result<Self, Error> {
+        let (bus, ports) = parse_port(port)?;
+        let ctx = Context::new().map_err(map_err)?;
+        let devices = ctx.devices().map_err(map_err)?;
+        let mut matches = devices
+            .iter()
+            .filter(|d| d.bus_number() == bus && d.port_numbers().ok().as_ref() == Some(&ports));
+        let device = matches.next().ok_or(Error::DeviceNotFound)?;
+        if matches.next().is_some() {
+            return Err(Error::UnsafeDevice("ambiguous physical USB path".into()));
+        }
+        let descriptor = device.device_descriptor().map_err(map_err)?;
+        if descriptor.vendor_id() != VID || descriptor.product_id() != 0x4307 {
+            return Err(Error::UnsafeDevice("expected 17e9:4307".into()));
+        }
+        let config = device.active_config_descriptor().map_err(map_err)?;
+        let interfaces: Vec<_> = config
+            .interfaces()
+            .flat_map(|i| i.descriptors())
+            .map(|d| InterfaceLayout {
+                number: d.interface_number(),
+                alternate: d.setting_number(),
+                class: d.class_code(),
+                subclass: d.sub_class_code(),
+                protocol: d.protocol_code(),
+                endpoints: d
+                    .endpoint_descriptors()
+                    .map(|e| (e.address(), e.transfer_type()))
+                    .collect(),
+            })
+            .collect();
+        validate_ella_layout(config.number(), &interfaces)?;
+        if placement.connectors == 0
+            || placement.connectors > 2
+            || placement
+                .video_endpoints
+                .iter()
+                .take(usize::from(placement.connectors))
+                .any(|&e| e != EP_OUT_CTRL)
+        {
+            return Err(Error::UnsafeDevice(
+                "placement is not an Ella display profile".into(),
+            ));
+        }
+        let handle = device.open().map_err(map_err)?;
+        let identity = read_identity(&handle)
+            .filter(|id| id.family() == Some(Family::Ella))
+            .ok_or_else(|| Error::UnsafeDevice("missing or non-Ella identity descriptor".into()))?;
+        for iface in [0, 1] {
+            if handle.kernel_driver_active(iface).map_err(map_err)? {
+                return Err(Error::UnsafeDevice(format!(
+                    "interface {iface} still has a kernel driver"
+                )));
+            }
+        }
+        handle.claim_interface(0).map_err(map_err)?;
+        handle.set_alternate_setting(0, 0).map_err(map_err)?;
+        // Only clear the two display endpoints. Never SET_CONFIGURATION or touch interface 2.
+        handle.clear_halt(EP_OUT_CTRL).map_err(map_err)?;
+        handle.clear_halt(EP_IN_CTRL).map_err(map_err)?;
+        let video_out = AsyncOut::new(handle.as_raw(), ctx.as_raw())?;
+        // Ella's measured reply discipline permits exactly one posted read (PROFILE_ELLA).
+        let ep84 = AsyncIn::with_depth(handle.as_raw(), ctx.as_raw(), EP_IN_CTRL, 1);
+        let mut video = [None; MAX_HEADS];
+        for slot in video.iter_mut().take(usize::from(placement.connectors)) {
+            *slot = Some(EP_OUT_CTRL);
+        }
+        eprintln!(
+            "[usb] selected {port}: {identity}, firmware {}",
+            identity.version
+        );
+        Ok(Self {
+            video_out: Mutex::new(video_out),
+            ep84: Mutex::new(ep84),
+            handle,
+            ctx,
+            timeout: Duration::from_secs(2),
+            out_lock: Mutex::new(()),
+            connectors: placement.connectors,
+            placement,
+            identity: Some(identity),
+            video,
+            has_intr: false,
+            strict_display_only: true,
         })
     }
 
@@ -531,7 +896,15 @@ impl Dock {
     /// (confirmed live: `vino 2-1.1:1.1: bound D6000 interface 1`) -- needed
     /// before `std_out_iface`'s `SET_INTERFACE` on it will succeed.
     pub fn claim_interface(&self, iface: u8) -> Result<(), Error> {
-        let _ = self.handle.detach_kernel_driver(iface);
+        if self.strict_display_only {
+            if iface > 1 || self.handle.kernel_driver_active(iface).map_err(map_err)? {
+                return Err(Error::UnsafeDevice(format!(
+                    "cannot claim interface {iface}"
+                )));
+            }
+        } else {
+            let _ = self.handle.detach_kernel_driver(iface);
+        }
         self.handle.claim_interface(iface).map_err(map_err)
     }
 
@@ -715,129 +1088,13 @@ impl Dock {
         if chunks.is_empty() {
             return Ok(0);
         }
+        // Always take the shared endpoint lock before the pool lock. Control traffic also takes
+        // out_lock, so it cannot interleave with a frame on Ella's shared control/video pipe.
         let _g = self.out_lock.lock().unwrap();
-        let handle = self.handle.as_raw();
-        let ctx = self.ctx.as_raw();
-        let depth = PIPELINE_DEPTH.min(chunks.len());
-        // Completions land here (transfer ptr, status, actual_length). Callbacks
-        // fire on this thread inside `pump_events`, so no cross-thread hazard.
-        let completions: Box<Mutex<VecDeque<(*mut libusb_transfer, c_int, c_int)>>> =
-            Box::new(Mutex::new(VecDeque::new()));
-        let cptr = &*completions as *const Mutex<VecDeque<(*mut libusb_transfer, c_int, c_int)>>
-            as *mut c_void;
-
-        let transfers: Vec<*mut libusb_transfer> = (0..depth)
-            .map(|_| unsafe { libusb_alloc_transfer(0) })
-            .collect();
-        assert!(
-            transfers.iter().all(|t| !t.is_null()),
-            "libusb_alloc_transfer failed"
-        );
-        let timeout_ms = self.timeout.as_millis() as c_uint;
-
-        // SAFETY: fill+submit a transfer for chunk `ci` on transfer object `t`.
-        let submit = |t: *mut libusb_transfer, ci: usize| -> c_int {
-            unsafe {
-                let tr = &mut *t;
-                tr.dev_handle = handle;
-                tr.endpoint = ep;
-                tr.transfer_type = LIBUSB_TRANSFER_TYPE_BULK;
-                tr.timeout = timeout_ms;
-                tr.buffer = chunks[ci].as_ptr() as *mut u8;
-                tr.length = chunks[ci].len() as c_int;
-                tr.callback = out_complete;
-                tr.user_data = cptr;
-                tr.flags = 0;
-                tr.num_iso_packets = 0;
-                libusb_submit_transfer(t)
-            }
-        };
-
-        let mut next = 0usize;
-        let mut submitted = 0usize;
-        let mut reaped = 0usize;
-        let mut total = 0usize;
-        let mut err: Option<Error> = None;
-
-        // Prime the window.
-        for &t in &transfers {
-            if next >= chunks.len() {
-                break;
-            }
-            if submit(t, next) == 0 {
-                submitted += 1;
-                next += 1;
-            } else {
-                err = Some(Error::Disconnected);
-                break;
-            }
-        }
-
-        // Reap and submit-ahead until every submitted transfer has completed.
-        let deadline = Instant::now() + self.timeout + Duration::from_millis(500);
-        while reaped < submitted {
-            let done = completions.lock().unwrap().pop_front();
-            let (t, status, actual) = match done {
-                Some(x) => x,
-                None => {
-                    if Instant::now() >= deadline {
-                        err = err.or(Some(Error::Timeout));
-                        break;
-                    }
-                    pump_events(ctx, Duration::from_millis(20));
-                    continue;
-                }
-            };
-            reaped += 1;
-            if status != LIBUSB_TRANSFER_COMPLETED {
-                if err.is_none() {
-                    err = Some(status_to_err(status));
-                }
-                continue;
-            }
-            // A completed transfer that moved fewer bytes than it was given is a truncated
-            // record on the wire; the dock's frame assembler will not tell us about it.
-            let wanted = unsafe { (*t).length.max(0) as usize };
-            let wrote = actual.max(0) as usize;
-            if wrote != wanted {
-                err = err.or(Some(Error::ShortWrite { wrote, wanted }));
-                continue;
-            }
-            total += wrote;
-            // Submit-ahead: reuse the just-completed transfer for the next chunk.
-            if err.is_none() && next < chunks.len() {
-                if submit(t, next) == 0 {
-                    submitted += 1;
-                    next += 1;
-                } else if err.is_none() {
-                    err = Some(Error::Disconnected);
-                }
-            }
-        }
-
-        // Teardown: cancel anything still outstanding and drain its callback so
-        // no transfer is owned by libusb when we free.
-        for &t in &transfers {
-            unsafe { libusb_cancel_transfer(t) };
-        }
-        // Unbounded for the same reason as the single-transfer path: `completions` is a local,
-        // and the callbacks write into it. Freeing the transfers while one can still fire is a
-        // use-after-free, so every submitted transfer has to be accounted for first.
-        while reaped < submitted {
-            if completions.lock().unwrap().pop_front().is_some() {
-                reaped += 1;
-            } else {
-                pump_events(ctx, Duration::from_millis(20));
-            }
-        }
-        for &t in &transfers {
-            unsafe { libusb_free_transfer(t) };
-        }
-
-        match err {
-            Some(e) => Err(e),
-            None => Ok(total),
-        }
+        self.video_out
+            .lock()
+            .unwrap()
+            .write(ep, chunks, self.timeout)
     }
 
     /// Clear the halt/stall condition on one connector's video endpoint.
@@ -878,14 +1135,14 @@ impl Dock {
     }
 }
 
-/// libusb completion callback for a video OUT transfer (see [`Dock::pipeline_out`]).
+/// libusb completion callback for a video OUT transfer. Another thread pumping this context
+/// (for example the dock-reply reader) may deliver it; only the boxed queue is shared.
 extern "system" fn out_complete(transfer: *mut libusb_transfer) {
-    // SAFETY: `user_data` points at the `completions` queue boxed on the stack of
-    // the `pipeline_out` call that submitted this transfer; that call does not
-    // return until every transfer it submitted has been reaped or cancelled.
+    // SAFETY: AsyncOut keeps the transfer and queue alive until every submitted callback has
+    // been drained. The callback does not access either after releasing the queue lock.
     unsafe {
         let t = &*transfer;
-        let q = &*(t.user_data as *const Mutex<VecDeque<(*mut libusb_transfer, c_int, c_int)>>);
+        let q = &*(t.user_data as *const OutCompletions);
         q.lock()
             .unwrap()
             .push_back((transfer, t.status, t.actual_length));
@@ -949,4 +1206,528 @@ fn has_endpoint(handle: &DeviceHandle<Context>, addr: u8) -> bool {
         .flat_map(|i| i.descriptors())
         .flat_map(|d| d.endpoint_descriptors())
         .any(|e| e.address() == addr)
+}
+
+fn parse_port(port: &str) -> Result<(u8, Vec<u8>), Error> {
+    let invalid = || Error::UnsafeDevice("expected a physical USB path such as 8-1.2".into());
+    let (bus, path) = port.split_once('-').ok_or_else(invalid)?;
+    let bus = bus
+        .parse::<u8>()
+        .ok()
+        .filter(|v| *v > 0)
+        .ok_or_else(invalid)?;
+    let ports: Vec<u8> = path
+        .split('.')
+        .map(|v| v.parse::<u8>().ok().filter(|p| *p > 0).ok_or_else(invalid))
+        .collect::<Result<_, _>>()?;
+    if ports.is_empty() || ports.len() > 7 {
+        return Err(invalid());
+    }
+    Ok((bus, ports))
+}
+
+struct InterfaceLayout {
+    number: u8,
+    alternate: u8,
+    class: u8,
+    subclass: u8,
+    protocol: u8,
+    endpoints: Vec<(u8, rusb::TransferType)>,
+}
+
+fn validate_ella_layout(config: u8, interfaces: &[InterfaceLayout]) -> Result<(), Error> {
+    let valid = |number, class, subclass, protocol, endpoints: &[(u8, rusb::TransferType)]| {
+        let mut candidates = interfaces
+            .iter()
+            .filter(|d| d.number == number && d.alternate == 0);
+        candidates.next().is_some_and(|d| {
+            d.class == class
+                && d.subclass == subclass
+                && d.protocol == protocol
+                && endpoints.iter().all(|e| d.endpoints.contains(e))
+        }) && candidates.next().is_none()
+    };
+    if config != 1
+        || !valid(
+            0,
+            0xff,
+            0,
+            3,
+            &[
+                (EP_OUT_CTRL, rusb::TransferType::Bulk),
+                (EP_IN_CTRL, rusb::TransferType::Bulk),
+            ],
+        )
+        || !valid(1, 0xfe, 1, 1, &[])
+    {
+        return Err(Error::UnsafeDevice(
+            "unexpected Ella configuration/interfaces".into(),
+        ));
+    }
+    Ok(())
+}
+
+#[cfg(test)]
+mod out_pool_tests {
+    use super::*;
+    use rusb::constants::*;
+    use std::cell::RefCell;
+    use std::rc::Rc;
+
+    struct Submitted {
+        transfer: usize,
+        queue: usize,
+        endpoint: u8,
+        timeout: c_uint,
+        bytes: Vec<u8>,
+    }
+
+    struct Pending {
+        transfer: *mut libusb_transfer,
+        status: c_int,
+        actual: c_int,
+        cancelled: bool,
+    }
+
+    #[derive(Default)]
+    struct MockState {
+        allocations: Vec<usize>,
+        frees: Vec<usize>,
+        allocation_attempts: usize,
+        fail_allocation_at: Option<usize>,
+        submit_attempts: usize,
+        fail_submit_at: Option<(usize, c_int)>,
+        submissions: Vec<Submitted>,
+        pending: VecDeque<Pending>,
+        outcomes: VecDeque<(c_int, Option<c_int>)>,
+        cancellations: Vec<usize>,
+        peak_pending: usize,
+        pump_count: usize,
+        hold_until_cancel: bool,
+        delayed_cancel_pumps: usize,
+        remaining_cancel_pumps: usize,
+        cross_thread_callbacks: bool,
+        complete_during_submit: bool,
+        reverse_completions: bool,
+        panic_once: bool,
+    }
+
+    struct MockOut(Rc<RefCell<MockState>>);
+
+    impl OutBackend for MockOut {
+        fn alloc(&mut self) -> *mut libusb_transfer {
+            let mut state = self.0.borrow_mut();
+            let attempt = state.allocation_attempts;
+            state.allocation_attempts += 1;
+            if state.fail_allocation_at == Some(attempt) {
+                return std::ptr::null_mut();
+            }
+            // This libusb operation only allocates host memory: no context or device is opened.
+            let transfer = unsafe { libusb_alloc_transfer(0) };
+            assert!(!transfer.is_null());
+            state.allocations.push(transfer as usize);
+            transfer
+        }
+
+        fn free(&mut self, transfer: *mut libusb_transfer) {
+            let mut state = self.0.borrow_mut();
+            assert!(!state.pending.iter().any(|p| p.transfer == transfer));
+            assert!(!state.frees.contains(&(transfer as usize)));
+            unsafe {
+                assert!((*transfer).buffer.is_null());
+                assert_eq!((*transfer).length, 0);
+                libusb_free_transfer(transfer);
+            }
+            state.frees.push(transfer as usize);
+        }
+
+        fn submit(&mut self, transfer: *mut libusb_transfer) -> c_int {
+            let mut state = self.0.borrow_mut();
+            let attempt = state.submit_attempts;
+            state.submit_attempts += 1;
+            if let Some((index, error)) = state.fail_submit_at {
+                if attempt == index {
+                    return error;
+                }
+            }
+            assert!(!state.pending.iter().any(|p| p.transfer == transfer));
+            let tr = unsafe { &*transfer };
+            state.submissions.push(Submitted {
+                transfer: transfer as usize,
+                queue: tr.user_data as usize,
+                endpoint: tr.endpoint,
+                timeout: tr.timeout,
+                bytes: unsafe {
+                    std::slice::from_raw_parts(tr.buffer, tr.length as usize).to_vec()
+                },
+            });
+            let (status, actual) = state
+                .outcomes
+                .pop_front()
+                .unwrap_or((LIBUSB_TRANSFER_COMPLETED, None));
+            state.pending.push_back(Pending {
+                transfer,
+                status,
+                actual: actual.unwrap_or(tr.length),
+                cancelled: false,
+            });
+            state.peak_pending = state.peak_pending.max(state.pending.len());
+            assert!(state.pending.len() <= PIPELINE_DEPTH);
+            if state.complete_during_submit {
+                // Another libusb event thread can finish a transfer before submit returns.
+                let pending = state.pending.pop_back().unwrap();
+                unsafe {
+                    (*transfer).status = pending.status;
+                    (*transfer).actual_length = pending.actual;
+                    ((*transfer).callback)(transfer);
+                }
+            }
+            0
+        }
+
+        fn cancel(&mut self, transfer: *mut libusb_transfer) {
+            let mut state = self.0.borrow_mut();
+            state.cancellations.push(transfer as usize);
+            state.remaining_cancel_pumps = state.delayed_cancel_pumps;
+            if let Some(pending) = state.pending.iter_mut().find(|p| p.transfer == transfer) {
+                pending.cancelled = true;
+                pending.status = LIBUSB_TRANSFER_CANCELLED;
+                pending.actual = 0;
+            }
+        }
+
+        fn pump(&mut self) {
+            let mut state = self.0.borrow_mut();
+            state.pump_count += 1;
+            if std::mem::take(&mut state.panic_once) {
+                panic!("injected pump panic");
+            }
+            if state.remaining_cancel_pumps > 0 {
+                state.remaining_cancel_pumps -= 1;
+                return;
+            }
+            if state.hold_until_cancel && state.pending.iter().all(|p| !p.cancelled) {
+                drop(state);
+                std::thread::sleep(Duration::from_millis(2));
+                return;
+            }
+            let pending = if state.reverse_completions {
+                state.pending.pop_back()
+            } else {
+                state.pending.pop_front()
+            };
+            let cross_thread = state.cross_thread_callbacks;
+            drop(state);
+            let Some(pending) = pending else {
+                return;
+            };
+            let address = pending.transfer as usize;
+            let callback = move || unsafe {
+                let transfer = address as *mut libusb_transfer;
+                (*transfer).status = pending.status;
+                (*transfer).actual_length = pending.actual;
+                ((*transfer).callback)(transfer);
+            };
+            if cross_thread {
+                std::thread::spawn(callback).join().unwrap();
+            } else {
+                callback();
+            }
+        }
+    }
+
+    fn pool(state: &Rc<RefCell<MockState>>) -> AsyncOut<MockOut> {
+        AsyncOut::with_backend(std::ptr::null_mut(), MockOut(Rc::clone(state))).unwrap()
+    }
+
+    fn assert_idle(pool: &AsyncOut<MockOut>, state: &Rc<RefCell<MockState>>) {
+        assert!(!pool.has_pending());
+        assert!(pool.completions.lock().unwrap().is_empty());
+        assert!(state.borrow().pending.is_empty());
+        for slot in &pool.slots {
+            unsafe {
+                assert!((*slot.transfer).buffer.is_null());
+                assert_eq!((*slot.transfer).length, 0);
+            }
+        }
+    }
+
+    fn chunks(count: usize) -> Vec<Vec<u8>> {
+        (0..count).map(|n| vec![n as u8; n * 17 + 1]).collect()
+    }
+
+    #[test]
+    fn out_pool_reuses_slots_and_callback_storage_across_frames() {
+        let state = Rc::new(RefCell::new(MockState {
+            reverse_completions: true,
+            cross_thread_callbacks: true,
+            ..Default::default()
+        }));
+        let mut pool = pool(&state);
+        let queue_capacity = pool.completions.lock().unwrap().capacity();
+        assert_eq!(pool.write(8, &[], Duration::from_millis(17)).unwrap(), 0);
+        assert!(state.borrow().submissions.is_empty());
+        let first = chunks(25);
+        let first_bytes = first.iter().map(Vec::len).sum::<usize>();
+        assert_eq!(
+            pool.write(8, &first, Duration::from_millis(17)).unwrap(),
+            first_bytes
+        );
+        assert_idle(&pool, &state);
+        // Include an empty chunk: it is a valid zero-length transfer, not a stale buffer.
+        let second = vec![vec![0xcc; 19], vec![], vec![0x44; 3]];
+        assert_eq!(
+            pool.write(2, &second, Duration::from_millis(231)).unwrap(),
+            22
+        );
+        assert_idle(&pool, &state);
+        assert_eq!(pool.completions.lock().unwrap().capacity(), queue_capacity);
+        {
+            let state = state.borrow();
+            assert_eq!(state.allocations.len(), PIPELINE_DEPTH);
+            assert_eq!(state.peak_pending, PIPELINE_DEPTH);
+            assert!(state.frees.is_empty());
+            assert!(state.cancellations.is_empty());
+            let queue = state.submissions[0].queue;
+            for (i, submission) in state.submissions.iter().enumerate() {
+                assert!(state.allocations.contains(&submission.transfer));
+                assert_eq!(submission.queue, queue);
+                let (expected, endpoint, timeout) = if i < first.len() {
+                    (&first[i], 8, 17)
+                } else {
+                    (&second[i - first.len()], 2, 231)
+                };
+                assert_eq!(&submission.bytes, expected);
+                assert_eq!(submission.endpoint, endpoint);
+                assert_eq!(submission.timeout, timeout);
+            }
+        }
+        drop(pool);
+        assert_eq!(state.borrow().frees.len(), PIPELINE_DEPTH);
+    }
+
+    #[test]
+    fn out_pool_partial_allocation_failure_frees_all_earlier_slots() {
+        for fail_at in 0..PIPELINE_DEPTH {
+            let state = Rc::new(RefCell::new(MockState {
+                fail_allocation_at: Some(fail_at),
+                ..Default::default()
+            }));
+            let result = AsyncOut::with_backend(std::ptr::null_mut(), MockOut(Rc::clone(&state)));
+            assert!(matches!(result, Err(Error::Usb(rusb::Error::NoMem))));
+            let state = state.borrow();
+            assert_eq!(state.allocation_attempts, fail_at + 1);
+            assert_eq!(state.allocations.len(), fail_at);
+            assert_eq!(state.frees, state.allocations);
+            assert!(state.submissions.is_empty());
+        }
+    }
+
+    #[test]
+    fn out_pool_handles_callbacks_before_submit_returns_and_full_completion_queue() {
+        let state = Rc::new(RefCell::new(MockState {
+            complete_during_submit: true,
+            ..Default::default()
+        }));
+        let mut pool = pool(&state);
+        let capacity = pool.completions.lock().unwrap().capacity();
+        let chunks = chunks(32);
+        assert_eq!(
+            pool.write(2, &chunks, Duration::from_millis(10)).unwrap(),
+            chunks.iter().map(Vec::len).sum::<usize>()
+        );
+        assert_idle(&pool, &state);
+        assert_eq!(pool.completions.lock().unwrap().capacity(), capacity);
+        assert_eq!(state.borrow().pump_count, 0);
+        assert_eq!(state.borrow().submissions.len(), chunks.len());
+        assert!(state.borrow().cancellations.is_empty());
+    }
+
+    #[test]
+    fn out_pool_submission_failure_drains_primed_or_refilled_slots_and_can_retry() {
+        for fail_at in [0, 3, 10] {
+            let state = Rc::new(RefCell::new(MockState {
+                fail_submit_at: Some((fail_at, LIBUSB_ERROR_NO_DEVICE)),
+                ..Default::default()
+            }));
+            let mut pool = pool(&state);
+            assert!(matches!(
+                pool.write(2, &chunks(25), Duration::from_millis(10)),
+                Err(Error::Disconnected)
+            ));
+            assert_idle(&pool, &state);
+            assert_eq!(state.borrow().submit_attempts, fail_at + 1);
+            state.borrow_mut().fail_submit_at = None;
+            assert!(pool
+                .write(2, &chunks(12), Duration::from_millis(10))
+                .is_ok());
+            assert_idle(&pool, &state);
+            assert_eq!(state.borrow().allocations.len(), PIPELINE_DEPTH);
+        }
+        let state = Rc::new(RefCell::new(MockState {
+            fail_submit_at: Some((2, LIBUSB_ERROR_NO_MEM)),
+            ..Default::default()
+        }));
+        let mut pool = pool(&state);
+        assert!(matches!(
+            pool.write(2, &chunks(9), Duration::from_millis(10)),
+            Err(Error::Usb(rusb::Error::NoMem))
+        ));
+        assert_idle(&pool, &state);
+    }
+
+    #[test]
+    fn out_pool_completion_errors_stop_submit_ahead_and_preserve_the_first_error() {
+        for (status, actual) in [
+            (LIBUSB_TRANSFER_STALL, None),
+            (LIBUSB_TRANSFER_NO_DEVICE, None),
+            (LIBUSB_TRANSFER_TIMED_OUT, None),
+            (LIBUSB_TRANSFER_ERROR, None),
+            (LIBUSB_TRANSFER_COMPLETED, Some(0)),
+        ] {
+            let state = Rc::new(RefCell::new(MockState {
+                outcomes: VecDeque::from([(status, actual)]),
+                ..Default::default()
+            }));
+            let mut pool = pool(&state);
+            let error = pool
+                .write(2, &chunks(12), Duration::from_millis(10))
+                .unwrap_err();
+            match status {
+                LIBUSB_TRANSFER_STALL => assert!(matches!(error, Error::Stall)),
+                LIBUSB_TRANSFER_NO_DEVICE => assert!(matches!(error, Error::Disconnected)),
+                LIBUSB_TRANSFER_TIMED_OUT => assert!(matches!(error, Error::Timeout)),
+                LIBUSB_TRANSFER_COMPLETED => {
+                    assert!(matches!(
+                        error,
+                        Error::ShortWrite {
+                            wrote: 0,
+                            wanted: 1
+                        }
+                    ));
+                }
+                _ => assert!(matches!(error, Error::Usb(rusb::Error::Other))),
+            }
+            assert_idle(&pool, &state);
+            assert_eq!(state.borrow().submissions.len(), PIPELINE_DEPTH);
+            assert_eq!(state.borrow().cancellations.len(), PIPELINE_DEPTH - 1);
+            assert!(pool.write(8, &chunks(2), Duration::from_millis(10)).is_ok());
+            assert_idle(&pool, &state);
+        }
+    }
+
+    #[test]
+    fn out_pool_deadline_waits_for_late_cancel_callbacks_before_reusing_buffers() {
+        let state = Rc::new(RefCell::new(MockState {
+            hold_until_cancel: true,
+            delayed_cancel_pumps: 3,
+            ..Default::default()
+        }));
+        let mut pool = pool(&state);
+        assert!(matches!(
+            pool.write(2, &chunks(12), Duration::ZERO),
+            Err(Error::Timeout)
+        ));
+        assert_idle(&pool, &state);
+        assert_eq!(state.borrow().cancellations.len(), PIPELINE_DEPTH);
+        assert_eq!(state.borrow().remaining_cancel_pumps, 0);
+        state.borrow_mut().hold_until_cancel = false;
+        assert!(pool
+            .write(2, &chunks(12), Duration::from_millis(10))
+            .is_ok());
+        assert_idle(&pool, &state);
+        assert_eq!(state.borrow().allocations.len(), PIPELINE_DEPTH);
+    }
+
+    #[test]
+    fn out_pool_frame_guard_drains_during_unwinding() {
+        let state = Rc::new(RefCell::new(MockState {
+            panic_once: true,
+            ..Default::default()
+        }));
+        let mut pool = pool(&state);
+        let chunks = chunks(12);
+        let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let _ = pool.write(2, &chunks, Duration::from_millis(10));
+        }));
+        assert!(result.is_err());
+        assert_idle(&pool, &state);
+        assert_eq!(state.borrow().cancellations.len(), PIPELINE_DEPTH);
+        assert!(pool.write(2, &chunks, Duration::from_millis(10)).is_ok());
+        assert_idle(&pool, &state);
+    }
+
+    #[test]
+    fn out_pool_drop_drains_before_freeing_transfer_or_callback_storage() {
+        let state = Rc::new(RefCell::new(MockState::default()));
+        let mut pool = pool(&state);
+        let bytes = vec![0x5a; 128];
+        pool.submit(0, 2, &bytes, Duration::from_millis(10))
+            .unwrap();
+        drop(pool);
+        let state = state.borrow();
+        assert!(state.pending.is_empty());
+        assert_eq!(state.cancellations.len(), 1);
+        assert_eq!(state.frees.len(), PIPELINE_DEPTH);
+    }
+}
+
+#[cfg(test)]
+mod selected_dock_tests {
+    use super::*;
+    fn layout() -> Vec<InterfaceLayout> {
+        vec![
+            InterfaceLayout {
+                number: 0,
+                alternate: 0,
+                class: 0xff,
+                subclass: 0,
+                protocol: 3,
+                endpoints: vec![
+                    (2, rusb::TransferType::Bulk),
+                    (0x84, rusb::TransferType::Bulk),
+                ],
+            },
+            InterfaceLayout {
+                number: 1,
+                alternate: 0,
+                class: 0xfe,
+                subclass: 1,
+                protocol: 1,
+                endpoints: vec![],
+            },
+            InterfaceLayout {
+                number: 2,
+                alternate: 0,
+                class: 1,
+                subclass: 1,
+                protocol: 0x20,
+                endpoints: vec![(0x83, rusb::TransferType::Interrupt)],
+            },
+            InterfaceLayout {
+                number: 5,
+                alternate: 0,
+                class: 2,
+                subclass: 0x0d,
+                protocol: 0,
+                endpoints: vec![(0x86, rusb::TransferType::Interrupt)],
+            },
+        ]
+    }
+    #[test]
+    fn actual_dock_audio_and_network_are_not_display_endpoints() {
+        let mut interfaces = layout();
+        assert!(validate_ella_layout(1, &interfaces).is_ok());
+        let ep = interfaces[0].endpoints.pop().unwrap();
+        interfaces[2].endpoints.push(ep);
+        assert!(validate_ella_layout(1, &interfaces).is_err());
+        assert!(validate_ella_layout(2, &layout()).is_err());
+    }
+    #[test]
+    fn physical_selector_rejects_addresses_and_incomplete_paths() {
+        assert_eq!(parse_port("8-1.2").unwrap(), (8, vec![1, 2]));
+        for p in ["", "008:002", "8-", "8-0", "0-1", "8-1/2", "8-1.2:1.0"] {
+            assert!(parse_port(p).is_err(), "{p}");
+        }
+    }
 }

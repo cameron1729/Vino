@@ -1,0 +1,5931 @@
+{
+  "schema_version": 1,
+  "started_unix": 1792162416.57451,
+  "setup": {
+    "heads": [
+      {
+        "name": "DVI-I-1-1",
+        "width": 1920,
+        "height": 1080,
+        "x": 0,
+        "y": 0
+      },
+      {
+        "name": "DVI-I-2-2",
+        "width": 1920,
+        "height": 1080,
+        "x": 1920,
+        "y": 0
+      }
+    ],
+    "pids": {
+      "Xorg": 2873,
+      "kwin_x11": 3934,
+      "DisplayLinkManager": 1011142
+    },
+    "monitor_listing": "Monitors: 3\n 0: +*eDP 1920/302x1200/188+960+1080  eDP\n 1: +DVI-I-2-2 1920/527x1080/296+1920+0  DVI-I-2-2\n 2: +DVI-I-1-1 1920/531x1080/299+0+0  DVI-I-1-1\n"
+  },
+  "method": "same source pixels and nominal input cadence; live driver versus offline Vino GPU",
+  "delivered_frame_rate_verified": false,
+  "quality_equivalence_verified": false,
+  "seconds": 10,
+  "warmup": 3,
+  "pairs": 3,
+  "limitations": [
+    "No dock/output completion counter, dropped-frame count, or screen-to-screen latency measurement",
+    "Official service includes EVDI capture, codec selection, adaptive quality, transport and management",
+    "Vino GPU includes its padding/cache/framing but no EVDI capture or USB transport",
+    "Official quality, damage handling and frame selection are not forced to match Vino",
+    "Static baseline holds one image; active cases submit full-window damage at each input frame",
+    "Normal desktop, automatic clocks, short runs; no heat or power conclusion"
+  ],
+  "versions": "displaylink-driver\t6.4.0-22\nevdi\t1.15.1-197\n",
+  "kernel": "7.0.0-34-generic",
+  "sha256": {
+    "/home/cameronball/Projects/Vino/revdi/target/release/vino-gpu": "50e6f3e7b5d458a4ebd82c964a6b4f86372599969ce9228e526341c942d1bb1c",
+    "/home/cameronball/Projects/Vino/gpu-artifacts/official-comparison/live-display": "847c7b55ad246d4882e3953323528e47357af667307fcc663130047a6a4cfdb6",
+    "/usr/lib/displaylink-driver/DisplayLinkManager": "e57cc78ca42b8cb06a20892af76ce29f0f055136760428421133e6af2822ed4a",
+    "/home/cameronball/Projects/Vino/tools/gpu/compare-official.py": "84bbddd14da7724bf1f6d9fc30de62f191dbc63797a0d011d6085000cfe1f4d7",
+    "gpu-artifacts/official-comparison/run-1/idle.bgrx": "b8fb35be385d70ca99d8ba49d36cd24abf2a20a51f45b7b83bc2185ebb0b480c",
+    "gpu-artifacts/official-comparison/run-1/scroll.bgrx": "1a353b169464e1d1492fd58dde04203c48df7a12f011425c524240b4c91b9da9",
+    "gpu-artifacts/official-comparison/run-1/motion.bgrx": "bb557d60243098096571c016a1fe23ce5e85f0721bb47b79ca3e3f2c5bdd93ae"
+  },
+  "runs": [
+    {
+      "repeat": 0,
+      "case": "idle",
+      "target_rate": 30,
+      "backend": "official",
+      "command": [
+        "/home/cameronball/Projects/Vino/gpu-artifacts/official-comparison/live-display",
+        "gpu-artifacts/official-comparison/run-1/idle.bgrx",
+        "1920",
+        "1080",
+        "30",
+        "3",
+        "10",
+        "0",
+        "0",
+        "1920",
+        "0",
+        "2873",
+        "3934",
+        "1",
+        "checked-layout"
+      ],
+      "measurement": {
+        "scope": "live official service; output delivery unverified",
+        "frame_pairs_submitted": 0,
+        "seconds": 10.000101763,
+        "input_pairs_per_second": 0.0,
+        "static_hold": true,
+        "displaylink_cpu_seconds": 2.520839,
+        "displaylink_user_seconds": 1.272842,
+        "displaylink_system_seconds": 1.247998,
+        "displaylink_cpu_cores": 0.252081335,
+        "xorg_cpu_cores": 0.035999634,
+        "kwin_cpu_cores": 0.012999868,
+        "player_cpu_cores": 0.002884611,
+        "input_deadline_misses": 0,
+        "x_submission_p99_ms": 2.270944,
+        "pixel_checks_passed": 32
+      }
+    },
+    {
+      "repeat": 0,
+      "case": "scroll",
+      "target_rate": 30,
+      "backend": "official",
+      "command": [
+        "/home/cameronball/Projects/Vino/gpu-artifacts/official-comparison/live-display",
+        "gpu-artifacts/official-comparison/run-1/scroll.bgrx",
+        "1920",
+        "1080",
+        "30",
+        "3",
+        "10",
+        "0",
+        "0",
+        "1920",
+        "0",
+        "2873",
+        "3934",
+        "0",
+        "checked-layout"
+      ],
+      "measurement": {
+        "scope": "live official service; output delivery unverified",
+        "frame_pairs_submitted": 300,
+        "seconds": 10.00005924,
+        "input_pairs_per_second": 29.999822,
+        "static_hold": false,
+        "displaylink_cpu_seconds": 11.232884,
+        "displaylink_user_seconds": 8.482083,
+        "displaylink_system_seconds": 2.7508,
+        "displaylink_cpu_cores": 1.123281746,
+        "xorg_cpu_cores": 0.108999354,
+        "kwin_cpu_cores": 0.056999662,
+        "player_cpu_cores": 0.094807898,
+        "input_deadline_misses": 13,
+        "x_submission_p99_ms": 46.869426,
+        "pixel_checks_passed": 32
+      }
+    },
+    {
+      "repeat": 0,
+      "case": "scroll",
+      "target_rate": 30,
+      "backend": "gpu",
+      "command": [
+        "/home/cameronball/Projects/Vino/revdi/target/release/vino-gpu",
+        "sample",
+        "--case",
+        "scroll",
+        "--rate",
+        "30",
+        "--warmup",
+        "3",
+        "--seconds",
+        "10",
+        "--output",
+        "gpu-artifacts/official-comparison/run-1/0-scroll-30-gpu.json"
+      ],
+      "measurement": {
+        "average_cpu_cores": 0.6266964098857405,
+        "average_package_watts": 21.455001465067152,
+        "backend": "gpu",
+        "cpu_seconds": 7.048784378,
+        "cpu_threads": null,
+        "deadline_misses": 300,
+        "encoded_bytes": 2034531648,
+        "encoded_strips": 1224000,
+        "frame_pairs": 300,
+        "frame_pairs_per_second": 26.672531444218645,
+        "gpu_dispatches": 1200,
+        "gpu_stage_totals": {
+          "pack_ms": 2262.6374391542795,
+          "readback_ms": 560.5819249999993,
+          "submit_wait_ms": 4314.619157999994,
+          "transform_ms": 972.1197996578175,
+          "upload_ms": 213.46973799999978
+        },
+        "joules_per_frame_pair": 0.804385647081788,
+        "p50_ms": 37.375391,
+        "p95_ms": 41.386196,
+        "p99_ms": 43.250209,
+        "package_joules": 241.31569412453638,
+        "power_error": null,
+        "power_samples": [
+          {
+            "seconds": 0.000385292,
+            "temperature_c": 58.0,
+            "watts": 23.199
+          },
+          {
+            "seconds": 0.101171882,
+            "temperature_c": 58.0,
+            "watts": 23.162
+          },
+          {
+            "seconds": 0.201425845,
+            "temperature_c": 59.0,
+            "watts": 23.224
+          },
+          {
+            "seconds": 0.301688974,
+            "temperature_c": 59.0,
+            "watts": 23.178
+          },
+          {
+            "seconds": 0.40238256,
+            "temperature_c": 59.0,
+            "watts": 24.016
+          },
+          {
+            "seconds": 0.502663914,
+            "temperature_c": 58.0,
+            "watts": 23.234
+          },
+          {
+            "seconds": 0.602897779,
+            "temperature_c": 58.0,
+            "watts": 23.235
+          },
+          {
+            "seconds": 0.703628685,
+            "temperature_c": 59.0,
+            "watts": 23.183
+          },
+          {
+            "seconds": 0.805092525,
+            "temperature_c": 58.0,
+            "watts": 23.158
+          },
+          {
+            "seconds": 0.905540671,
+            "temperature_c": 58.0,
+            "watts": 23.126
+          },
+          {
+            "seconds": 1.006015728,
+            "temperature_c": 58.0,
+            "watts": 23.069
+          },
+          {
+            "seconds": 1.106254832,
+            "temperature_c": 60.0,
+            "watts": 23.12
+          },
+          {
+            "seconds": 1.206529003,
+            "temperature_c": 58.0,
+            "watts": 23.112
+          },
+          {
+            "seconds": 1.3072176899999999,
+            "temperature_c": 58.0,
+            "watts": 23.075
+          },
+          {
+            "seconds": 1.4074878530000001,
+            "temperature_c": 59.0,
+            "watts": 23.198
+          },
+          {
+            "seconds": 1.507768085,
+            "temperature_c": 58.0,
+            "watts": 23.146
+          },
+          {
+            "seconds": 1.609094578,
+            "temperature_c": 58.0,
+            "watts": 23.003
+          },
+          {
+            "seconds": 1.709315359,
+            "temperature_c": 58.0,
+            "watts": 23.046
+          },
+          {
+            "seconds": 1.8100469160000001,
+            "temperature_c": 58.0,
+            "watts": 22.224
+          },
+          {
+            "seconds": 1.910309595,
+            "temperature_c": 57.0,
+            "watts": 22.081
+          },
+          {
+            "seconds": 2.010582003,
+            "temperature_c": 57.0,
+            "watts": 22.023
+          },
+          {
+            "seconds": 2.111509898,
+            "temperature_c": 57.0,
+            "watts": 21.183
+          },
+          {
+            "seconds": 2.2120687119999998,
+            "temperature_c": 58.0,
+            "watts": 21.144
+          },
+          {
+            "seconds": 2.312676969,
+            "temperature_c": 57.0,
+            "watts": 21.036
+          },
+          {
+            "seconds": 2.41306303,
+            "temperature_c": 58.0,
+            "watts": 21.125
+          },
+          {
+            "seconds": 2.513975817,
+            "temperature_c": 58.0,
+            "watts": 21.173
+          },
+          {
+            "seconds": 2.614286737,
+            "temperature_c": 58.0,
+            "watts": 21.161
+          },
+          {
+            "seconds": 2.714814082,
+            "temperature_c": 58.0,
+            "watts": 21.127
+          },
+          {
+            "seconds": 2.815146953,
+            "temperature_c": 57.0,
+            "watts": 21.061
+          },
+          {
+            "seconds": 2.915423659,
+            "temperature_c": 58.0,
+            "watts": 21.031
+          },
+          {
+            "seconds": 3.016233334,
+            "temperature_c": 57.0,
+            "watts": 20.225
+          },
+          {
+            "seconds": 3.117317763,
+            "temperature_c": 58.0,
+            "watts": 20.249
+          },
+          {
+            "seconds": 3.217729271,
+            "temperature_c": 57.0,
+            "watts": 20.163
+          },
+          {
+            "seconds": 3.317942107,
+            "temperature_c": 58.0,
+            "watts": 20.248
+          },
+          {
+            "seconds": 3.418311367,
+            "temperature_c": 57.0,
+            "watts": 20.243
+          },
+          {
+            "seconds": 3.5189092239999997,
+            "temperature_c": 58.0,
+            "watts": 21.119
+          },
+          {
+            "seconds": 3.619143411,
+            "temperature_c": 58.0,
+            "watts": 21.031
+          },
+          {
+            "seconds": 3.719410769,
+            "temperature_c": 57.0,
+            "watts": 21.009
+          },
+          {
+            "seconds": 3.8200533610000003,
+            "temperature_c": 57.0,
+            "watts": 20.217
+          },
+          {
+            "seconds": 3.920376985,
+            "temperature_c": 57.0,
+            "watts": 20.129
+          },
+          {
+            "seconds": 4.02067993,
+            "temperature_c": 57.0,
+            "watts": 20.13
+          },
+          {
+            "seconds": 4.121521945,
+            "temperature_c": 57.0,
+            "watts": 20.058
+          },
+          {
+            "seconds": 4.222156943,
+            "temperature_c": 57.0,
+            "watts": 20.122
+          },
+          {
+            "seconds": 4.322373055,
+            "temperature_c": 58.0,
+            "watts": 20.124
+          },
+          {
+            "seconds": 4.422555595,
+            "temperature_c": 58.0,
+            "watts": 21.027
+          },
+          {
+            "seconds": 4.522778491,
+            "temperature_c": 59.0,
+            "watts": 21.12
+          },
+          {
+            "seconds": 4.62307246,
+            "temperature_c": 58.0,
+            "watts": 21.165
+          },
+          {
+            "seconds": 4.723990828,
+            "temperature_c": 58.0,
+            "watts": 21.183
+          },
+          {
+            "seconds": 4.824655852,
+            "temperature_c": 58.0,
+            "watts": 21.19
+          },
+          {
+            "seconds": 4.925345722,
+            "temperature_c": 58.0,
+            "watts": 21.23
+          },
+          {
+            "seconds": 5.025607611,
+            "temperature_c": 58.0,
+            "watts": 22.009
+          },
+          {
+            "seconds": 5.125897262,
+            "temperature_c": 58.0,
+            "watts": 21.24
+          },
+          {
+            "seconds": 5.226877857,
+            "temperature_c": 57.0,
+            "watts": 21.133
+          },
+          {
+            "seconds": 5.327331385,
+            "temperature_c": 57.0,
+            "watts": 21.124
+          },
+          {
+            "seconds": 5.42761793,
+            "temperature_c": 58.0,
+            "watts": 21.192
+          },
+          {
+            "seconds": 5.527940953,
+            "temperature_c": 57.0,
+            "watts": 21.182
+          },
+          {
+            "seconds": 5.6287462900000005,
+            "temperature_c": 58.0,
+            "watts": 21.252
+          },
+          {
+            "seconds": 5.72959581,
+            "temperature_c": 58.0,
+            "watts": 21.189
+          },
+          {
+            "seconds": 5.83018345,
+            "temperature_c": 58.0,
+            "watts": 21.151
+          },
+          {
+            "seconds": 5.930438315,
+            "temperature_c": 57.0,
+            "watts": 21.045
+          },
+          {
+            "seconds": 6.030698781,
+            "temperature_c": 58.0,
+            "watts": 21.012
+          },
+          {
+            "seconds": 6.131410002,
+            "temperature_c": 57.0,
+            "watts": 20.225
+          },
+          {
+            "seconds": 6.232276784,
+            "temperature_c": 57.0,
+            "watts": 21.009
+          },
+          {
+            "seconds": 6.333206374,
+            "temperature_c": 58.0,
+            "watts": 21.062
+          },
+          {
+            "seconds": 6.434018815,
+            "temperature_c": 59.0,
+            "watts": 21.179
+          },
+          {
+            "seconds": 6.534863286,
+            "temperature_c": 59.0,
+            "watts": 21.222
+          },
+          {
+            "seconds": 6.635409317,
+            "temperature_c": 58.0,
+            "watts": 22.051
+          },
+          {
+            "seconds": 6.735671357,
+            "temperature_c": 59.0,
+            "watts": 22.125
+          },
+          {
+            "seconds": 6.835929289,
+            "temperature_c": 58.0,
+            "watts": 22.123
+          },
+          {
+            "seconds": 6.936626904,
+            "temperature_c": 58.0,
+            "watts": 22.147
+          },
+          {
+            "seconds": 7.036931884,
+            "temperature_c": 58.0,
+            "watts": 22.115
+          },
+          {
+            "seconds": 7.137206838,
+            "temperature_c": 57.0,
+            "watts": 22.072
+          },
+          {
+            "seconds": 7.238579258,
+            "temperature_c": 57.0,
+            "watts": 21.227
+          },
+          {
+            "seconds": 7.338868759,
+            "temperature_c": 57.0,
+            "watts": 21.164
+          },
+          {
+            "seconds": 7.439627629,
+            "temperature_c": 58.0,
+            "watts": 22.024
+          },
+          {
+            "seconds": 7.54015709,
+            "temperature_c": 58.0,
+            "watts": 21.186
+          },
+          {
+            "seconds": 7.640493559,
+            "temperature_c": 58.0,
+            "watts": 21.149
+          },
+          {
+            "seconds": 7.741288928,
+            "temperature_c": 58.0,
+            "watts": 21.223
+          },
+          {
+            "seconds": 7.84161596,
+            "temperature_c": 58.0,
+            "watts": 21.187
+          },
+          {
+            "seconds": 7.942108662,
+            "temperature_c": 57.0,
+            "watts": 21.064
+          },
+          {
+            "seconds": 8.042523287,
+            "temperature_c": 58.0,
+            "watts": 21.058
+          },
+          {
+            "seconds": 8.142870487,
+            "temperature_c": 58.0,
+            "watts": 21.018
+          },
+          {
+            "seconds": 8.243491258,
+            "temperature_c": 57.0,
+            "watts": 21.005
+          },
+          {
+            "seconds": 8.343710468,
+            "temperature_c": 58.0,
+            "watts": 20.231
+          },
+          {
+            "seconds": 8.443915822,
+            "temperature_c": 57.0,
+            "watts": 21.035
+          },
+          {
+            "seconds": 8.544951211,
+            "temperature_c": 57.0,
+            "watts": 21.026
+          },
+          {
+            "seconds": 8.645718968,
+            "temperature_c": 57.0,
+            "watts": 20.225
+          },
+          {
+            "seconds": 8.746307059,
+            "temperature_c": 58.0,
+            "watts": 21.087
+          },
+          {
+            "seconds": 8.847364299,
+            "temperature_c": 58.0,
+            "watts": 21.123
+          },
+          {
+            "seconds": 8.947951258,
+            "temperature_c": 58.0,
+            "watts": 21.132
+          },
+          {
+            "seconds": 9.048667509,
+            "temperature_c": 59.0,
+            "watts": 21.183
+          },
+          {
+            "seconds": 9.149651151,
+            "temperature_c": 58.0,
+            "watts": 21.169
+          },
+          {
+            "seconds": 9.250602643,
+            "temperature_c": 57.0,
+            "watts": 21.075
+          },
+          {
+            "seconds": 9.351103911,
+            "temperature_c": 59.0,
+            "watts": 21.125
+          },
+          {
+            "seconds": 9.451857232,
+            "temperature_c": 59.0,
+            "watts": 21.203
+          },
+          {
+            "seconds": 9.552955118,
+            "temperature_c": 57.0,
+            "watts": 21.123
+          },
+          {
+            "seconds": 9.653512482,
+            "temperature_c": 57.0,
+            "watts": 21.102
+          },
+          {
+            "seconds": 9.753763882,
+            "temperature_c": 58.0,
+            "watts": 21.094
+          },
+          {
+            "seconds": 9.853994484,
+            "temperature_c": 58.0,
+            "watts": 21.157
+          },
+          {
+            "seconds": 9.954771178,
+            "temperature_c": 57.0,
+            "watts": 21.044
+          },
+          {
+            "seconds": 10.055517115,
+            "temperature_c": 57.0,
+            "watts": 21.037
+          },
+          {
+            "seconds": 10.155840711,
+            "temperature_c": 58.0,
+            "watts": 21.024
+          },
+          {
+            "seconds": 10.256056976,
+            "temperature_c": 58.0,
+            "watts": 21.029
+          },
+          {
+            "seconds": 10.356900476,
+            "temperature_c": 59.0,
+            "watts": 21.084
+          },
+          {
+            "seconds": 10.457631705,
+            "temperature_c": 58.0,
+            "watts": 21.11
+          },
+          {
+            "seconds": 10.558323802,
+            "temperature_c": 59.0,
+            "watts": 21.133
+          },
+          {
+            "seconds": 10.658581615,
+            "temperature_c": 58.0,
+            "watts": 21.097
+          },
+          {
+            "seconds": 10.758820762,
+            "temperature_c": 58.0,
+            "watts": 21.154
+          },
+          {
+            "seconds": 10.859584403,
+            "temperature_c": 60.0,
+            "watts": 22.011
+          },
+          {
+            "seconds": 10.960369814,
+            "temperature_c": 58.0,
+            "watts": 22.055
+          },
+          {
+            "seconds": 11.060595577,
+            "temperature_c": 58.0,
+            "watts": 22.058
+          },
+          {
+            "seconds": 11.160925645,
+            "temperature_c": 58.0,
+            "watts": 22.047
+          },
+          {
+            "seconds": 11.247825372,
+            "temperature_c": 58.0,
+            "watts": 21.231
+          }
+        ],
+        "seconds": 11.247526341
+      }
+    },
+    {
+      "repeat": 0,
+      "case": "motion",
+      "target_rate": 10,
+      "backend": "official",
+      "command": [
+        "/home/cameronball/Projects/Vino/gpu-artifacts/official-comparison/live-display",
+        "gpu-artifacts/official-comparison/run-1/motion.bgrx",
+        "1920",
+        "1080",
+        "10",
+        "3",
+        "10",
+        "0",
+        "0",
+        "1920",
+        "0",
+        "2873",
+        "3934",
+        "0",
+        "checked-layout"
+      ],
+      "measurement": {
+        "scope": "live official service; output delivery unverified",
+        "frame_pairs_submitted": 100,
+        "seconds": 10.000084384,
+        "input_pairs_per_second": 9.999916,
+        "static_hold": false,
+        "displaylink_cpu_seconds": 7.761484,
+        "displaylink_user_seconds": 5.21249,
+        "displaylink_system_seconds": 2.548995,
+        "displaylink_cpu_cores": 0.776141851,
+        "xorg_cpu_cores": 0.072999384,
+        "kwin_cpu_cores": 0.041999646,
+        "player_cpu_cores": 0.024312605,
+        "input_deadline_misses": 0,
+        "x_submission_p99_ms": 8.375292,
+        "pixel_checks_passed": 32
+      }
+    },
+    {
+      "repeat": 0,
+      "case": "motion",
+      "target_rate": 10,
+      "backend": "gpu",
+      "command": [
+        "/home/cameronball/Projects/Vino/revdi/target/release/vino-gpu",
+        "sample",
+        "--case",
+        "motion",
+        "--rate",
+        "10",
+        "--warmup",
+        "3",
+        "--seconds",
+        "10",
+        "--output",
+        "gpu-artifacts/official-comparison/run-1/0-motion-10-gpu.json"
+      ],
+      "measurement": {
+        "average_cpu_cores": 0.2069555075881245,
+        "average_package_watts": 16.227332184384952,
+        "backend": "gpu",
+        "cpu_seconds": 2.0695691710000004,
+        "cpu_threads": null,
+        "deadline_misses": 100,
+        "encoded_bytes": 230355104,
+        "encoded_strips": 408000,
+        "frame_pairs": 100,
+        "frame_pairs_per_second": 9.999931893463852,
+        "gpu_dispatches": 400,
+        "gpu_stage_totals": {
+          "pack_ms": 580.1259264443667,
+          "readback_ms": 96.69135299999995,
+          "submit_wait_ms": 1312.5021,
+          "transform_ms": 324.75984773242976,
+          "upload_ms": 73.72652000000002
+        },
+        "joules_per_frame_pair": 1.622744270387626,
+        "p50_ms": 32.607853,
+        "p95_ms": 37.231096,
+        "p99_ms": 40.985358,
+        "package_joules": 162.2744270387626,
+        "power_error": null,
+        "power_samples": [
+          {
+            "seconds": 0.000665036,
+            "temperature_c": 53.0,
+            "watts": 14.23
+          },
+          {
+            "seconds": 0.101344594,
+            "temperature_c": 54.0,
+            "watts": 14.247
+          },
+          {
+            "seconds": 0.201549222,
+            "temperature_c": 54.0,
+            "watts": 14.207
+          },
+          {
+            "seconds": 0.301879296,
+            "temperature_c": 55.0,
+            "watts": 15.04
+          },
+          {
+            "seconds": 0.402598167,
+            "temperature_c": 54.0,
+            "watts": 14.187
+          },
+          {
+            "seconds": 0.503303754,
+            "temperature_c": 54.0,
+            "watts": 14.177
+          },
+          {
+            "seconds": 0.603610914,
+            "temperature_c": 54.0,
+            "watts": 14.2
+          },
+          {
+            "seconds": 0.703860237,
+            "temperature_c": 54.0,
+            "watts": 14.144
+          },
+          {
+            "seconds": 0.804834938,
+            "temperature_c": 54.0,
+            "watts": 14.098
+          },
+          {
+            "seconds": 0.905271771,
+            "temperature_c": 54.0,
+            "watts": 14.058
+          },
+          {
+            "seconds": 1.005596855,
+            "temperature_c": 56.0,
+            "watts": 15.055
+          },
+          {
+            "seconds": 1.105870954,
+            "temperature_c": 56.0,
+            "watts": 16.052
+          },
+          {
+            "seconds": 1.206657022,
+            "temperature_c": 56.0,
+            "watts": 17.003
+          },
+          {
+            "seconds": 1.307337773,
+            "temperature_c": 56.0,
+            "watts": 16.253
+          },
+          {
+            "seconds": 1.4082127770000001,
+            "temperature_c": 55.0,
+            "watts": 16.246
+          },
+          {
+            "seconds": 1.5088959320000002,
+            "temperature_c": 55.0,
+            "watts": 16.243
+          },
+          {
+            "seconds": 1.6099139249999999,
+            "temperature_c": 56.0,
+            "watts": 17.171
+          },
+          {
+            "seconds": 1.710548008,
+            "temperature_c": 56.0,
+            "watts": 17.23
+          },
+          {
+            "seconds": 1.810804684,
+            "temperature_c": 56.0,
+            "watts": 18.185
+          },
+          {
+            "seconds": 1.911232391,
+            "temperature_c": 57.0,
+            "watts": 19.208
+          },
+          {
+            "seconds": 2.011752871,
+            "temperature_c": 57.0,
+            "watts": 20.198
+          },
+          {
+            "seconds": 2.112008616,
+            "temperature_c": 57.0,
+            "watts": 21.173
+          },
+          {
+            "seconds": 2.212405885,
+            "temperature_c": 57.0,
+            "watts": 22.123
+          },
+          {
+            "seconds": 2.313142561,
+            "temperature_c": 57.0,
+            "watts": 23.038
+          },
+          {
+            "seconds": 2.413925644,
+            "temperature_c": 58.0,
+            "watts": 23.202
+          },
+          {
+            "seconds": 2.514645007,
+            "temperature_c": 58.0,
+            "watts": 24.068
+          },
+          {
+            "seconds": 2.615462885,
+            "temperature_c": 58.0,
+            "watts": 24.107
+          },
+          {
+            "seconds": 2.716190133,
+            "temperature_c": 57.0,
+            "watts": 24.076
+          },
+          {
+            "seconds": 2.81645805,
+            "temperature_c": 57.0,
+            "watts": 24.1
+          },
+          {
+            "seconds": 2.916700089,
+            "temperature_c": 57.0,
+            "watts": 24.1
+          },
+          {
+            "seconds": 3.01735997,
+            "temperature_c": 57.0,
+            "watts": 24.11
+          },
+          {
+            "seconds": 3.117675237,
+            "temperature_c": 57.0,
+            "watts": 24.116
+          },
+          {
+            "seconds": 3.217942764,
+            "temperature_c": 56.0,
+            "watts": 23.207
+          },
+          {
+            "seconds": 3.318691663,
+            "temperature_c": 55.0,
+            "watts": 22.132
+          },
+          {
+            "seconds": 3.41942363,
+            "temperature_c": 56.0,
+            "watts": 22.034
+          },
+          {
+            "seconds": 3.519681479,
+            "temperature_c": 55.0,
+            "watts": 21.061
+          },
+          {
+            "seconds": 3.6199056240000003,
+            "temperature_c": 56.0,
+            "watts": 21.104
+          },
+          {
+            "seconds": 3.720564816,
+            "temperature_c": 56.0,
+            "watts": 21.042
+          },
+          {
+            "seconds": 3.8208725980000002,
+            "temperature_c": 54.0,
+            "watts": 20.054
+          },
+          {
+            "seconds": 3.9211899580000003,
+            "temperature_c": 54.0,
+            "watts": 19.148
+          },
+          {
+            "seconds": 4.021904763,
+            "temperature_c": 55.0,
+            "watts": 19.028
+          },
+          {
+            "seconds": 4.122653131,
+            "temperature_c": 55.0,
+            "watts": 18.219
+          },
+          {
+            "seconds": 4.223777414,
+            "temperature_c": 55.0,
+            "watts": 18.04
+          },
+          {
+            "seconds": 4.324345764,
+            "temperature_c": 54.0,
+            "watts": 17.184
+          },
+          {
+            "seconds": 4.425788914,
+            "temperature_c": 55.0,
+            "watts": 17.037
+          },
+          {
+            "seconds": 4.5261602960000005,
+            "temperature_c": 54.0,
+            "watts": 17.009
+          },
+          {
+            "seconds": 4.626819397,
+            "temperature_c": 55.0,
+            "watts": 16.195
+          },
+          {
+            "seconds": 4.727495941,
+            "temperature_c": 54.0,
+            "watts": 16.052
+          },
+          {
+            "seconds": 4.828305473,
+            "temperature_c": 55.0,
+            "watts": 16.124
+          },
+          {
+            "seconds": 4.928526293,
+            "temperature_c": 54.0,
+            "watts": 15.199
+          },
+          {
+            "seconds": 5.02889992,
+            "temperature_c": 54.0,
+            "watts": 15.128
+          },
+          {
+            "seconds": 5.129508576,
+            "temperature_c": 55.0,
+            "watts": 15.135
+          },
+          {
+            "seconds": 5.229713978,
+            "temperature_c": 54.0,
+            "watts": 15.114
+          },
+          {
+            "seconds": 5.329920972,
+            "temperature_c": 55.0,
+            "watts": 15.055
+          },
+          {
+            "seconds": 5.430691351,
+            "temperature_c": 54.0,
+            "watts": 15.0
+          },
+          {
+            "seconds": 5.531689728,
+            "temperature_c": 55.0,
+            "watts": 15.079
+          },
+          {
+            "seconds": 5.632335284,
+            "temperature_c": 54.0,
+            "watts": 14.241
+          },
+          {
+            "seconds": 5.7332854300000005,
+            "temperature_c": 54.0,
+            "watts": 14.239
+          },
+          {
+            "seconds": 5.833908885,
+            "temperature_c": 55.0,
+            "watts": 15.03
+          },
+          {
+            "seconds": 5.934821771,
+            "temperature_c": 54.0,
+            "watts": 15.012
+          },
+          {
+            "seconds": 6.035524905,
+            "temperature_c": 54.0,
+            "watts": 14.2
+          },
+          {
+            "seconds": 6.1357536,
+            "temperature_c": 55.0,
+            "watts": 15.093
+          },
+          {
+            "seconds": 6.235955185,
+            "temperature_c": 55.0,
+            "watts": 15.03
+          },
+          {
+            "seconds": 6.337037549,
+            "temperature_c": 54.0,
+            "watts": 14.213
+          },
+          {
+            "seconds": 6.437691782,
+            "temperature_c": 54.0,
+            "watts": 14.178
+          },
+          {
+            "seconds": 6.538371371,
+            "temperature_c": 54.0,
+            "watts": 14.105
+          },
+          {
+            "seconds": 6.639121874,
+            "temperature_c": 55.0,
+            "watts": 14.173
+          },
+          {
+            "seconds": 6.739386146,
+            "temperature_c": 54.0,
+            "watts": 14.056
+          },
+          {
+            "seconds": 6.839581529,
+            "temperature_c": 54.0,
+            "watts": 14.116
+          },
+          {
+            "seconds": 6.940150201,
+            "temperature_c": 54.0,
+            "watts": 14.148
+          },
+          {
+            "seconds": 7.040559885,
+            "temperature_c": 54.0,
+            "watts": 14.16
+          },
+          {
+            "seconds": 7.140741322,
+            "temperature_c": 55.0,
+            "watts": 14.221
+          },
+          {
+            "seconds": 7.24106222,
+            "temperature_c": 54.0,
+            "watts": 14.131
+          },
+          {
+            "seconds": 7.341387697,
+            "temperature_c": 54.0,
+            "watts": 14.059
+          },
+          {
+            "seconds": 7.441970075,
+            "temperature_c": 53.0,
+            "watts": 13.23
+          },
+          {
+            "seconds": 7.542204321,
+            "temperature_c": 53.0,
+            "watts": 13.189
+          },
+          {
+            "seconds": 7.64251525,
+            "temperature_c": 53.0,
+            "watts": 13.169
+          },
+          {
+            "seconds": 7.74318426,
+            "temperature_c": 54.0,
+            "watts": 13.148
+          },
+          {
+            "seconds": 7.844024772,
+            "temperature_c": 53.0,
+            "watts": 13.035
+          },
+          {
+            "seconds": 7.94491159,
+            "temperature_c": 53.0,
+            "watts": 13.145
+          },
+          {
+            "seconds": 8.045616959,
+            "temperature_c": 53.0,
+            "watts": 13.108
+          },
+          {
+            "seconds": 8.145828102,
+            "temperature_c": 54.0,
+            "watts": 13.218
+          },
+          {
+            "seconds": 8.246044755,
+            "temperature_c": 54.0,
+            "watts": 13.188
+          },
+          {
+            "seconds": 8.346826396,
+            "temperature_c": 54.0,
+            "watts": 13.109
+          },
+          {
+            "seconds": 8.447760203,
+            "temperature_c": 53.0,
+            "watts": 13.083
+          },
+          {
+            "seconds": 8.548509434,
+            "temperature_c": 53.0,
+            "watts": 12.247
+          },
+          {
+            "seconds": 8.649497964,
+            "temperature_c": 53.0,
+            "watts": 13.1
+          },
+          {
+            "seconds": 8.750723106,
+            "temperature_c": 53.0,
+            "watts": 13.026
+          },
+          {
+            "seconds": 8.8510737,
+            "temperature_c": 53.0,
+            "watts": 13.047
+          },
+          {
+            "seconds": 8.951595124,
+            "temperature_c": 53.0,
+            "watts": 13.0
+          },
+          {
+            "seconds": 9.051886448,
+            "temperature_c": 53.0,
+            "watts": 13.069
+          },
+          {
+            "seconds": 9.152115955,
+            "temperature_c": 54.0,
+            "watts": 13.149
+          },
+          {
+            "seconds": 9.25227993,
+            "temperature_c": 53.0,
+            "watts": 13.154
+          },
+          {
+            "seconds": 9.352490892,
+            "temperature_c": 53.0,
+            "watts": 13.154
+          },
+          {
+            "seconds": 9.453347685,
+            "temperature_c": 53.0,
+            "watts": 13.118
+          },
+          {
+            "seconds": 9.554063314,
+            "temperature_c": 53.0,
+            "watts": 13.202
+          },
+          {
+            "seconds": 9.654919605,
+            "temperature_c": 53.0,
+            "watts": 13.162
+          },
+          {
+            "seconds": 9.755848623,
+            "temperature_c": 54.0,
+            "watts": 14.082
+          },
+          {
+            "seconds": 9.856521251,
+            "temperature_c": 53.0,
+            "watts": 14.022
+          },
+          {
+            "seconds": 9.95729596,
+            "temperature_c": 53.0,
+            "watts": 14.052
+          },
+          {
+            "seconds": 10.000545682,
+            "temperature_c": 53.0,
+            "watts": 14.035
+          }
+        ],
+        "seconds": 10.000068107
+      }
+    },
+    {
+      "repeat": 0,
+      "case": "motion",
+      "target_rate": 30,
+      "backend": "official",
+      "command": [
+        "/home/cameronball/Projects/Vino/gpu-artifacts/official-comparison/live-display",
+        "gpu-artifacts/official-comparison/run-1/motion.bgrx",
+        "1920",
+        "1080",
+        "30",
+        "3",
+        "10",
+        "0",
+        "0",
+        "1920",
+        "0",
+        "2873",
+        "3934",
+        "0",
+        "checked-layout"
+      ],
+      "measurement": {
+        "scope": "live official service; output delivery unverified",
+        "frame_pairs_submitted": 300,
+        "seconds": 10.000080165,
+        "input_pairs_per_second": 29.99976,
+        "static_hold": false,
+        "displaylink_cpu_seconds": 10.657692,
+        "displaylink_user_seconds": 7.595509,
+        "displaylink_system_seconds": 3.062183,
+        "displaylink_cpu_cores": 1.065760656,
+        "xorg_cpu_cores": 0.112999094,
+        "kwin_cpu_cores": 0.063999487,
+        "player_cpu_cores": 0.062780717,
+        "input_deadline_misses": 3,
+        "x_submission_p99_ms": 32.637129,
+        "pixel_checks_passed": 32
+      }
+    },
+    {
+      "repeat": 0,
+      "case": "motion",
+      "target_rate": 30,
+      "backend": "gpu",
+      "command": [
+        "/home/cameronball/Projects/Vino/revdi/target/release/vino-gpu",
+        "sample",
+        "--case",
+        "motion",
+        "--rate",
+        "30",
+        "--warmup",
+        "3",
+        "--seconds",
+        "10",
+        "--output",
+        "gpu-artifacts/official-comparison/run-1/0-motion-30-gpu.json"
+      ],
+      "measurement": {
+        "average_cpu_cores": 0.5696220052938111,
+        "average_package_watts": 23.88189003837779,
+        "backend": "gpu",
+        "cpu_seconds": 5.6962730950000005,
+        "cpu_threads": null,
+        "deadline_misses": 300,
+        "encoded_bytes": 691189808,
+        "encoded_strips": 1224000,
+        "frame_pairs": 300,
+        "frame_pairs_per_second": 29.99972064860126,
+        "gpu_dispatches": 1200,
+        "gpu_stage_totals": {
+          "pack_ms": 1816.9101918646684,
+          "readback_ms": 277.59895700000027,
+          "submit_wait_ms": 3878.030378,
+          "transform_ms": 958.6536538139521,
+          "upload_ms": 222.89572099999992
+        },
+        "joules_per_frame_pair": 0.796070414058715,
+        "p50_ms": 31.135997,
+        "p95_ms": 36.188794,
+        "p99_ms": 38.405918,
+        "package_joules": 238.8211242176145,
+        "power_error": null,
+        "power_samples": [
+          {
+            "seconds": 0.000662621,
+            "temperature_c": 59.0,
+            "watts": 25.012
+          },
+          {
+            "seconds": 0.100910969,
+            "temperature_c": 58.0,
+            "watts": 25.001
+          },
+          {
+            "seconds": 0.201125794,
+            "temperature_c": 58.0,
+            "watts": 25.004
+          },
+          {
+            "seconds": 0.301882835,
+            "temperature_c": 58.0,
+            "watts": 25.009
+          },
+          {
+            "seconds": 0.402858646,
+            "temperature_c": 59.0,
+            "watts": 25.025
+          },
+          {
+            "seconds": 0.503437693,
+            "temperature_c": 58.0,
+            "watts": 25.007
+          },
+          {
+            "seconds": 0.604425256,
+            "temperature_c": 58.0,
+            "watts": 25.022
+          },
+          {
+            "seconds": 0.705121182,
+            "temperature_c": 58.0,
+            "watts": 24.254
+          },
+          {
+            "seconds": 0.805328523,
+            "temperature_c": 59.0,
+            "watts": 25.007
+          },
+          {
+            "seconds": 0.9055284,
+            "temperature_c": 59.0,
+            "watts": 25.005
+          },
+          {
+            "seconds": 1.006312051,
+            "temperature_c": 59.0,
+            "watts": 25.008
+          },
+          {
+            "seconds": 1.1072461630000001,
+            "temperature_c": 59.0,
+            "watts": 25.008
+          },
+          {
+            "seconds": 1.207823748,
+            "temperature_c": 59.0,
+            "watts": 25.004
+          },
+          {
+            "seconds": 1.308125176,
+            "temperature_c": 59.0,
+            "watts": 25.018
+          },
+          {
+            "seconds": 1.408411184,
+            "temperature_c": 59.0,
+            "watts": 25.013
+          },
+          {
+            "seconds": 1.509089949,
+            "temperature_c": 59.0,
+            "watts": 25.013
+          },
+          {
+            "seconds": 1.609341593,
+            "temperature_c": 59.0,
+            "watts": 25.002
+          },
+          {
+            "seconds": 1.709624075,
+            "temperature_c": 59.0,
+            "watts": 25.033
+          },
+          {
+            "seconds": 1.8102964369999999,
+            "temperature_c": 59.0,
+            "watts": 25.022
+          },
+          {
+            "seconds": 1.910551117,
+            "temperature_c": 58.0,
+            "watts": 25.022
+          },
+          {
+            "seconds": 2.010706231,
+            "temperature_c": 59.0,
+            "watts": 25.016
+          },
+          {
+            "seconds": 2.110962624,
+            "temperature_c": 59.0,
+            "watts": 25.012
+          },
+          {
+            "seconds": 2.211154486,
+            "temperature_c": 59.0,
+            "watts": 25.018
+          },
+          {
+            "seconds": 2.311361718,
+            "temperature_c": 58.0,
+            "watts": 25.016
+          },
+          {
+            "seconds": 2.41156407,
+            "temperature_c": 59.0,
+            "watts": 25.015
+          },
+          {
+            "seconds": 2.511765039,
+            "temperature_c": 59.0,
+            "watts": 25.017
+          },
+          {
+            "seconds": 2.612586501,
+            "temperature_c": 59.0,
+            "watts": 25.009
+          },
+          {
+            "seconds": 2.712843516,
+            "temperature_c": 59.0,
+            "watts": 24.253
+          },
+          {
+            "seconds": 2.813556895,
+            "temperature_c": 59.0,
+            "watts": 25.007
+          },
+          {
+            "seconds": 2.913775889,
+            "temperature_c": 59.0,
+            "watts": 25.003
+          },
+          {
+            "seconds": 3.013959305,
+            "temperature_c": 59.0,
+            "watts": 25.007
+          },
+          {
+            "seconds": 3.114207504,
+            "temperature_c": 59.0,
+            "watts": 25.002
+          },
+          {
+            "seconds": 3.214499805,
+            "temperature_c": 59.0,
+            "watts": 25.017
+          },
+          {
+            "seconds": 3.31520007,
+            "temperature_c": 59.0,
+            "watts": 25.008
+          },
+          {
+            "seconds": 3.415962742,
+            "temperature_c": 59.0,
+            "watts": 25.001
+          },
+          {
+            "seconds": 3.5162260180000002,
+            "temperature_c": 59.0,
+            "watts": 25.018
+          },
+          {
+            "seconds": 3.616469017,
+            "temperature_c": 59.0,
+            "watts": 25.013
+          },
+          {
+            "seconds": 3.717429099,
+            "temperature_c": 59.0,
+            "watts": 24.255
+          },
+          {
+            "seconds": 3.817945239,
+            "temperature_c": 59.0,
+            "watts": 25.005
+          },
+          {
+            "seconds": 3.918232871,
+            "temperature_c": 59.0,
+            "watts": 24.255
+          },
+          {
+            "seconds": 4.018537856,
+            "temperature_c": 59.0,
+            "watts": 25.006
+          },
+          {
+            "seconds": 4.119479043,
+            "temperature_c": 58.0,
+            "watts": 24.135
+          },
+          {
+            "seconds": 4.220250432,
+            "temperature_c": 58.0,
+            "watts": 23.215
+          },
+          {
+            "seconds": 4.3208631539999995,
+            "temperature_c": 58.0,
+            "watts": 23.089
+          },
+          {
+            "seconds": 4.421583738,
+            "temperature_c": 58.0,
+            "watts": 22.246
+          },
+          {
+            "seconds": 4.521866701,
+            "temperature_c": 57.0,
+            "watts": 22.107
+          },
+          {
+            "seconds": 4.622188287,
+            "temperature_c": 58.0,
+            "watts": 22.111
+          },
+          {
+            "seconds": 4.722899143,
+            "temperature_c": 57.0,
+            "watts": 21.23
+          },
+          {
+            "seconds": 4.8236657229999995,
+            "temperature_c": 57.0,
+            "watts": 21.201
+          },
+          {
+            "seconds": 4.923846745,
+            "temperature_c": 58.0,
+            "watts": 21.146
+          },
+          {
+            "seconds": 5.0240979,
+            "temperature_c": 58.0,
+            "watts": 21.242
+          },
+          {
+            "seconds": 5.124824795,
+            "temperature_c": 60.0,
+            "watts": 22.182
+          },
+          {
+            "seconds": 5.225590985,
+            "temperature_c": 60.0,
+            "watts": 23.029
+          },
+          {
+            "seconds": 5.32587472,
+            "temperature_c": 60.0,
+            "watts": 23.15
+          },
+          {
+            "seconds": 5.426053689,
+            "temperature_c": 60.0,
+            "watts": 24.03
+          },
+          {
+            "seconds": 5.526276681,
+            "temperature_c": 60.0,
+            "watts": 24.186
+          },
+          {
+            "seconds": 5.626453265,
+            "temperature_c": 60.0,
+            "watts": 25.009
+          },
+          {
+            "seconds": 5.726674213,
+            "temperature_c": 59.0,
+            "watts": 24.229
+          },
+          {
+            "seconds": 5.826926209,
+            "temperature_c": 59.0,
+            "watts": 24.238
+          },
+          {
+            "seconds": 5.92783199,
+            "temperature_c": 59.0,
+            "watts": 24.216
+          },
+          {
+            "seconds": 6.028388977,
+            "temperature_c": 59.0,
+            "watts": 24.222
+          },
+          {
+            "seconds": 6.128705815,
+            "temperature_c": 59.0,
+            "watts": 24.223
+          },
+          {
+            "seconds": 6.228986425,
+            "temperature_c": 59.0,
+            "watts": 24.22
+          },
+          {
+            "seconds": 6.32965951,
+            "temperature_c": 59.0,
+            "watts": 24.225
+          },
+          {
+            "seconds": 6.429901116,
+            "temperature_c": 59.0,
+            "watts": 24.225
+          },
+          {
+            "seconds": 6.530138475,
+            "temperature_c": 59.0,
+            "watts": 24.231
+          },
+          {
+            "seconds": 6.630907099,
+            "temperature_c": 59.0,
+            "watts": 24.228
+          },
+          {
+            "seconds": 6.731105114,
+            "temperature_c": 59.0,
+            "watts": 24.232
+          },
+          {
+            "seconds": 6.831304833,
+            "temperature_c": 59.0,
+            "watts": 24.233
+          },
+          {
+            "seconds": 6.932118511,
+            "temperature_c": 59.0,
+            "watts": 24.238
+          },
+          {
+            "seconds": 7.032316296,
+            "temperature_c": 59.0,
+            "watts": 24.244
+          },
+          {
+            "seconds": 7.132543737,
+            "temperature_c": 59.0,
+            "watts": 24.25
+          },
+          {
+            "seconds": 7.233233623,
+            "temperature_c": 59.0,
+            "watts": 24.237
+          },
+          {
+            "seconds": 7.333529743,
+            "temperature_c": 59.0,
+            "watts": 24.249
+          },
+          {
+            "seconds": 7.433813328,
+            "temperature_c": 59.0,
+            "watts": 24.241
+          },
+          {
+            "seconds": 7.534499157,
+            "temperature_c": 60.0,
+            "watts": 25.011
+          },
+          {
+            "seconds": 7.634741325,
+            "temperature_c": 59.0,
+            "watts": 24.18
+          },
+          {
+            "seconds": 7.734964297,
+            "temperature_c": 59.0,
+            "watts": 24.116
+          },
+          {
+            "seconds": 7.835738903,
+            "temperature_c": 58.0,
+            "watts": 23.226
+          },
+          {
+            "seconds": 7.936543405,
+            "temperature_c": 58.0,
+            "watts": 23.202
+          },
+          {
+            "seconds": 8.036764283,
+            "temperature_c": 59.0,
+            "watts": 23.198
+          },
+          {
+            "seconds": 8.137114935,
+            "temperature_c": 58.0,
+            "watts": 23.061
+          },
+          {
+            "seconds": 8.237997984,
+            "temperature_c": 59.0,
+            "watts": 23.043
+          },
+          {
+            "seconds": 8.338823034,
+            "temperature_c": 59.0,
+            "watts": 22.201
+          },
+          {
+            "seconds": 8.439414026,
+            "temperature_c": 58.0,
+            "watts": 22.137
+          },
+          {
+            "seconds": 8.540127537,
+            "temperature_c": 58.0,
+            "watts": 22.003
+          },
+          {
+            "seconds": 8.641144117,
+            "temperature_c": 58.0,
+            "watts": 21.216
+          },
+          {
+            "seconds": 8.741757831,
+            "temperature_c": 58.0,
+            "watts": 21.075
+          },
+          {
+            "seconds": 8.842028232,
+            "temperature_c": 58.0,
+            "watts": 21.109
+          },
+          {
+            "seconds": 8.942425511,
+            "temperature_c": 58.0,
+            "watts": 21.043
+          },
+          {
+            "seconds": 9.042930092,
+            "temperature_c": 58.0,
+            "watts": 21.107
+          },
+          {
+            "seconds": 9.143194732,
+            "temperature_c": 59.0,
+            "watts": 22.064
+          },
+          {
+            "seconds": 9.24340955,
+            "temperature_c": 60.0,
+            "watts": 22.229
+          },
+          {
+            "seconds": 9.344407274,
+            "temperature_c": 59.0,
+            "watts": 23.048
+          },
+          {
+            "seconds": 9.445032961,
+            "temperature_c": 59.0,
+            "watts": 23.058
+          },
+          {
+            "seconds": 9.545805693,
+            "temperature_c": 60.0,
+            "watts": 23.123
+          },
+          {
+            "seconds": 9.646020421,
+            "temperature_c": 59.0,
+            "watts": 23.125
+          },
+          {
+            "seconds": 9.746376372,
+            "temperature_c": 58.0,
+            "watts": 23.076
+          },
+          {
+            "seconds": 9.846974728,
+            "temperature_c": 60.0,
+            "watts": 23.11
+          },
+          {
+            "seconds": 9.947248456,
+            "temperature_c": 59.0,
+            "watts": 23.107
+          },
+          {
+            "seconds": 10.00062789,
+            "temperature_c": 59.0,
+            "watts": 23.15
+          }
+        ],
+        "seconds": 10.000093118
+      }
+    },
+    {
+      "repeat": 1,
+      "case": "idle",
+      "target_rate": 30,
+      "backend": "official",
+      "command": [
+        "/home/cameronball/Projects/Vino/gpu-artifacts/official-comparison/live-display",
+        "gpu-artifacts/official-comparison/run-1/idle.bgrx",
+        "1920",
+        "1080",
+        "30",
+        "3",
+        "10",
+        "0",
+        "0",
+        "1920",
+        "0",
+        "2873",
+        "3934",
+        "1",
+        "checked-layout"
+      ],
+      "measurement": {
+        "scope": "live official service; output delivery unverified",
+        "frame_pairs_submitted": 0,
+        "seconds": 10.000108431,
+        "input_pairs_per_second": 0.0,
+        "static_hold": true,
+        "displaylink_cpu_seconds": 2.365384,
+        "displaylink_user_seconds": 1.204263,
+        "displaylink_system_seconds": 1.161121,
+        "displaylink_cpu_cores": 0.236535835,
+        "xorg_cpu_cores": 0.033999631,
+        "kwin_cpu_cores": 0.012999859,
+        "player_cpu_cores": 0.002237273,
+        "input_deadline_misses": 0,
+        "x_submission_p99_ms": 0.477134,
+        "pixel_checks_passed": 32
+      }
+    },
+    {
+      "repeat": 1,
+      "case": "scroll",
+      "target_rate": 30,
+      "backend": "gpu",
+      "command": [
+        "/home/cameronball/Projects/Vino/revdi/target/release/vino-gpu",
+        "sample",
+        "--case",
+        "scroll",
+        "--rate",
+        "30",
+        "--warmup",
+        "3",
+        "--seconds",
+        "10",
+        "--output",
+        "gpu-artifacts/official-comparison/run-1/1-scroll-30-gpu.json"
+      ],
+      "measurement": {
+        "average_cpu_cores": 0.6322575779199089,
+        "average_package_watts": 23.234407342980628,
+        "backend": "gpu",
+        "cpu_seconds": 7.1162495759999995,
+        "cpu_threads": null,
+        "deadline_misses": 300,
+        "encoded_bytes": 2034531648,
+        "encoded_strips": 1224000,
+        "frame_pairs": 300,
+        "frame_pairs_per_second": 26.654106401168285,
+        "gpu_dispatches": 1200,
+        "gpu_stage_totals": {
+          "pack_ms": 2250.143540592291,
+          "readback_ms": 544.2749820000004,
+          "submit_wait_ms": 4250.399132,
+          "transform_ms": 950.2808253361587,
+          "upload_ms": 203.69745800000013
+        },
+        "joules_per_frame_pair": 0.8717008551433648,
+        "p50_ms": 36.895702,
+        "p95_ms": 43.483165,
+        "p99_ms": 47.914027,
+        "package_joules": 261.51025654300946,
+        "power_error": null,
+        "power_samples": [
+          {
+            "seconds": 0.000416781,
+            "temperature_c": 56.0,
+            "watts": 23.091
+          },
+          {
+            "seconds": 0.100686666,
+            "temperature_c": 56.0,
+            "watts": 23.05
+          },
+          {
+            "seconds": 0.201329841,
+            "temperature_c": 56.0,
+            "watts": 23.16
+          },
+          {
+            "seconds": 0.301617249,
+            "temperature_c": 56.0,
+            "watts": 23.129
+          },
+          {
+            "seconds": 0.401840136,
+            "temperature_c": 57.0,
+            "watts": 24.052
+          },
+          {
+            "seconds": 0.502614787,
+            "temperature_c": 57.0,
+            "watts": 24.164
+          },
+          {
+            "seconds": 0.602805223,
+            "temperature_c": 57.0,
+            "watts": 24.175
+          },
+          {
+            "seconds": 0.70306008,
+            "temperature_c": 57.0,
+            "watts": 24.223
+          },
+          {
+            "seconds": 0.803944176,
+            "temperature_c": 57.0,
+            "watts": 24.216
+          },
+          {
+            "seconds": 0.90463507,
+            "temperature_c": 57.0,
+            "watts": 24.175
+          },
+          {
+            "seconds": 1.005409862,
+            "temperature_c": 57.0,
+            "watts": 24.123
+          },
+          {
+            "seconds": 1.106223987,
+            "temperature_c": 57.0,
+            "watts": 24.097
+          },
+          {
+            "seconds": 1.20700515,
+            "temperature_c": 57.0,
+            "watts": 24.038
+          },
+          {
+            "seconds": 1.308057462,
+            "temperature_c": 57.0,
+            "watts": 24.074
+          },
+          {
+            "seconds": 1.408873791,
+            "temperature_c": 57.0,
+            "watts": 23.248
+          },
+          {
+            "seconds": 1.509456082,
+            "temperature_c": 56.0,
+            "watts": 23.111
+          },
+          {
+            "seconds": 1.6103453170000002,
+            "temperature_c": 57.0,
+            "watts": 23.108
+          },
+          {
+            "seconds": 1.711072139,
+            "temperature_c": 56.0,
+            "watts": 23.044
+          },
+          {
+            "seconds": 1.811936619,
+            "temperature_c": 56.0,
+            "watts": 22.236
+          },
+          {
+            "seconds": 1.912659152,
+            "temperature_c": 57.0,
+            "watts": 23.121
+          },
+          {
+            "seconds": 2.013490019,
+            "temperature_c": 57.0,
+            "watts": 24.0
+          },
+          {
+            "seconds": 2.114238862,
+            "temperature_c": 57.0,
+            "watts": 23.155
+          },
+          {
+            "seconds": 2.214968539,
+            "temperature_c": 57.0,
+            "watts": 23.14
+          },
+          {
+            "seconds": 2.31527338,
+            "temperature_c": 57.0,
+            "watts": 23.182
+          },
+          {
+            "seconds": 2.41555081,
+            "temperature_c": 57.0,
+            "watts": 24.007
+          },
+          {
+            "seconds": 2.516279365,
+            "temperature_c": 57.0,
+            "watts": 23.228
+          },
+          {
+            "seconds": 2.616470373,
+            "temperature_c": 57.0,
+            "watts": 23.126
+          },
+          {
+            "seconds": 2.716919875,
+            "temperature_c": 57.0,
+            "watts": 23.209
+          },
+          {
+            "seconds": 2.818120004,
+            "temperature_c": 56.0,
+            "watts": 23.066
+          },
+          {
+            "seconds": 2.918418273,
+            "temperature_c": 56.0,
+            "watts": 22.254
+          },
+          {
+            "seconds": 3.019274718,
+            "temperature_c": 56.0,
+            "watts": 23.008
+          },
+          {
+            "seconds": 3.119966404,
+            "temperature_c": 56.0,
+            "watts": 22.219
+          },
+          {
+            "seconds": 3.220708445,
+            "temperature_c": 57.0,
+            "watts": 22.13
+          },
+          {
+            "seconds": 3.320909943,
+            "temperature_c": 57.0,
+            "watts": 22.057
+          },
+          {
+            "seconds": 3.42126036,
+            "temperature_c": 58.0,
+            "watts": 22.216
+          },
+          {
+            "seconds": 3.5218651530000002,
+            "temperature_c": 57.0,
+            "watts": 23.046
+          },
+          {
+            "seconds": 3.622118768,
+            "temperature_c": 58.0,
+            "watts": 23.158
+          },
+          {
+            "seconds": 3.7223282109999998,
+            "temperature_c": 58.0,
+            "watts": 23.253
+          },
+          {
+            "seconds": 3.822515081,
+            "temperature_c": 58.0,
+            "watts": 24.123
+          },
+          {
+            "seconds": 3.9228312340000002,
+            "temperature_c": 58.0,
+            "watts": 24.226
+          },
+          {
+            "seconds": 4.023656711,
+            "temperature_c": 57.0,
+            "watts": 24.226
+          },
+          {
+            "seconds": 4.124542041,
+            "temperature_c": 58.0,
+            "watts": 24.203
+          },
+          {
+            "seconds": 4.22526746,
+            "temperature_c": 58.0,
+            "watts": 24.197
+          },
+          {
+            "seconds": 4.325924752,
+            "temperature_c": 58.0,
+            "watts": 24.209
+          },
+          {
+            "seconds": 4.426716867,
+            "temperature_c": 57.0,
+            "watts": 24.2
+          },
+          {
+            "seconds": 4.527537335,
+            "temperature_c": 57.0,
+            "watts": 24.169
+          },
+          {
+            "seconds": 4.628581512,
+            "temperature_c": 57.0,
+            "watts": 24.136
+          },
+          {
+            "seconds": 4.729114351,
+            "temperature_c": 58.0,
+            "watts": 24.175
+          },
+          {
+            "seconds": 4.829347328,
+            "temperature_c": 57.0,
+            "watts": 24.193
+          },
+          {
+            "seconds": 4.92974306,
+            "temperature_c": 57.0,
+            "watts": 24.124
+          },
+          {
+            "seconds": 5.030280267,
+            "temperature_c": 58.0,
+            "watts": 24.167
+          },
+          {
+            "seconds": 5.131130942,
+            "temperature_c": 57.0,
+            "watts": 24.025
+          },
+          {
+            "seconds": 5.231381582,
+            "temperature_c": 57.0,
+            "watts": 23.219
+          },
+          {
+            "seconds": 5.331687787,
+            "temperature_c": 57.0,
+            "watts": 23.101
+          },
+          {
+            "seconds": 5.432288213,
+            "temperature_c": 57.0,
+            "watts": 23.043
+          },
+          {
+            "seconds": 5.532566124,
+            "temperature_c": 57.0,
+            "watts": 23.062
+          },
+          {
+            "seconds": 5.632738187,
+            "temperature_c": 57.0,
+            "watts": 23.026
+          },
+          {
+            "seconds": 5.733002463,
+            "temperature_c": 57.0,
+            "watts": 22.192
+          },
+          {
+            "seconds": 5.833223719,
+            "temperature_c": 58.0,
+            "watts": 23.019
+          },
+          {
+            "seconds": 5.933930794,
+            "temperature_c": 57.0,
+            "watts": 22.233
+          },
+          {
+            "seconds": 6.034187576,
+            "temperature_c": 57.0,
+            "watts": 23.021
+          },
+          {
+            "seconds": 6.134392171,
+            "temperature_c": 57.0,
+            "watts": 23.021
+          },
+          {
+            "seconds": 6.235202169,
+            "temperature_c": 57.0,
+            "watts": 23.04
+          },
+          {
+            "seconds": 6.335988394,
+            "temperature_c": 57.0,
+            "watts": 23.022
+          },
+          {
+            "seconds": 6.436939958,
+            "temperature_c": 57.0,
+            "watts": 22.195
+          },
+          {
+            "seconds": 6.537568486,
+            "temperature_c": 57.0,
+            "watts": 22.211
+          },
+          {
+            "seconds": 6.637832281,
+            "temperature_c": 57.0,
+            "watts": 22.134
+          },
+          {
+            "seconds": 6.738060289,
+            "temperature_c": 57.0,
+            "watts": 22.12
+          },
+          {
+            "seconds": 6.838788264,
+            "temperature_c": 57.0,
+            "watts": 22.049
+          },
+          {
+            "seconds": 6.939018126,
+            "temperature_c": 57.0,
+            "watts": 22.035
+          },
+          {
+            "seconds": 7.039231798,
+            "temperature_c": 57.0,
+            "watts": 22.089
+          },
+          {
+            "seconds": 7.140008344,
+            "temperature_c": 57.0,
+            "watts": 22.036
+          },
+          {
+            "seconds": 7.240852617,
+            "temperature_c": 57.0,
+            "watts": 21.248
+          },
+          {
+            "seconds": 7.341783613,
+            "temperature_c": 57.0,
+            "watts": 21.184
+          },
+          {
+            "seconds": 7.442425968,
+            "temperature_c": 57.0,
+            "watts": 21.161
+          },
+          {
+            "seconds": 7.542652002,
+            "temperature_c": 56.0,
+            "watts": 21.058
+          },
+          {
+            "seconds": 7.643081819,
+            "temperature_c": 57.0,
+            "watts": 21.121
+          },
+          {
+            "seconds": 7.7436060730000005,
+            "temperature_c": 57.0,
+            "watts": 21.052
+          },
+          {
+            "seconds": 7.844540244,
+            "temperature_c": 58.0,
+            "watts": 21.213
+          },
+          {
+            "seconds": 7.945421066,
+            "temperature_c": 58.0,
+            "watts": 22.116
+          },
+          {
+            "seconds": 8.046002207,
+            "temperature_c": 58.0,
+            "watts": 22.239
+          },
+          {
+            "seconds": 8.146257366,
+            "temperature_c": 58.0,
+            "watts": 23.003
+          },
+          {
+            "seconds": 8.246467031,
+            "temperature_c": 58.0,
+            "watts": 23.067
+          },
+          {
+            "seconds": 8.346677477,
+            "temperature_c": 58.0,
+            "watts": 23.134
+          },
+          {
+            "seconds": 8.446898151,
+            "temperature_c": 58.0,
+            "watts": 23.126
+          },
+          {
+            "seconds": 8.547650443,
+            "temperature_c": 59.0,
+            "watts": 23.197
+          },
+          {
+            "seconds": 8.64788827,
+            "temperature_c": 59.0,
+            "watts": 24.037
+          },
+          {
+            "seconds": 8.748249378,
+            "temperature_c": 57.0,
+            "watts": 23.253
+          },
+          {
+            "seconds": 8.849044679,
+            "temperature_c": 57.0,
+            "watts": 23.154
+          },
+          {
+            "seconds": 8.949907047,
+            "temperature_c": 57.0,
+            "watts": 23.113
+          },
+          {
+            "seconds": 9.050397658,
+            "temperature_c": 58.0,
+            "watts": 23.184
+          },
+          {
+            "seconds": 9.150706037,
+            "temperature_c": 57.0,
+            "watts": 23.103
+          },
+          {
+            "seconds": 9.251088616,
+            "temperature_c": 57.0,
+            "watts": 23.063
+          },
+          {
+            "seconds": 9.351887174,
+            "temperature_c": 57.0,
+            "watts": 22.231
+          },
+          {
+            "seconds": 9.452441925,
+            "temperature_c": 58.0,
+            "watts": 23.037
+          },
+          {
+            "seconds": 9.552717994,
+            "temperature_c": 59.0,
+            "watts": 23.224
+          },
+          {
+            "seconds": 9.652923491,
+            "temperature_c": 59.0,
+            "watts": 24.138
+          },
+          {
+            "seconds": 9.753675983,
+            "temperature_c": 58.0,
+            "watts": 24.238
+          },
+          {
+            "seconds": 9.853917116,
+            "temperature_c": 58.0,
+            "watts": 24.194
+          },
+          {
+            "seconds": 9.954095923,
+            "temperature_c": 58.0,
+            "watts": 24.198
+          },
+          {
+            "seconds": 10.054353688,
+            "temperature_c": 58.0,
+            "watts": 24.186
+          },
+          {
+            "seconds": 10.154694839,
+            "temperature_c": 58.0,
+            "watts": 24.187
+          },
+          {
+            "seconds": 10.255288844,
+            "temperature_c": 58.0,
+            "watts": 24.188
+          },
+          {
+            "seconds": 10.355539346,
+            "temperature_c": 58.0,
+            "watts": 24.192
+          },
+          {
+            "seconds": 10.455731418,
+            "temperature_c": 57.0,
+            "watts": 24.186
+          },
+          {
+            "seconds": 10.556541087,
+            "temperature_c": 58.0,
+            "watts": 24.188
+          },
+          {
+            "seconds": 10.656737226,
+            "temperature_c": 57.0,
+            "watts": 24.183
+          },
+          {
+            "seconds": 10.756933736,
+            "temperature_c": 58.0,
+            "watts": 24.207
+          },
+          {
+            "seconds": 10.857938962,
+            "temperature_c": 58.0,
+            "watts": 24.211
+          },
+          {
+            "seconds": 10.958515054,
+            "temperature_c": 58.0,
+            "watts": 24.213
+          },
+          {
+            "seconds": 11.058776486,
+            "temperature_c": 58.0,
+            "watts": 24.214
+          },
+          {
+            "seconds": 11.159013793,
+            "temperature_c": 58.0,
+            "watts": 24.183
+          },
+          {
+            "seconds": 11.255570082,
+            "temperature_c": 58.0,
+            "watts": 24.182
+          }
+        ],
+        "seconds": 11.255301359
+      }
+    },
+    {
+      "repeat": 1,
+      "case": "scroll",
+      "target_rate": 30,
+      "backend": "official",
+      "command": [
+        "/home/cameronball/Projects/Vino/gpu-artifacts/official-comparison/live-display",
+        "gpu-artifacts/official-comparison/run-1/scroll.bgrx",
+        "1920",
+        "1080",
+        "30",
+        "3",
+        "10",
+        "0",
+        "0",
+        "1920",
+        "0",
+        "2873",
+        "3934",
+        "0",
+        "checked-layout"
+      ],
+      "measurement": {
+        "scope": "live official service; output delivery unverified",
+        "frame_pairs_submitted": 300,
+        "seconds": 10.0000692,
+        "input_pairs_per_second": 29.999792,
+        "static_hold": false,
+        "displaylink_cpu_seconds": 11.52368,
+        "displaylink_user_seconds": 8.524885,
+        "displaylink_system_seconds": 2.998795,
+        "displaylink_cpu_cores": 1.152360026,
+        "xorg_cpu_cores": 0.110999232,
+        "kwin_cpu_cores": 0.058999592,
+        "player_cpu_cores": 0.09271014,
+        "input_deadline_misses": 22,
+        "x_submission_p99_ms": 47.17852,
+        "pixel_checks_passed": 32
+      }
+    },
+    {
+      "repeat": 1,
+      "case": "motion",
+      "target_rate": 10,
+      "backend": "gpu",
+      "command": [
+        "/home/cameronball/Projects/Vino/revdi/target/release/vino-gpu",
+        "sample",
+        "--case",
+        "motion",
+        "--rate",
+        "10",
+        "--warmup",
+        "3",
+        "--seconds",
+        "10",
+        "--output",
+        "gpu-artifacts/official-comparison/run-1/1-motion-10-gpu.json"
+      ],
+      "measurement": {
+        "average_cpu_cores": 0.20683713635256873,
+        "average_package_watts": 21.410745893884304,
+        "backend": "gpu",
+        "cpu_seconds": 2.068386038,
+        "cpu_threads": null,
+        "deadline_misses": 100,
+        "encoded_bytes": 230355104,
+        "encoded_strips": 408000,
+        "frame_pairs": 100,
+        "frame_pairs_per_second": 9.999929053503346,
+        "gpu_dispatches": 400,
+        "gpu_stage_totals": {
+          "pack_ms": 580.8046159628569,
+          "readback_ms": 92.62996799999993,
+          "submit_wait_ms": 1329.0722030000006,
+          "transform_ms": 317.5595671100805,
+          "upload_ms": 74.46673700000004
+        },
+        "joules_per_frame_pair": 2.1410897796703194,
+        "p50_ms": 32.587911999999996,
+        "p95_ms": 37.22945,
+        "p99_ms": 41.255403,
+        "package_joules": 214.10897796703196,
+        "power_error": null,
+        "power_samples": [
+          {
+            "seconds": 0.000630402,
+            "temperature_c": 56.0,
+            "watts": 15.226
+          },
+          {
+            "seconds": 0.101409087,
+            "temperature_c": 56.0,
+            "watts": 15.189
+          },
+          {
+            "seconds": 0.202238087,
+            "temperature_c": 56.0,
+            "watts": 15.052
+          },
+          {
+            "seconds": 0.302900745,
+            "temperature_c": 56.0,
+            "watts": 15.102
+          },
+          {
+            "seconds": 0.405452743,
+            "temperature_c": 56.0,
+            "watts": 15.031
+          },
+          {
+            "seconds": 0.50578375,
+            "temperature_c": 56.0,
+            "watts": 15.04
+          },
+          {
+            "seconds": 0.60655387,
+            "temperature_c": 56.0,
+            "watts": 15.035
+          },
+          {
+            "seconds": 0.707135055,
+            "temperature_c": 56.0,
+            "watts": 14.232
+          },
+          {
+            "seconds": 0.807536164,
+            "temperature_c": 56.0,
+            "watts": 14.223
+          },
+          {
+            "seconds": 0.907878321,
+            "temperature_c": 56.0,
+            "watts": 14.166
+          },
+          {
+            "seconds": 1.008714064,
+            "temperature_c": 56.0,
+            "watts": 14.098
+          },
+          {
+            "seconds": 1.109226882,
+            "temperature_c": 55.0,
+            "watts": 13.245
+          },
+          {
+            "seconds": 1.210073184,
+            "temperature_c": 56.0,
+            "watts": 14.05
+          },
+          {
+            "seconds": 1.310343377,
+            "temperature_c": 57.0,
+            "watts": 14.166
+          },
+          {
+            "seconds": 1.410659897,
+            "temperature_c": 57.0,
+            "watts": 14.253
+          },
+          {
+            "seconds": 1.51130911,
+            "temperature_c": 57.0,
+            "watts": 15.098
+          },
+          {
+            "seconds": 1.6115476439999998,
+            "temperature_c": 58.0,
+            "watts": 16.09
+          },
+          {
+            "seconds": 1.711734791,
+            "temperature_c": 58.0,
+            "watts": 17.01
+          },
+          {
+            "seconds": 1.811977543,
+            "temperature_c": 58.0,
+            "watts": 17.16
+          },
+          {
+            "seconds": 1.912166254,
+            "temperature_c": 59.0,
+            "watts": 18.076
+          },
+          {
+            "seconds": 2.012945891,
+            "temperature_c": 58.0,
+            "watts": 18.186
+          },
+          {
+            "seconds": 2.113189595,
+            "temperature_c": 59.0,
+            "watts": 19.082
+          },
+          {
+            "seconds": 2.213368818,
+            "temperature_c": 58.0,
+            "watts": 19.178
+          },
+          {
+            "seconds": 2.313592123,
+            "temperature_c": 59.0,
+            "watts": 20.03
+          },
+          {
+            "seconds": 2.413877404,
+            "temperature_c": 59.0,
+            "watts": 20.146
+          },
+          {
+            "seconds": 2.514584336,
+            "temperature_c": 59.0,
+            "watts": 21.011
+          },
+          {
+            "seconds": 2.6155923420000002,
+            "temperature_c": 59.0,
+            "watts": 21.151
+          },
+          {
+            "seconds": 2.7161666049999997,
+            "temperature_c": 58.0,
+            "watts": 21.196
+          },
+          {
+            "seconds": 2.816391935,
+            "temperature_c": 58.0,
+            "watts": 21.237
+          },
+          {
+            "seconds": 2.916710218,
+            "temperature_c": 58.0,
+            "watts": 22.024
+          },
+          {
+            "seconds": 3.01748146,
+            "temperature_c": 60.0,
+            "watts": 22.204
+          },
+          {
+            "seconds": 3.118145883,
+            "temperature_c": 59.0,
+            "watts": 23.087
+          },
+          {
+            "seconds": 3.218426656,
+            "temperature_c": 60.0,
+            "watts": 23.242
+          },
+          {
+            "seconds": 3.318657365,
+            "temperature_c": 59.0,
+            "watts": 24.075
+          },
+          {
+            "seconds": 3.4193855969999998,
+            "temperature_c": 59.0,
+            "watts": 24.065
+          },
+          {
+            "seconds": 3.520162871,
+            "temperature_c": 59.0,
+            "watts": 24.059
+          },
+          {
+            "seconds": 3.621246909,
+            "temperature_c": 58.0,
+            "watts": 24.066
+          },
+          {
+            "seconds": 3.72201194,
+            "temperature_c": 58.0,
+            "watts": 24.075
+          },
+          {
+            "seconds": 3.822818088,
+            "temperature_c": 58.0,
+            "watts": 24.074
+          },
+          {
+            "seconds": 3.923362015,
+            "temperature_c": 58.0,
+            "watts": 24.089
+          },
+          {
+            "seconds": 4.023641546,
+            "temperature_c": 58.0,
+            "watts": 24.1
+          },
+          {
+            "seconds": 4.123958708,
+            "temperature_c": 58.0,
+            "watts": 24.104
+          },
+          {
+            "seconds": 4.224759997,
+            "temperature_c": 59.0,
+            "watts": 24.112
+          },
+          {
+            "seconds": 4.325509458,
+            "temperature_c": 59.0,
+            "watts": 24.115
+          },
+          {
+            "seconds": 4.42622707,
+            "temperature_c": 59.0,
+            "watts": 24.114
+          },
+          {
+            "seconds": 4.526459634,
+            "temperature_c": 59.0,
+            "watts": 24.121
+          },
+          {
+            "seconds": 4.626744024,
+            "temperature_c": 59.0,
+            "watts": 24.14
+          },
+          {
+            "seconds": 4.727441048,
+            "temperature_c": 59.0,
+            "watts": 24.096
+          },
+          {
+            "seconds": 4.8276637430000005,
+            "temperature_c": 59.0,
+            "watts": 24.11
+          },
+          {
+            "seconds": 4.927977047,
+            "temperature_c": 59.0,
+            "watts": 24.089
+          },
+          {
+            "seconds": 5.028646159,
+            "temperature_c": 59.0,
+            "watts": 24.147
+          },
+          {
+            "seconds": 5.128882589,
+            "temperature_c": 60.0,
+            "watts": 24.251
+          },
+          {
+            "seconds": 5.229060711,
+            "temperature_c": 59.0,
+            "watts": 24.213
+          },
+          {
+            "seconds": 5.3292827240000005,
+            "temperature_c": 59.0,
+            "watts": 24.194
+          },
+          {
+            "seconds": 5.429489169,
+            "temperature_c": 59.0,
+            "watts": 24.181
+          },
+          {
+            "seconds": 5.5296532339999995,
+            "temperature_c": 59.0,
+            "watts": 24.194
+          },
+          {
+            "seconds": 5.6298858880000004,
+            "temperature_c": 59.0,
+            "watts": 24.155
+          },
+          {
+            "seconds": 5.73009069,
+            "temperature_c": 59.0,
+            "watts": 24.178
+          },
+          {
+            "seconds": 5.830276265,
+            "temperature_c": 59.0,
+            "watts": 24.161
+          },
+          {
+            "seconds": 5.931060933,
+            "temperature_c": 59.0,
+            "watts": 24.167
+          },
+          {
+            "seconds": 6.031305339,
+            "temperature_c": 59.0,
+            "watts": 24.167
+          },
+          {
+            "seconds": 6.131501034,
+            "temperature_c": 59.0,
+            "watts": 24.17
+          },
+          {
+            "seconds": 6.231722607,
+            "temperature_c": 59.0,
+            "watts": 24.178
+          },
+          {
+            "seconds": 6.331905417,
+            "temperature_c": 59.0,
+            "watts": 24.171
+          },
+          {
+            "seconds": 6.432113816,
+            "temperature_c": 59.0,
+            "watts": 24.189
+          },
+          {
+            "seconds": 6.532620743,
+            "temperature_c": 59.0,
+            "watts": 24.194
+          },
+          {
+            "seconds": 6.633110369,
+            "temperature_c": 59.0,
+            "watts": 24.181
+          },
+          {
+            "seconds": 6.733349355,
+            "temperature_c": 59.0,
+            "watts": 24.181
+          },
+          {
+            "seconds": 6.8336397269999996,
+            "temperature_c": 59.0,
+            "watts": 24.184
+          },
+          {
+            "seconds": 6.934275467,
+            "temperature_c": 59.0,
+            "watts": 24.181
+          },
+          {
+            "seconds": 7.035112142,
+            "temperature_c": 59.0,
+            "watts": 24.184
+          },
+          {
+            "seconds": 7.135344716,
+            "temperature_c": 59.0,
+            "watts": 24.189
+          },
+          {
+            "seconds": 7.235772155,
+            "temperature_c": 59.0,
+            "watts": 24.187
+          },
+          {
+            "seconds": 7.336449743,
+            "temperature_c": 59.0,
+            "watts": 24.192
+          },
+          {
+            "seconds": 7.437229663,
+            "temperature_c": 59.0,
+            "watts": 24.183
+          },
+          {
+            "seconds": 7.5380589449999995,
+            "temperature_c": 59.0,
+            "watts": 24.203
+          },
+          {
+            "seconds": 7.638909246,
+            "temperature_c": 59.0,
+            "watts": 24.192
+          },
+          {
+            "seconds": 7.739716016,
+            "temperature_c": 59.0,
+            "watts": 24.181
+          },
+          {
+            "seconds": 7.840363708,
+            "temperature_c": 59.0,
+            "watts": 24.165
+          },
+          {
+            "seconds": 7.94057882,
+            "temperature_c": 59.0,
+            "watts": 24.173
+          },
+          {
+            "seconds": 8.040815722,
+            "temperature_c": 59.0,
+            "watts": 24.146
+          },
+          {
+            "seconds": 8.141506595,
+            "temperature_c": 59.0,
+            "watts": 24.18
+          },
+          {
+            "seconds": 8.241781498,
+            "temperature_c": 60.0,
+            "watts": 24.179
+          },
+          {
+            "seconds": 8.3420022,
+            "temperature_c": 59.0,
+            "watts": 24.182
+          },
+          {
+            "seconds": 8.442182637,
+            "temperature_c": 59.0,
+            "watts": 24.185
+          },
+          {
+            "seconds": 8.542397528,
+            "temperature_c": 59.0,
+            "watts": 24.201
+          },
+          {
+            "seconds": 8.642586380000001,
+            "temperature_c": 59.0,
+            "watts": 24.217
+          },
+          {
+            "seconds": 8.742806622,
+            "temperature_c": 58.0,
+            "watts": 24.097
+          },
+          {
+            "seconds": 8.843565462,
+            "temperature_c": 58.0,
+            "watts": 23.198
+          },
+          {
+            "seconds": 8.944571426,
+            "temperature_c": 57.0,
+            "watts": 22.147
+          },
+          {
+            "seconds": 9.045240798,
+            "temperature_c": 57.0,
+            "watts": 21.179
+          },
+          {
+            "seconds": 9.146040846,
+            "temperature_c": 57.0,
+            "watts": 20.184
+          },
+          {
+            "seconds": 9.246575657,
+            "temperature_c": 57.0,
+            "watts": 20.016
+          },
+          {
+            "seconds": 9.347008086,
+            "temperature_c": 56.0,
+            "watts": 19.108
+          },
+          {
+            "seconds": 9.447328946,
+            "temperature_c": 56.0,
+            "watts": 18.161
+          },
+          {
+            "seconds": 9.547982549,
+            "temperature_c": 57.0,
+            "watts": 18.07
+          },
+          {
+            "seconds": 9.648716183,
+            "temperature_c": 56.0,
+            "watts": 18.019
+          },
+          {
+            "seconds": 9.749039337,
+            "temperature_c": 58.0,
+            "watts": 18.15
+          },
+          {
+            "seconds": 9.849256302,
+            "temperature_c": 58.0,
+            "watts": 19.023
+          },
+          {
+            "seconds": 9.949987681,
+            "temperature_c": 58.0,
+            "watts": 19.175
+          },
+          {
+            "seconds": 10.000403149,
+            "temperature_c": 58.0,
+            "watts": 19.213
+          }
+        ],
+        "seconds": 10.000070947
+      }
+    },
+    {
+      "repeat": 1,
+      "case": "motion",
+      "target_rate": 10,
+      "backend": "official",
+      "command": [
+        "/home/cameronball/Projects/Vino/gpu-artifacts/official-comparison/live-display",
+        "gpu-artifacts/official-comparison/run-1/motion.bgrx",
+        "1920",
+        "1080",
+        "10",
+        "3",
+        "10",
+        "0",
+        "0",
+        "1920",
+        "0",
+        "2873",
+        "3934",
+        "0",
+        "checked-layout"
+      ],
+      "measurement": {
+        "scope": "live official service; output delivery unverified",
+        "frame_pairs_submitted": 100,
+        "seconds": 10.000062498,
+        "input_pairs_per_second": 9.999938,
+        "static_hold": false,
+        "displaylink_cpu_seconds": 7.545382,
+        "displaylink_user_seconds": 5.143032,
+        "displaylink_system_seconds": 2.40235,
+        "displaylink_cpu_cores": 0.754533484,
+        "xorg_cpu_cores": 0.068999569,
+        "kwin_cpu_cores": 0.03999975,
+        "player_cpu_cores": 0.021959764,
+        "input_deadline_misses": 0,
+        "x_submission_p99_ms": 8.61326,
+        "pixel_checks_passed": 32
+      }
+    },
+    {
+      "repeat": 1,
+      "case": "motion",
+      "target_rate": 30,
+      "backend": "gpu",
+      "command": [
+        "/home/cameronball/Projects/Vino/revdi/target/release/vino-gpu",
+        "sample",
+        "--case",
+        "motion",
+        "--rate",
+        "30",
+        "--warmup",
+        "3",
+        "--seconds",
+        "10",
+        "--output",
+        "gpu-artifacts/official-comparison/run-1/1-motion-30-gpu.json"
+      ],
+      "measurement": {
+        "average_cpu_cores": 0.5554186005118259,
+        "average_package_watts": 20.88098637122751,
+        "backend": "gpu",
+        "cpu_seconds": 5.554220731,
+        "cpu_threads": null,
+        "deadline_misses": 300,
+        "encoded_bytes": 691189808,
+        "encoded_strips": 1224000,
+        "frame_pairs": 300,
+        "frame_pairs_per_second": 29.999812435172693,
+        "gpu_dispatches": 1200,
+        "gpu_stage_totals": {
+          "pack_ms": 1868.8310020469853,
+          "readback_ms": 280.2564599999995,
+          "submit_wait_ms": 3962.7880330000016,
+          "transform_ms": 972.1935397649345,
+          "upload_ms": 251.05792400000036
+        },
+        "joules_per_frame_pair": 0.6960372307776833,
+        "p50_ms": 31.13396,
+        "p95_ms": 35.209987999999996,
+        "p99_ms": 36.568574,
+        "package_joules": 208.811169233305,
+        "power_error": null,
+        "power_samples": [
+          {
+            "seconds": 0.000467727,
+            "temperature_c": 56.0,
+            "watts": 20.169
+          },
+          {
+            "seconds": 0.100811353,
+            "temperature_c": 55.0,
+            "watts": 20.067
+          },
+          {
+            "seconds": 0.201615633,
+            "temperature_c": 56.0,
+            "watts": 20.035
+          },
+          {
+            "seconds": 0.302444339,
+            "temperature_c": 56.0,
+            "watts": 19.203
+          },
+          {
+            "seconds": 0.403027314,
+            "temperature_c": 56.0,
+            "watts": 19.218
+          },
+          {
+            "seconds": 0.503926222,
+            "temperature_c": 57.0,
+            "watts": 20.095
+          },
+          {
+            "seconds": 0.60465474,
+            "temperature_c": 57.0,
+            "watts": 20.253
+          },
+          {
+            "seconds": 0.705602068,
+            "temperature_c": 57.0,
+            "watts": 21.08
+          },
+          {
+            "seconds": 0.806287265,
+            "temperature_c": 57.0,
+            "watts": 21.08
+          },
+          {
+            "seconds": 0.907060767,
+            "temperature_c": 57.0,
+            "watts": 21.122
+          },
+          {
+            "seconds": 1.008071745,
+            "temperature_c": 57.0,
+            "watts": 21.104
+          },
+          {
+            "seconds": 1.108835729,
+            "temperature_c": 57.0,
+            "watts": 21.156
+          },
+          {
+            "seconds": 1.209434454,
+            "temperature_c": 57.0,
+            "watts": 21.19
+          },
+          {
+            "seconds": 1.309748035,
+            "temperature_c": 57.0,
+            "watts": 22.016
+          },
+          {
+            "seconds": 1.410115977,
+            "temperature_c": 57.0,
+            "watts": 21.219
+          },
+          {
+            "seconds": 1.510624894,
+            "temperature_c": 57.0,
+            "watts": 21.218
+          },
+          {
+            "seconds": 1.610918618,
+            "temperature_c": 56.0,
+            "watts": 22.031
+          },
+          {
+            "seconds": 1.7112534780000002,
+            "temperature_c": 57.0,
+            "watts": 22.095
+          },
+          {
+            "seconds": 1.811878803,
+            "temperature_c": 56.0,
+            "watts": 22.066
+          },
+          {
+            "seconds": 1.912114759,
+            "temperature_c": 56.0,
+            "watts": 21.225
+          },
+          {
+            "seconds": 2.012319947,
+            "temperature_c": 56.0,
+            "watts": 21.193
+          },
+          {
+            "seconds": 2.113255994,
+            "temperature_c": 56.0,
+            "watts": 21.073
+          },
+          {
+            "seconds": 2.214240251,
+            "temperature_c": 56.0,
+            "watts": 21.024
+          },
+          {
+            "seconds": 2.314877349,
+            "temperature_c": 57.0,
+            "watts": 21.078
+          },
+          {
+            "seconds": 2.415478108,
+            "temperature_c": 57.0,
+            "watts": 21.101
+          },
+          {
+            "seconds": 2.516312515,
+            "temperature_c": 58.0,
+            "watts": 21.24
+          },
+          {
+            "seconds": 2.616531629,
+            "temperature_c": 57.0,
+            "watts": 22.083
+          },
+          {
+            "seconds": 2.716819261,
+            "temperature_c": 57.0,
+            "watts": 22.24
+          },
+          {
+            "seconds": 2.817489611,
+            "temperature_c": 57.0,
+            "watts": 22.202
+          },
+          {
+            "seconds": 2.917750603,
+            "temperature_c": 56.0,
+            "watts": 22.182
+          },
+          {
+            "seconds": 3.017966641,
+            "temperature_c": 56.0,
+            "watts": 22.083
+          },
+          {
+            "seconds": 3.118754912,
+            "temperature_c": 56.0,
+            "watts": 22.065
+          },
+          {
+            "seconds": 3.219501665,
+            "temperature_c": 56.0,
+            "watts": 21.224
+          },
+          {
+            "seconds": 3.320608552,
+            "temperature_c": 56.0,
+            "watts": 21.143
+          },
+          {
+            "seconds": 3.421218519,
+            "temperature_c": 56.0,
+            "watts": 21.127
+          },
+          {
+            "seconds": 3.522601234,
+            "temperature_c": 57.0,
+            "watts": 21.131
+          },
+          {
+            "seconds": 3.6229838340000002,
+            "temperature_c": 56.0,
+            "watts": 21.199
+          },
+          {
+            "seconds": 3.723696914,
+            "temperature_c": 57.0,
+            "watts": 21.103
+          },
+          {
+            "seconds": 3.824305548,
+            "temperature_c": 57.0,
+            "watts": 21.207
+          },
+          {
+            "seconds": 3.924596728,
+            "temperature_c": 56.0,
+            "watts": 21.074
+          },
+          {
+            "seconds": 4.024923143,
+            "temperature_c": 56.0,
+            "watts": 21.041
+          },
+          {
+            "seconds": 4.125529112,
+            "temperature_c": 57.0,
+            "watts": 20.211
+          },
+          {
+            "seconds": 4.225799623,
+            "temperature_c": 56.0,
+            "watts": 20.122
+          },
+          {
+            "seconds": 4.326011223,
+            "temperature_c": 56.0,
+            "watts": 20.094
+          },
+          {
+            "seconds": 4.426911474,
+            "temperature_c": 56.0,
+            "watts": 20.064
+          },
+          {
+            "seconds": 4.527498277,
+            "temperature_c": 57.0,
+            "watts": 20.141
+          },
+          {
+            "seconds": 4.627829272,
+            "temperature_c": 57.0,
+            "watts": 20.199
+          },
+          {
+            "seconds": 4.728122375,
+            "temperature_c": 57.0,
+            "watts": 20.237
+          },
+          {
+            "seconds": 4.828800409,
+            "temperature_c": 57.0,
+            "watts": 21.111
+          },
+          {
+            "seconds": 4.929023281,
+            "temperature_c": 57.0,
+            "watts": 21.164
+          },
+          {
+            "seconds": 5.029391865,
+            "temperature_c": 57.0,
+            "watts": 21.148
+          },
+          {
+            "seconds": 5.130300051,
+            "temperature_c": 57.0,
+            "watts": 21.154
+          },
+          {
+            "seconds": 5.230778501,
+            "temperature_c": 57.0,
+            "watts": 21.15
+          },
+          {
+            "seconds": 5.331830196,
+            "temperature_c": 56.0,
+            "watts": 21.092
+          },
+          {
+            "seconds": 5.432436386,
+            "temperature_c": 56.0,
+            "watts": 21.035
+          },
+          {
+            "seconds": 5.533462703,
+            "temperature_c": 57.0,
+            "watts": 21.081
+          },
+          {
+            "seconds": 5.633989174,
+            "temperature_c": 57.0,
+            "watts": 21.084
+          },
+          {
+            "seconds": 5.734814385,
+            "temperature_c": 56.0,
+            "watts": 20.222
+          },
+          {
+            "seconds": 5.835047275,
+            "temperature_c": 57.0,
+            "watts": 21.026
+          },
+          {
+            "seconds": 5.935316083,
+            "temperature_c": 56.0,
+            "watts": 21.031
+          },
+          {
+            "seconds": 6.035985902,
+            "temperature_c": 56.0,
+            "watts": 20.231
+          },
+          {
+            "seconds": 6.136260721,
+            "temperature_c": 56.0,
+            "watts": 20.168
+          },
+          {
+            "seconds": 6.236568121,
+            "temperature_c": 56.0,
+            "watts": 20.148
+          },
+          {
+            "seconds": 6.337209007,
+            "temperature_c": 56.0,
+            "watts": 20.111
+          },
+          {
+            "seconds": 6.437481732,
+            "temperature_c": 56.0,
+            "watts": 20.019
+          },
+          {
+            "seconds": 6.537798931,
+            "temperature_c": 56.0,
+            "watts": 20.088
+          },
+          {
+            "seconds": 6.638601118,
+            "temperature_c": 56.0,
+            "watts": 20.099
+          },
+          {
+            "seconds": 6.739209052,
+            "temperature_c": 57.0,
+            "watts": 20.141
+          },
+          {
+            "seconds": 6.839480916,
+            "temperature_c": 56.0,
+            "watts": 20.083
+          },
+          {
+            "seconds": 6.94030787,
+            "temperature_c": 57.0,
+            "watts": 20.249
+          },
+          {
+            "seconds": 7.040570656,
+            "temperature_c": 57.0,
+            "watts": 20.246
+          },
+          {
+            "seconds": 7.141407709,
+            "temperature_c": 56.0,
+            "watts": 20.164
+          },
+          {
+            "seconds": 7.242032434,
+            "temperature_c": 57.0,
+            "watts": 20.155
+          },
+          {
+            "seconds": 7.342287827,
+            "temperature_c": 56.0,
+            "watts": 20.088
+          },
+          {
+            "seconds": 7.442622599,
+            "temperature_c": 56.0,
+            "watts": 20.101
+          },
+          {
+            "seconds": 7.543220123,
+            "temperature_c": 57.0,
+            "watts": 20.13
+          },
+          {
+            "seconds": 7.643552721,
+            "temperature_c": 57.0,
+            "watts": 20.147
+          },
+          {
+            "seconds": 7.743889457,
+            "temperature_c": 56.0,
+            "watts": 20.053
+          },
+          {
+            "seconds": 7.844636611,
+            "temperature_c": 56.0,
+            "watts": 20.067
+          },
+          {
+            "seconds": 7.945505935,
+            "temperature_c": 57.0,
+            "watts": 20.094
+          },
+          {
+            "seconds": 8.046269721,
+            "temperature_c": 56.0,
+            "watts": 20.101
+          },
+          {
+            "seconds": 8.147114248,
+            "temperature_c": 56.0,
+            "watts": 20.094
+          },
+          {
+            "seconds": 8.247764601,
+            "temperature_c": 56.0,
+            "watts": 20.07
+          },
+          {
+            "seconds": 8.348453366,
+            "temperature_c": 56.0,
+            "watts": 20.081
+          },
+          {
+            "seconds": 8.448757411,
+            "temperature_c": 56.0,
+            "watts": 20.074
+          },
+          {
+            "seconds": 8.549091021,
+            "temperature_c": 56.0,
+            "watts": 20.188
+          },
+          {
+            "seconds": 8.650367988,
+            "temperature_c": 56.0,
+            "watts": 20.195
+          },
+          {
+            "seconds": 8.750684636,
+            "temperature_c": 57.0,
+            "watts": 21.076
+          },
+          {
+            "seconds": 8.851360478,
+            "temperature_c": 58.0,
+            "watts": 21.2
+          },
+          {
+            "seconds": 8.952131517,
+            "temperature_c": 57.0,
+            "watts": 22.02
+          },
+          {
+            "seconds": 9.052874334,
+            "temperature_c": 58.0,
+            "watts": 22.211
+          },
+          {
+            "seconds": 9.153209667,
+            "temperature_c": 57.0,
+            "watts": 22.204
+          },
+          {
+            "seconds": 9.253630761,
+            "temperature_c": 57.0,
+            "watts": 22.187
+          },
+          {
+            "seconds": 9.354124681,
+            "temperature_c": 57.0,
+            "watts": 22.066
+          },
+          {
+            "seconds": 9.455261396,
+            "temperature_c": 56.0,
+            "watts": 22.005
+          },
+          {
+            "seconds": 9.555830398,
+            "temperature_c": 57.0,
+            "watts": 22.085
+          },
+          {
+            "seconds": 9.656566242,
+            "temperature_c": 57.0,
+            "watts": 22.107
+          },
+          {
+            "seconds": 9.75732609,
+            "temperature_c": 57.0,
+            "watts": 22.006
+          },
+          {
+            "seconds": 9.857595631,
+            "temperature_c": 57.0,
+            "watts": 21.232
+          },
+          {
+            "seconds": 9.957923079,
+            "temperature_c": 56.0,
+            "watts": 21.166
+          },
+          {
+            "seconds": 10.000397119,
+            "temperature_c": 56.0,
+            "watts": 21.192
+          }
+        ],
+        "seconds": 10.000062522
+      }
+    },
+    {
+      "repeat": 1,
+      "case": "motion",
+      "target_rate": 30,
+      "backend": "official",
+      "command": [
+        "/home/cameronball/Projects/Vino/gpu-artifacts/official-comparison/live-display",
+        "gpu-artifacts/official-comparison/run-1/motion.bgrx",
+        "1920",
+        "1080",
+        "30",
+        "3",
+        "10",
+        "0",
+        "0",
+        "1920",
+        "0",
+        "2873",
+        "3934",
+        "0",
+        "checked-layout"
+      ],
+      "measurement": {
+        "scope": "live official service; output delivery unverified",
+        "frame_pairs_submitted": 300,
+        "seconds": 10.000088051,
+        "input_pairs_per_second": 29.999736,
+        "static_hold": false,
+        "displaylink_cpu_seconds": 10.402533,
+        "displaylink_user_seconds": 7.415744,
+        "displaylink_system_seconds": 2.98679,
+        "displaylink_cpu_cores": 1.040244141,
+        "xorg_cpu_cores": 0.111999014,
+        "kwin_cpu_cores": 0.064999428,
+        "player_cpu_cores": 0.064521118,
+        "input_deadline_misses": 3,
+        "x_submission_p99_ms": 24.701978,
+        "pixel_checks_passed": 32
+      }
+    },
+    {
+      "repeat": 2,
+      "case": "idle",
+      "target_rate": 30,
+      "backend": "official",
+      "command": [
+        "/home/cameronball/Projects/Vino/gpu-artifacts/official-comparison/live-display",
+        "gpu-artifacts/official-comparison/run-1/idle.bgrx",
+        "1920",
+        "1080",
+        "30",
+        "3",
+        "10",
+        "0",
+        "0",
+        "1920",
+        "0",
+        "2873",
+        "3934",
+        "1",
+        "checked-layout"
+      ],
+      "measurement": {
+        "scope": "live official service; output delivery unverified",
+        "frame_pairs_submitted": 0,
+        "seconds": 10.000063953,
+        "input_pairs_per_second": 0.0,
+        "static_hold": true,
+        "displaylink_cpu_seconds": 2.493408,
+        "displaylink_user_seconds": 1.246846,
+        "displaylink_system_seconds": 1.246563,
+        "displaylink_cpu_cores": 0.249339205,
+        "xorg_cpu_cores": 0.03599977,
+        "kwin_cpu_cores": 0.014999904,
+        "player_cpu_cores": 0.002376814,
+        "input_deadline_misses": 0,
+        "x_submission_p99_ms": 1.411635,
+        "pixel_checks_passed": 32
+      }
+    },
+    {
+      "repeat": 2,
+      "case": "scroll",
+      "target_rate": 30,
+      "backend": "official",
+      "command": [
+        "/home/cameronball/Projects/Vino/gpu-artifacts/official-comparison/live-display",
+        "gpu-artifacts/official-comparison/run-1/scroll.bgrx",
+        "1920",
+        "1080",
+        "30",
+        "3",
+        "10",
+        "0",
+        "0",
+        "1920",
+        "0",
+        "2873",
+        "3934",
+        "0",
+        "checked-layout"
+      ],
+      "measurement": {
+        "scope": "live official service; output delivery unverified",
+        "frame_pairs_submitted": 300,
+        "seconds": 10.000063503,
+        "input_pairs_per_second": 29.999809,
+        "static_hold": false,
+        "displaylink_cpu_seconds": 11.208913,
+        "displaylink_user_seconds": 8.418076,
+        "displaylink_system_seconds": 2.790837,
+        "displaylink_cpu_cores": 1.120884182,
+        "xorg_cpu_cores": 0.105999327,
+        "kwin_cpu_cores": 0.055999644,
+        "player_cpu_cores": 0.090202618,
+        "input_deadline_misses": 16,
+        "x_submission_p99_ms": 42.476548,
+        "pixel_checks_passed": 32
+      }
+    },
+    {
+      "repeat": 2,
+      "case": "scroll",
+      "target_rate": 30,
+      "backend": "gpu",
+      "command": [
+        "/home/cameronball/Projects/Vino/revdi/target/release/vino-gpu",
+        "sample",
+        "--case",
+        "scroll",
+        "--rate",
+        "30",
+        "--warmup",
+        "3",
+        "--seconds",
+        "10",
+        "--output",
+        "gpu-artifacts/official-comparison/run-1/2-scroll-30-gpu.json"
+      ],
+      "measurement": {
+        "average_cpu_cores": 0.6409258493913015,
+        "average_package_watts": 22.364914933460792,
+        "backend": "gpu",
+        "cpu_seconds": 7.414694399,
+        "cpu_threads": null,
+        "deadline_misses": 300,
+        "encoded_bytes": 2034531648,
+        "encoded_strips": 1224000,
+        "frame_pairs": 300,
+        "frame_pairs_per_second": 25.931986467752797,
+        "gpu_dispatches": 1200,
+        "gpu_stage_totals": {
+          "pack_ms": 2252.7724956394372,
+          "readback_ms": 555.1939789999997,
+          "submit_wait_ms": 4282.9452409999985,
+          "transform_ms": 951.5202602778966,
+          "upload_ms": 213.5380840000002
+        },
+        "joules_per_frame_pair": 0.862445110453541,
+        "p50_ms": 37.820623999999995,
+        "p95_ms": 44.479813,
+        "p99_ms": 53.850544,
+        "package_joules": 258.7335331360623,
+        "power_error": null,
+        "power_samples": [
+          {
+            "seconds": 0.000321823,
+            "temperature_c": 57.0,
+            "watts": 21.005
+          },
+          {
+            "seconds": 0.10047786,
+            "temperature_c": 58.0,
+            "watts": 21.077
+          },
+          {
+            "seconds": 0.200748803,
+            "temperature_c": 57.0,
+            "watts": 21.135
+          },
+          {
+            "seconds": 0.301488534,
+            "temperature_c": 58.0,
+            "watts": 21.08
+          },
+          {
+            "seconds": 0.401790514,
+            "temperature_c": 57.0,
+            "watts": 21.069
+          },
+          {
+            "seconds": 0.502018296,
+            "temperature_c": 58.0,
+            "watts": 21.076
+          },
+          {
+            "seconds": 0.602794054,
+            "temperature_c": 57.0,
+            "watts": 21.007
+          },
+          {
+            "seconds": 0.702997941,
+            "temperature_c": 57.0,
+            "watts": 21.073
+          },
+          {
+            "seconds": 0.80329346,
+            "temperature_c": 57.0,
+            "watts": 20.248
+          },
+          {
+            "seconds": 0.904842177,
+            "temperature_c": 57.0,
+            "watts": 20.254
+          },
+          {
+            "seconds": 1.005083203,
+            "temperature_c": 57.0,
+            "watts": 20.179
+          },
+          {
+            "seconds": 1.105560352,
+            "temperature_c": 58.0,
+            "watts": 21.087
+          },
+          {
+            "seconds": 1.2057984529999999,
+            "temperature_c": 58.0,
+            "watts": 21.105
+          },
+          {
+            "seconds": 1.306005907,
+            "temperature_c": 57.0,
+            "watts": 21.026
+          },
+          {
+            "seconds": 1.406934031,
+            "temperature_c": 58.0,
+            "watts": 21.005
+          },
+          {
+            "seconds": 1.507652682,
+            "temperature_c": 57.0,
+            "watts": 20.18
+          },
+          {
+            "seconds": 1.608453398,
+            "temperature_c": 57.0,
+            "watts": 20.169
+          },
+          {
+            "seconds": 1.709336858,
+            "temperature_c": 57.0,
+            "watts": 20.143
+          },
+          {
+            "seconds": 1.8099854180000001,
+            "temperature_c": 58.0,
+            "watts": 20.233
+          },
+          {
+            "seconds": 1.9102341,
+            "temperature_c": 58.0,
+            "watts": 21.041
+          },
+          {
+            "seconds": 2.010427747,
+            "temperature_c": 59.0,
+            "watts": 21.214
+          },
+          {
+            "seconds": 2.111176606,
+            "temperature_c": 59.0,
+            "watts": 22.099
+          },
+          {
+            "seconds": 2.211440756,
+            "temperature_c": 59.0,
+            "watts": 22.238
+          },
+          {
+            "seconds": 2.3116570960000002,
+            "temperature_c": 59.0,
+            "watts": 22.239
+          },
+          {
+            "seconds": 2.412397479,
+            "temperature_c": 58.0,
+            "watts": 22.204
+          },
+          {
+            "seconds": 2.512646851,
+            "temperature_c": 58.0,
+            "watts": 22.208
+          },
+          {
+            "seconds": 2.6128615589999997,
+            "temperature_c": 58.0,
+            "watts": 22.184
+          },
+          {
+            "seconds": 2.713614074,
+            "temperature_c": 59.0,
+            "watts": 22.219
+          },
+          {
+            "seconds": 2.814459013,
+            "temperature_c": 58.0,
+            "watts": 22.207
+          },
+          {
+            "seconds": 2.915232597,
+            "temperature_c": 58.0,
+            "watts": 22.235
+          },
+          {
+            "seconds": 3.01546084,
+            "temperature_c": 58.0,
+            "watts": 22.141
+          },
+          {
+            "seconds": 3.115673654,
+            "temperature_c": 58.0,
+            "watts": 22.129
+          },
+          {
+            "seconds": 3.216459833,
+            "temperature_c": 59.0,
+            "watts": 22.224
+          },
+          {
+            "seconds": 3.317323377,
+            "temperature_c": 57.0,
+            "watts": 22.124
+          },
+          {
+            "seconds": 3.418002524,
+            "temperature_c": 58.0,
+            "watts": 22.058
+          },
+          {
+            "seconds": 3.518342798,
+            "temperature_c": 57.0,
+            "watts": 21.192
+          },
+          {
+            "seconds": 3.618570409,
+            "temperature_c": 57.0,
+            "watts": 21.167
+          },
+          {
+            "seconds": 3.719460492,
+            "temperature_c": 57.0,
+            "watts": 21.043
+          },
+          {
+            "seconds": 3.819993036,
+            "temperature_c": 58.0,
+            "watts": 21.128
+          },
+          {
+            "seconds": 3.920279157,
+            "temperature_c": 58.0,
+            "watts": 21.087
+          },
+          {
+            "seconds": 4.020502551,
+            "temperature_c": 57.0,
+            "watts": 21.044
+          },
+          {
+            "seconds": 4.120687584,
+            "temperature_c": 58.0,
+            "watts": 21.046
+          },
+          {
+            "seconds": 4.221597835,
+            "temperature_c": 58.0,
+            "watts": 21.1
+          },
+          {
+            "seconds": 4.321849873,
+            "temperature_c": 58.0,
+            "watts": 21.187
+          },
+          {
+            "seconds": 4.422440736,
+            "temperature_c": 58.0,
+            "watts": 21.144
+          },
+          {
+            "seconds": 4.522718852,
+            "temperature_c": 58.0,
+            "watts": 21.189
+          },
+          {
+            "seconds": 4.623139416,
+            "temperature_c": 58.0,
+            "watts": 21.183
+          },
+          {
+            "seconds": 4.723631674,
+            "temperature_c": 58.0,
+            "watts": 21.219
+          },
+          {
+            "seconds": 4.823935248,
+            "temperature_c": 58.0,
+            "watts": 22.016
+          },
+          {
+            "seconds": 4.924170715,
+            "temperature_c": 58.0,
+            "watts": 22.08
+          },
+          {
+            "seconds": 5.025060258,
+            "temperature_c": 58.0,
+            "watts": 22.091
+          },
+          {
+            "seconds": 5.125710001,
+            "temperature_c": 58.0,
+            "watts": 22.116
+          },
+          {
+            "seconds": 5.226484408,
+            "temperature_c": 58.0,
+            "watts": 22.225
+          },
+          {
+            "seconds": 5.326741886,
+            "temperature_c": 59.0,
+            "watts": 23.039
+          },
+          {
+            "seconds": 5.427004063,
+            "temperature_c": 57.0,
+            "watts": 23.059
+          },
+          {
+            "seconds": 5.527706305,
+            "temperature_c": 57.0,
+            "watts": 22.205
+          },
+          {
+            "seconds": 5.627978501,
+            "temperature_c": 57.0,
+            "watts": 22.199
+          },
+          {
+            "seconds": 5.728312162,
+            "temperature_c": 57.0,
+            "watts": 22.057
+          },
+          {
+            "seconds": 5.828995618,
+            "temperature_c": 57.0,
+            "watts": 21.25
+          },
+          {
+            "seconds": 5.9299754700000005,
+            "temperature_c": 57.0,
+            "watts": 22.005
+          },
+          {
+            "seconds": 6.0306764,
+            "temperature_c": 58.0,
+            "watts": 22.01
+          },
+          {
+            "seconds": 6.131315052,
+            "temperature_c": 58.0,
+            "watts": 22.002
+          },
+          {
+            "seconds": 6.232152648,
+            "temperature_c": 58.0,
+            "watts": 22.0
+          },
+          {
+            "seconds": 6.332998269,
+            "temperature_c": 57.0,
+            "watts": 21.232
+          },
+          {
+            "seconds": 6.433949487,
+            "temperature_c": 58.0,
+            "watts": 21.245
+          },
+          {
+            "seconds": 6.534515604,
+            "temperature_c": 58.0,
+            "watts": 22.032
+          },
+          {
+            "seconds": 6.63538035,
+            "temperature_c": 58.0,
+            "watts": 21.221
+          },
+          {
+            "seconds": 6.736179885,
+            "temperature_c": 57.0,
+            "watts": 21.199
+          },
+          {
+            "seconds": 6.83692673,
+            "temperature_c": 58.0,
+            "watts": 21.211
+          },
+          {
+            "seconds": 6.937201781,
+            "temperature_c": 58.0,
+            "watts": 21.251
+          },
+          {
+            "seconds": 7.037611075,
+            "temperature_c": 58.0,
+            "watts": 21.247
+          },
+          {
+            "seconds": 7.138203811,
+            "temperature_c": 58.0,
+            "watts": 21.239
+          },
+          {
+            "seconds": 7.238976315,
+            "temperature_c": 59.0,
+            "watts": 22.061
+          },
+          {
+            "seconds": 7.339821746,
+            "temperature_c": 58.0,
+            "watts": 21.251
+          },
+          {
+            "seconds": 7.439995588,
+            "temperature_c": 58.0,
+            "watts": 22.113
+          },
+          {
+            "seconds": 7.54030332,
+            "temperature_c": 59.0,
+            "watts": 23.036
+          },
+          {
+            "seconds": 7.641064784,
+            "temperature_c": 60.0,
+            "watts": 23.185
+          },
+          {
+            "seconds": 7.741933798,
+            "temperature_c": 60.0,
+            "watts": 24.06
+          },
+          {
+            "seconds": 7.842799196,
+            "temperature_c": 59.0,
+            "watts": 24.072
+          },
+          {
+            "seconds": 7.943373599,
+            "temperature_c": 58.0,
+            "watts": 24.063
+          },
+          {
+            "seconds": 8.043618093,
+            "temperature_c": 58.0,
+            "watts": 24.038
+          },
+          {
+            "seconds": 8.143833403,
+            "temperature_c": 59.0,
+            "watts": 24.054
+          },
+          {
+            "seconds": 8.244585098,
+            "temperature_c": 58.0,
+            "watts": 24.009
+          },
+          {
+            "seconds": 8.344827018,
+            "temperature_c": 58.0,
+            "watts": 24.037
+          },
+          {
+            "seconds": 8.445143367,
+            "temperature_c": 60.0,
+            "watts": 24.122
+          },
+          {
+            "seconds": 8.545827505,
+            "temperature_c": 59.0,
+            "watts": 24.135
+          },
+          {
+            "seconds": 8.647808794,
+            "temperature_c": 59.0,
+            "watts": 24.126
+          },
+          {
+            "seconds": 8.748623888000001,
+            "temperature_c": 58.0,
+            "watts": 24.088
+          },
+          {
+            "seconds": 8.84885656,
+            "temperature_c": 58.0,
+            "watts": 24.081
+          },
+          {
+            "seconds": 8.949081539,
+            "temperature_c": 59.0,
+            "watts": 24.085
+          },
+          {
+            "seconds": 9.049869832,
+            "temperature_c": 59.0,
+            "watts": 24.087
+          },
+          {
+            "seconds": 9.150668656,
+            "temperature_c": 58.0,
+            "watts": 24.081
+          },
+          {
+            "seconds": 9.251610247,
+            "temperature_c": 58.0,
+            "watts": 24.081
+          },
+          {
+            "seconds": 9.352277794,
+            "temperature_c": 59.0,
+            "watts": 24.085
+          },
+          {
+            "seconds": 9.452476924,
+            "temperature_c": 58.0,
+            "watts": 24.088
+          },
+          {
+            "seconds": 9.552801088,
+            "temperature_c": 59.0,
+            "watts": 24.1
+          },
+          {
+            "seconds": 9.653688598,
+            "temperature_c": 59.0,
+            "watts": 24.079
+          },
+          {
+            "seconds": 9.754311041,
+            "temperature_c": 59.0,
+            "watts": 24.102
+          },
+          {
+            "seconds": 9.855049651,
+            "temperature_c": 59.0,
+            "watts": 24.096
+          },
+          {
+            "seconds": 9.955282404,
+            "temperature_c": 59.0,
+            "watts": 24.101
+          },
+          {
+            "seconds": 10.055796885,
+            "temperature_c": 59.0,
+            "watts": 24.099
+          },
+          {
+            "seconds": 10.156316465,
+            "temperature_c": 59.0,
+            "watts": 24.076
+          },
+          {
+            "seconds": 10.2572439,
+            "temperature_c": 59.0,
+            "watts": 24.072
+          },
+          {
+            "seconds": 10.357857416,
+            "temperature_c": 59.0,
+            "watts": 24.084
+          },
+          {
+            "seconds": 10.458118933,
+            "temperature_c": 59.0,
+            "watts": 24.016
+          },
+          {
+            "seconds": 10.558296503,
+            "temperature_c": 60.0,
+            "watts": 24.105
+          },
+          {
+            "seconds": 10.659284391,
+            "temperature_c": 59.0,
+            "watts": 24.149
+          },
+          {
+            "seconds": 10.759855758,
+            "temperature_c": 59.0,
+            "watts": 24.111
+          },
+          {
+            "seconds": 10.86012522,
+            "temperature_c": 59.0,
+            "watts": 24.121
+          },
+          {
+            "seconds": 10.96038843,
+            "temperature_c": 59.0,
+            "watts": 24.093
+          },
+          {
+            "seconds": 11.061085163,
+            "temperature_c": 59.0,
+            "watts": 24.115
+          },
+          {
+            "seconds": 11.161340548,
+            "temperature_c": 59.0,
+            "watts": 24.088
+          },
+          {
+            "seconds": 11.261650085,
+            "temperature_c": 58.0,
+            "watts": 24.044
+          },
+          {
+            "seconds": 11.362509102,
+            "temperature_c": 58.0,
+            "watts": 23.167
+          },
+          {
+            "seconds": 11.463421128,
+            "temperature_c": 58.0,
+            "watts": 23.126
+          },
+          {
+            "seconds": 11.564227887,
+            "temperature_c": 58.0,
+            "watts": 23.116
+          },
+          {
+            "seconds": 11.568840621,
+            "temperature_c": 58.0,
+            "watts": 23.114
+          }
+        ],
+        "seconds": 11.568724223
+      }
+    },
+    {
+      "repeat": 2,
+      "case": "motion",
+      "target_rate": 10,
+      "backend": "official",
+      "command": [
+        "/home/cameronball/Projects/Vino/gpu-artifacts/official-comparison/live-display",
+        "gpu-artifacts/official-comparison/run-1/motion.bgrx",
+        "1920",
+        "1080",
+        "10",
+        "3",
+        "10",
+        "0",
+        "0",
+        "1920",
+        "0",
+        "2873",
+        "3934",
+        "0",
+        "checked-layout"
+      ],
+      "measurement": {
+        "scope": "live official service; output delivery unverified",
+        "frame_pairs_submitted": 100,
+        "seconds": 10.000102708,
+        "input_pairs_per_second": 9.999897,
+        "static_hold": false,
+        "displaylink_cpu_seconds": 7.795702,
+        "displaylink_user_seconds": 5.263323,
+        "displaylink_system_seconds": 2.532379,
+        "displaylink_cpu_cores": 0.779562193,
+        "xorg_cpu_cores": 0.07299925,
+        "kwin_cpu_cores": 0.040999579,
+        "player_cpu_cores": 0.025151524,
+        "input_deadline_misses": 0,
+        "x_submission_p99_ms": 9.888972,
+        "pixel_checks_passed": 32
+      }
+    },
+    {
+      "repeat": 2,
+      "case": "motion",
+      "target_rate": 10,
+      "backend": "gpu",
+      "command": [
+        "/home/cameronball/Projects/Vino/revdi/target/release/vino-gpu",
+        "sample",
+        "--case",
+        "motion",
+        "--rate",
+        "10",
+        "--warmup",
+        "3",
+        "--seconds",
+        "10",
+        "--output",
+        "gpu-artifacts/official-comparison/run-1/2-motion-10-gpu.json"
+      ],
+      "measurement": {
+        "average_cpu_cores": 0.20473260910907035,
+        "average_package_watts": 15.11108674868917,
+        "backend": "gpu",
+        "cpu_seconds": 2.047349188,
+        "cpu_threads": null,
+        "deadline_misses": 100,
+        "encoded_bytes": 230355104,
+        "encoded_strips": 408000,
+        "frame_pairs": 100,
+        "frame_pairs_per_second": 9.999887186272709,
+        "gpu_dispatches": 400,
+        "gpu_stage_totals": {
+          "pack_ms": 587.4456339793277,
+          "readback_ms": 93.91069100000001,
+          "submit_wait_ms": 1354.6446359999989,
+          "transform_ms": 329.15067034977716,
+          "upload_ms": 89.86970799999996
+        },
+        "joules_per_frame_pair": 1.5111257224414325,
+        "p50_ms": 32.488344000000005,
+        "p95_ms": 38.178007,
+        "p99_ms": 40.380162,
+        "package_joules": 151.11257224414325,
+        "power_error": null,
+        "power_samples": [
+          {
+            "seconds": 0.001247177,
+            "temperature_c": 54.0,
+            "watts": 15.05
+          },
+          {
+            "seconds": 0.101790986,
+            "temperature_c": 55.0,
+            "watts": 15.04
+          },
+          {
+            "seconds": 0.202476581,
+            "temperature_c": 54.0,
+            "watts": 14.212
+          },
+          {
+            "seconds": 0.303237498,
+            "temperature_c": 54.0,
+            "watts": 15.064
+          },
+          {
+            "seconds": 0.403514347,
+            "temperature_c": 55.0,
+            "watts": 15.143
+          },
+          {
+            "seconds": 0.50394294,
+            "temperature_c": 55.0,
+            "watts": 15.19
+          },
+          {
+            "seconds": 0.605105069,
+            "temperature_c": 55.0,
+            "watts": 15.239
+          },
+          {
+            "seconds": 0.705529274,
+            "temperature_c": 54.0,
+            "watts": 15.142
+          },
+          {
+            "seconds": 0.806084485,
+            "temperature_c": 54.0,
+            "watts": 15.126
+          },
+          {
+            "seconds": 0.909620402,
+            "temperature_c": 54.0,
+            "watts": 15.011
+          },
+          {
+            "seconds": 1.010076207,
+            "temperature_c": 55.0,
+            "watts": 15.175
+          },
+          {
+            "seconds": 1.110536961,
+            "temperature_c": 54.0,
+            "watts": 15.045
+          },
+          {
+            "seconds": 1.2113652639999999,
+            "temperature_c": 54.0,
+            "watts": 14.243
+          },
+          {
+            "seconds": 1.311620673,
+            "temperature_c": 54.0,
+            "watts": 14.204
+          },
+          {
+            "seconds": 1.412214086,
+            "temperature_c": 54.0,
+            "watts": 14.201
+          },
+          {
+            "seconds": 1.513073507,
+            "temperature_c": 55.0,
+            "watts": 15.005
+          },
+          {
+            "seconds": 1.613679724,
+            "temperature_c": 55.0,
+            "watts": 15.007
+          },
+          {
+            "seconds": 1.714725204,
+            "temperature_c": 54.0,
+            "watts": 15.012
+          },
+          {
+            "seconds": 1.81555533,
+            "temperature_c": 54.0,
+            "watts": 14.167
+          },
+          {
+            "seconds": 1.9160623110000001,
+            "temperature_c": 54.0,
+            "watts": 14.145
+          },
+          {
+            "seconds": 2.016351253,
+            "temperature_c": 55.0,
+            "watts": 14.146
+          },
+          {
+            "seconds": 2.116628884,
+            "temperature_c": 54.0,
+            "watts": 14.124
+          },
+          {
+            "seconds": 2.21759213,
+            "temperature_c": 54.0,
+            "watts": 14.168
+          },
+          {
+            "seconds": 2.318170625,
+            "temperature_c": 53.0,
+            "watts": 14.057
+          },
+          {
+            "seconds": 2.418926342,
+            "temperature_c": 55.0,
+            "watts": 14.188
+          },
+          {
+            "seconds": 2.519162716,
+            "temperature_c": 54.0,
+            "watts": 14.24
+          },
+          {
+            "seconds": 2.619395703,
+            "temperature_c": 54.0,
+            "watts": 14.197
+          },
+          {
+            "seconds": 2.7202015040000003,
+            "temperature_c": 53.0,
+            "watts": 14.067
+          },
+          {
+            "seconds": 2.8210112130000002,
+            "temperature_c": 53.0,
+            "watts": 14.0
+          },
+          {
+            "seconds": 2.921808097,
+            "temperature_c": 53.0,
+            "watts": 13.165
+          },
+          {
+            "seconds": 3.022531243,
+            "temperature_c": 53.0,
+            "watts": 13.197
+          },
+          {
+            "seconds": 3.123683343,
+            "temperature_c": 54.0,
+            "watts": 14.042
+          },
+          {
+            "seconds": 3.224124481,
+            "temperature_c": 53.0,
+            "watts": 13.201
+          },
+          {
+            "seconds": 3.3249799749999998,
+            "temperature_c": 54.0,
+            "watts": 13.167
+          },
+          {
+            "seconds": 3.425185962,
+            "temperature_c": 54.0,
+            "watts": 13.23
+          },
+          {
+            "seconds": 3.525663668,
+            "temperature_c": 54.0,
+            "watts": 14.079
+          },
+          {
+            "seconds": 3.626329557,
+            "temperature_c": 53.0,
+            "watts": 14.016
+          },
+          {
+            "seconds": 3.7269988830000003,
+            "temperature_c": 54.0,
+            "watts": 14.033
+          },
+          {
+            "seconds": 3.827217584,
+            "temperature_c": 53.0,
+            "watts": 13.21
+          },
+          {
+            "seconds": 3.927522967,
+            "temperature_c": 54.0,
+            "watts": 13.192
+          },
+          {
+            "seconds": 4.028189778,
+            "temperature_c": 54.0,
+            "watts": 13.22
+          },
+          {
+            "seconds": 4.128435329,
+            "temperature_c": 54.0,
+            "watts": 13.237
+          },
+          {
+            "seconds": 4.228766931,
+            "temperature_c": 54.0,
+            "watts": 14.026
+          },
+          {
+            "seconds": 4.329414426,
+            "temperature_c": 53.0,
+            "watts": 13.228
+          },
+          {
+            "seconds": 4.430223443,
+            "temperature_c": 55.0,
+            "watts": 14.069
+          },
+          {
+            "seconds": 4.531054943,
+            "temperature_c": 54.0,
+            "watts": 14.233
+          },
+          {
+            "seconds": 4.631231014,
+            "temperature_c": 54.0,
+            "watts": 15.077
+          },
+          {
+            "seconds": 4.7314580809999995,
+            "temperature_c": 55.0,
+            "watts": 16.01
+          },
+          {
+            "seconds": 4.832274572,
+            "temperature_c": 55.0,
+            "watts": 16.201
+          },
+          {
+            "seconds": 4.933239091,
+            "temperature_c": 56.0,
+            "watts": 17.065
+          },
+          {
+            "seconds": 5.033869303,
+            "temperature_c": 54.0,
+            "watts": 16.162
+          },
+          {
+            "seconds": 5.134668001,
+            "temperature_c": 54.0,
+            "watts": 16.034
+          },
+          {
+            "seconds": 5.234879208,
+            "temperature_c": 54.0,
+            "watts": 16.075
+          },
+          {
+            "seconds": 5.335091718,
+            "temperature_c": 54.0,
+            "watts": 16.001
+          },
+          {
+            "seconds": 5.435848147,
+            "temperature_c": 54.0,
+            "watts": 15.126
+          },
+          {
+            "seconds": 5.53607845,
+            "temperature_c": 55.0,
+            "watts": 16.092
+          },
+          {
+            "seconds": 5.636434339,
+            "temperature_c": 54.0,
+            "watts": 15.221
+          },
+          {
+            "seconds": 5.737200816,
+            "temperature_c": 54.0,
+            "watts": 15.17
+          },
+          {
+            "seconds": 5.837841188,
+            "temperature_c": 54.0,
+            "watts": 15.058
+          },
+          {
+            "seconds": 5.938680643,
+            "temperature_c": 53.0,
+            "watts": 14.247
+          },
+          {
+            "seconds": 6.038890307,
+            "temperature_c": 54.0,
+            "watts": 15.062
+          },
+          {
+            "seconds": 6.139363616,
+            "temperature_c": 53.0,
+            "watts": 14.211
+          },
+          {
+            "seconds": 6.239862232,
+            "temperature_c": 54.0,
+            "watts": 14.217
+          },
+          {
+            "seconds": 6.341016697,
+            "temperature_c": 53.0,
+            "watts": 14.163
+          },
+          {
+            "seconds": 6.441579594,
+            "temperature_c": 53.0,
+            "watts": 14.162
+          },
+          {
+            "seconds": 6.542269538,
+            "temperature_c": 54.0,
+            "watts": 15.017
+          },
+          {
+            "seconds": 6.642618153,
+            "temperature_c": 53.0,
+            "watts": 14.22
+          },
+          {
+            "seconds": 6.742887049,
+            "temperature_c": 53.0,
+            "watts": 14.084
+          },
+          {
+            "seconds": 6.843524385,
+            "temperature_c": 53.0,
+            "watts": 14.051
+          },
+          {
+            "seconds": 6.94427311,
+            "temperature_c": 53.0,
+            "watts": 14.001
+          },
+          {
+            "seconds": 7.045011806,
+            "temperature_c": 53.0,
+            "watts": 13.162
+          },
+          {
+            "seconds": 7.145334673,
+            "temperature_c": 53.0,
+            "watts": 13.126
+          },
+          {
+            "seconds": 7.246274095,
+            "temperature_c": 52.0,
+            "watts": 13.017
+          },
+          {
+            "seconds": 7.346495472,
+            "temperature_c": 53.0,
+            "watts": 13.151
+          },
+          {
+            "seconds": 7.4471319959999995,
+            "temperature_c": 53.0,
+            "watts": 13.153
+          },
+          {
+            "seconds": 7.547343785,
+            "temperature_c": 54.0,
+            "watts": 14.027
+          },
+          {
+            "seconds": 7.647661442,
+            "temperature_c": 54.0,
+            "watts": 14.084
+          },
+          {
+            "seconds": 7.748396301,
+            "temperature_c": 54.0,
+            "watts": 14.19
+          },
+          {
+            "seconds": 7.849242469,
+            "temperature_c": 54.0,
+            "watts": 14.253
+          },
+          {
+            "seconds": 7.949936982,
+            "temperature_c": 54.0,
+            "watts": 15.099
+          },
+          {
+            "seconds": 8.050147849,
+            "temperature_c": 55.0,
+            "watts": 15.228
+          },
+          {
+            "seconds": 8.150363225,
+            "temperature_c": 54.0,
+            "watts": 16.032
+          },
+          {
+            "seconds": 8.250558583,
+            "temperature_c": 54.0,
+            "watts": 16.137
+          },
+          {
+            "seconds": 8.350773848,
+            "temperature_c": 55.0,
+            "watts": 16.246
+          },
+          {
+            "seconds": 8.450980307,
+            "temperature_c": 55.0,
+            "watts": 17.141
+          },
+          {
+            "seconds": 8.551191895,
+            "temperature_c": 55.0,
+            "watts": 18.059
+          },
+          {
+            "seconds": 8.651940009,
+            "temperature_c": 56.0,
+            "watts": 19.06
+          },
+          {
+            "seconds": 8.752177897,
+            "temperature_c": 56.0,
+            "watts": 20.037
+          },
+          {
+            "seconds": 8.852412147999999,
+            "temperature_c": 56.0,
+            "watts": 20.093
+          },
+          {
+            "seconds": 8.953122682,
+            "temperature_c": 55.0,
+            "watts": 20.02
+          },
+          {
+            "seconds": 9.053416475,
+            "temperature_c": 54.0,
+            "watts": 19.205
+          },
+          {
+            "seconds": 9.15361052,
+            "temperature_c": 54.0,
+            "watts": 19.117
+          },
+          {
+            "seconds": 9.254384623,
+            "temperature_c": 54.0,
+            "watts": 18.211
+          },
+          {
+            "seconds": 9.355095317,
+            "temperature_c": 53.0,
+            "watts": 18.081
+          },
+          {
+            "seconds": 9.455405992,
+            "temperature_c": 54.0,
+            "watts": 18.084
+          },
+          {
+            "seconds": 9.556315258,
+            "temperature_c": 54.0,
+            "watts": 18.065
+          },
+          {
+            "seconds": 9.65651244,
+            "temperature_c": 54.0,
+            "watts": 17.243
+          },
+          {
+            "seconds": 9.75732268,
+            "temperature_c": 53.0,
+            "watts": 17.187
+          },
+          {
+            "seconds": 9.858306426,
+            "temperature_c": 53.0,
+            "watts": 17.048
+          },
+          {
+            "seconds": 9.959068557,
+            "temperature_c": 54.0,
+            "watts": 17.028
+          },
+          {
+            "seconds": 10.000876396,
+            "temperature_c": 53.0,
+            "watts": 16.226
+          }
+        ],
+        "seconds": 10.000112815
+      }
+    },
+    {
+      "repeat": 2,
+      "case": "motion",
+      "target_rate": 30,
+      "backend": "official",
+      "command": [
+        "/home/cameronball/Projects/Vino/gpu-artifacts/official-comparison/live-display",
+        "gpu-artifacts/official-comparison/run-1/motion.bgrx",
+        "1920",
+        "1080",
+        "30",
+        "3",
+        "10",
+        "0",
+        "0",
+        "1920",
+        "0",
+        "2873",
+        "3934",
+        "0",
+        "checked-layout"
+      ],
+      "measurement": {
+        "scope": "live official service; output delivery unverified",
+        "frame_pairs_submitted": 300,
+        "seconds": 10.000137976,
+        "input_pairs_per_second": 29.999586,
+        "static_hold": false,
+        "displaylink_cpu_seconds": 10.41627,
+        "displaylink_user_seconds": 7.422312,
+        "displaylink_system_seconds": 2.993959,
+        "displaylink_cpu_cores": 1.041612628,
+        "xorg_cpu_cores": 0.111998455,
+        "kwin_cpu_cores": 0.065999089,
+        "player_cpu_cores": 0.061112368,
+        "input_deadline_misses": 0,
+        "x_submission_p99_ms": 29.956079,
+        "pixel_checks_passed": 32
+      }
+    },
+    {
+      "repeat": 2,
+      "case": "motion",
+      "target_rate": 30,
+      "backend": "gpu",
+      "command": [
+        "/home/cameronball/Projects/Vino/revdi/target/release/vino-gpu",
+        "sample",
+        "--case",
+        "motion",
+        "--rate",
+        "30",
+        "--warmup",
+        "3",
+        "--seconds",
+        "10",
+        "--output",
+        "gpu-artifacts/official-comparison/run-1/2-motion-30-gpu.json"
+      ],
+      "measurement": {
+        "average_cpu_cores": 0.561890446948317,
+        "average_package_watts": 23.067264648005914,
+        "backend": "gpu",
+        "cpu_seconds": 5.618938388,
+        "cpu_threads": null,
+        "deadline_misses": 300,
+        "encoded_bytes": 691189808,
+        "encoded_strips": 1224000,
+        "frame_pairs": 300,
+        "frame_pairs_per_second": 29.999818906093175,
+        "gpu_dispatches": 1200,
+        "gpu_stage_totals": {
+          "pack_ms": 1839.0634032406176,
+          "readback_ms": 268.9752930000001,
+          "submit_wait_ms": 3910.756418999996,
+          "transform_ms": 965.7208816343302,
+          "upload_ms": 246.2000479999998
+        },
+        "joules_per_frame_pair": 0.7689134631182987,
+        "p50_ms": 31.230428,
+        "p95_ms": 34.911725999999994,
+        "p99_ms": 37.225401999999995,
+        "package_joules": 230.6740389354896,
+        "power_error": null,
+        "power_samples": [
+          {
+            "seconds": 0.000874218,
+            "temperature_c": 58.0,
+            "watts": 24.075
+          },
+          {
+            "seconds": 0.101863267,
+            "temperature_c": 58.0,
+            "watts": 24.091
+          },
+          {
+            "seconds": 0.202464599,
+            "temperature_c": 58.0,
+            "watts": 24.071
+          },
+          {
+            "seconds": 0.302694566,
+            "temperature_c": 59.0,
+            "watts": 24.099
+          },
+          {
+            "seconds": 0.402974476,
+            "temperature_c": 58.0,
+            "watts": 24.063
+          },
+          {
+            "seconds": 0.503642514,
+            "temperature_c": 58.0,
+            "watts": 24.069
+          },
+          {
+            "seconds": 0.603908839,
+            "temperature_c": 58.0,
+            "watts": 24.068
+          },
+          {
+            "seconds": 0.704144566,
+            "temperature_c": 58.0,
+            "watts": 24.074
+          },
+          {
+            "seconds": 0.804932999,
+            "temperature_c": 59.0,
+            "watts": 24.076
+          },
+          {
+            "seconds": 0.905645109,
+            "temperature_c": 58.0,
+            "watts": 24.07
+          },
+          {
+            "seconds": 1.006674334,
+            "temperature_c": 58.0,
+            "watts": 24.08
+          },
+          {
+            "seconds": 1.10729375,
+            "temperature_c": 59.0,
+            "watts": 24.076
+          },
+          {
+            "seconds": 1.2075373520000001,
+            "temperature_c": 58.0,
+            "watts": 24.091
+          },
+          {
+            "seconds": 1.307766157,
+            "temperature_c": 58.0,
+            "watts": 24.086
+          },
+          {
+            "seconds": 1.408569969,
+            "temperature_c": 58.0,
+            "watts": 24.076
+          },
+          {
+            "seconds": 1.509349937,
+            "temperature_c": 58.0,
+            "watts": 24.072
+          },
+          {
+            "seconds": 1.610049544,
+            "temperature_c": 58.0,
+            "watts": 24.091
+          },
+          {
+            "seconds": 1.7103294340000001,
+            "temperature_c": 58.0,
+            "watts": 24.067
+          },
+          {
+            "seconds": 1.810607862,
+            "temperature_c": 59.0,
+            "watts": 24.067
+          },
+          {
+            "seconds": 1.911538642,
+            "temperature_c": 59.0,
+            "watts": 24.091
+          },
+          {
+            "seconds": 2.012093558,
+            "temperature_c": 59.0,
+            "watts": 24.079
+          },
+          {
+            "seconds": 2.112354653,
+            "temperature_c": 58.0,
+            "watts": 24.094
+          },
+          {
+            "seconds": 2.212702981,
+            "temperature_c": 59.0,
+            "watts": 24.074
+          },
+          {
+            "seconds": 2.313336044,
+            "temperature_c": 58.0,
+            "watts": 24.088
+          },
+          {
+            "seconds": 2.413559529,
+            "temperature_c": 58.0,
+            "watts": 24.082
+          },
+          {
+            "seconds": 2.513768777,
+            "temperature_c": 58.0,
+            "watts": 24.081
+          },
+          {
+            "seconds": 2.613975971,
+            "temperature_c": 58.0,
+            "watts": 24.062
+          },
+          {
+            "seconds": 2.714278985,
+            "temperature_c": 58.0,
+            "watts": 24.066
+          },
+          {
+            "seconds": 2.8149923279999998,
+            "temperature_c": 58.0,
+            "watts": 24.061
+          },
+          {
+            "seconds": 2.9157872129999998,
+            "temperature_c": 58.0,
+            "watts": 24.069
+          },
+          {
+            "seconds": 3.016516156,
+            "temperature_c": 58.0,
+            "watts": 24.075
+          },
+          {
+            "seconds": 3.116795395,
+            "temperature_c": 59.0,
+            "watts": 24.054
+          },
+          {
+            "seconds": 3.217004202,
+            "temperature_c": 58.0,
+            "watts": 23.208
+          },
+          {
+            "seconds": 3.317785402,
+            "temperature_c": 59.0,
+            "watts": 23.21
+          },
+          {
+            "seconds": 3.418525135,
+            "temperature_c": 58.0,
+            "watts": 23.244
+          },
+          {
+            "seconds": 3.518822889,
+            "temperature_c": 58.0,
+            "watts": 23.166
+          },
+          {
+            "seconds": 3.619701842,
+            "temperature_c": 58.0,
+            "watts": 23.076
+          },
+          {
+            "seconds": 3.719984779,
+            "temperature_c": 57.0,
+            "watts": 22.19
+          },
+          {
+            "seconds": 3.820699965,
+            "temperature_c": 58.0,
+            "watts": 22.233
+          },
+          {
+            "seconds": 3.9213506909999998,
+            "temperature_c": 59.0,
+            "watts": 23.05
+          },
+          {
+            "seconds": 4.021622847,
+            "temperature_c": 59.0,
+            "watts": 23.127
+          },
+          {
+            "seconds": 4.121805065,
+            "temperature_c": 59.0,
+            "watts": 23.213
+          },
+          {
+            "seconds": 4.222639234,
+            "temperature_c": 59.0,
+            "watts": 23.25
+          },
+          {
+            "seconds": 4.322815822,
+            "temperature_c": 59.0,
+            "watts": 23.251
+          },
+          {
+            "seconds": 4.423135768,
+            "temperature_c": 58.0,
+            "watts": 24.017
+          },
+          {
+            "seconds": 4.524031192,
+            "temperature_c": 59.0,
+            "watts": 24.035
+          },
+          {
+            "seconds": 4.624583063,
+            "temperature_c": 58.0,
+            "watts": 23.19
+          },
+          {
+            "seconds": 4.724849178,
+            "temperature_c": 58.0,
+            "watts": 23.12
+          },
+          {
+            "seconds": 4.825101467,
+            "temperature_c": 58.0,
+            "watts": 23.038
+          },
+          {
+            "seconds": 4.926019273,
+            "temperature_c": 58.0,
+            "watts": 22.25
+          },
+          {
+            "seconds": 5.026585411,
+            "temperature_c": 58.0,
+            "watts": 22.164
+          },
+          {
+            "seconds": 5.127481166,
+            "temperature_c": 57.0,
+            "watts": 22.063
+          },
+          {
+            "seconds": 5.227674174,
+            "temperature_c": 57.0,
+            "watts": 21.253
+          },
+          {
+            "seconds": 5.327941421,
+            "temperature_c": 58.0,
+            "watts": 22.008
+          },
+          {
+            "seconds": 5.428815045,
+            "temperature_c": 58.0,
+            "watts": 22.112
+          },
+          {
+            "seconds": 5.529602056,
+            "temperature_c": 57.0,
+            "watts": 22.06
+          },
+          {
+            "seconds": 5.630222375,
+            "temperature_c": 59.0,
+            "watts": 22.206
+          },
+          {
+            "seconds": 5.731038662,
+            "temperature_c": 58.0,
+            "watts": 22.104
+          },
+          {
+            "seconds": 5.831270663,
+            "temperature_c": 58.0,
+            "watts": 22.104
+          },
+          {
+            "seconds": 5.93147354,
+            "temperature_c": 58.0,
+            "watts": 22.033
+          },
+          {
+            "seconds": 6.031690403,
+            "temperature_c": 57.0,
+            "watts": 21.221
+          },
+          {
+            "seconds": 6.131906875,
+            "temperature_c": 58.0,
+            "watts": 21.208
+          },
+          {
+            "seconds": 6.232738791,
+            "temperature_c": 57.0,
+            "watts": 21.114
+          },
+          {
+            "seconds": 6.333466572,
+            "temperature_c": 58.0,
+            "watts": 21.214
+          },
+          {
+            "seconds": 6.434439572,
+            "temperature_c": 58.0,
+            "watts": 21.248
+          },
+          {
+            "seconds": 6.5351075,
+            "temperature_c": 59.0,
+            "watts": 22.118
+          },
+          {
+            "seconds": 6.63585093,
+            "temperature_c": 59.0,
+            "watts": 22.147
+          },
+          {
+            "seconds": 6.736114371,
+            "temperature_c": 58.0,
+            "watts": 22.148
+          },
+          {
+            "seconds": 6.836336494,
+            "temperature_c": 59.0,
+            "watts": 22.137
+          },
+          {
+            "seconds": 6.9370925979999996,
+            "temperature_c": 59.0,
+            "watts": 22.165
+          },
+          {
+            "seconds": 7.037891261,
+            "temperature_c": 58.0,
+            "watts": 22.167
+          },
+          {
+            "seconds": 7.13867162,
+            "temperature_c": 58.0,
+            "watts": 22.12
+          },
+          {
+            "seconds": 7.238917358,
+            "temperature_c": 59.0,
+            "watts": 22.193
+          },
+          {
+            "seconds": 7.33932568,
+            "temperature_c": 58.0,
+            "watts": 22.218
+          },
+          {
+            "seconds": 7.43990374,
+            "temperature_c": 58.0,
+            "watts": 22.19
+          },
+          {
+            "seconds": 7.540128037,
+            "temperature_c": 58.0,
+            "watts": 22.143
+          },
+          {
+            "seconds": 7.640499991,
+            "temperature_c": 59.0,
+            "watts": 22.207
+          },
+          {
+            "seconds": 7.741095113,
+            "temperature_c": 58.0,
+            "watts": 22.188
+          },
+          {
+            "seconds": 7.841907863,
+            "temperature_c": 59.0,
+            "watts": 23.025
+          },
+          {
+            "seconds": 7.942183657,
+            "temperature_c": 60.0,
+            "watts": 23.106
+          },
+          {
+            "seconds": 8.042491761,
+            "temperature_c": 59.0,
+            "watts": 23.161
+          },
+          {
+            "seconds": 8.14315971,
+            "temperature_c": 60.0,
+            "watts": 23.247
+          },
+          {
+            "seconds": 8.243352539,
+            "temperature_c": 58.0,
+            "watts": 23.163
+          },
+          {
+            "seconds": 8.343581926,
+            "temperature_c": 59.0,
+            "watts": 23.229
+          },
+          {
+            "seconds": 8.444371723,
+            "temperature_c": 58.0,
+            "watts": 23.119
+          },
+          {
+            "seconds": 8.545168233,
+            "temperature_c": 58.0,
+            "watts": 23.067
+          },
+          {
+            "seconds": 8.646147806,
+            "temperature_c": 59.0,
+            "watts": 23.083
+          },
+          {
+            "seconds": 8.746881888,
+            "temperature_c": 58.0,
+            "watts": 23.073
+          },
+          {
+            "seconds": 8.847588861,
+            "temperature_c": 58.0,
+            "watts": 23.011
+          },
+          {
+            "seconds": 8.948359362,
+            "temperature_c": 58.0,
+            "watts": 22.139
+          },
+          {
+            "seconds": 9.049113351999999,
+            "temperature_c": 58.0,
+            "watts": 22.127
+          },
+          {
+            "seconds": 9.149406117,
+            "temperature_c": 58.0,
+            "watts": 22.221
+          },
+          {
+            "seconds": 9.249632669,
+            "temperature_c": 59.0,
+            "watts": 23.059
+          },
+          {
+            "seconds": 9.350321848,
+            "temperature_c": 59.0,
+            "watts": 23.165
+          },
+          {
+            "seconds": 9.450618762,
+            "temperature_c": 59.0,
+            "watts": 24.01
+          },
+          {
+            "seconds": 9.550900227,
+            "temperature_c": 59.0,
+            "watts": 23.212
+          },
+          {
+            "seconds": 9.651599344,
+            "temperature_c": 59.0,
+            "watts": 23.189
+          },
+          {
+            "seconds": 9.75255926,
+            "temperature_c": 59.0,
+            "watts": 23.236
+          },
+          {
+            "seconds": 9.853464394,
+            "temperature_c": 58.0,
+            "watts": 23.148
+          },
+          {
+            "seconds": 9.95421122,
+            "temperature_c": 58.0,
+            "watts": 23.072
+          },
+          {
+            "seconds": 10.001111736,
+            "temperature_c": 57.0,
+            "watts": 22.244
+          }
+        ],
+        "seconds": 10.000060365
+      }
+    }
+  ],
+  "finished_unix": 1792162706.898746,
+  "summary": [
+    {
+      "case": "idle",
+      "target_rate": 30,
+      "static_hold": true,
+      "official": {
+        "displaylink_cpu_cores": {
+          "mean": 0.24598545833333335,
+          "min": 0.236535835,
+          "max": 0.252081335
+        },
+        "input_pairs_per_second": {
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "xorg_cpu_cores": {
+          "mean": 0.03533301166666667,
+          "min": 0.033999631,
+          "max": 0.03599977
+        },
+        "kwin_cpu_cores": {
+          "mean": 0.013666543666666666,
+          "min": 0.012999859,
+          "max": 0.014999904
+        },
+        "player_cpu_cores": {
+          "mean": 0.002499566,
+          "min": 0.002237273,
+          "max": 0.002884611
+        }
+      }
+    },
+    {
+      "case": "scroll",
+      "target_rate": 30,
+      "static_hold": false,
+      "official": {
+        "displaylink_cpu_cores": {
+          "mean": 1.132175318,
+          "min": 1.120884182,
+          "max": 1.152360026
+        },
+        "input_pairs_per_second": {
+          "mean": 29.999807666666666,
+          "min": 29.999792,
+          "max": 29.999822
+        },
+        "xorg_cpu_cores": {
+          "mean": 0.108665971,
+          "min": 0.105999327,
+          "max": 0.110999232
+        },
+        "kwin_cpu_cores": {
+          "mean": 0.057332966,
+          "min": 0.055999644,
+          "max": 0.058999592
+        },
+        "player_cpu_cores": {
+          "mean": 0.092573552,
+          "min": 0.090202618,
+          "max": 0.094807898
+        }
+      },
+      "gpu": {
+        "average_cpu_cores": {
+          "mean": 0.6332932790656502,
+          "min": 0.6266964098857405,
+          "max": 0.6409258493913015
+        },
+        "frame_pairs_per_second": {
+          "mean": 26.419541437713242,
+          "min": 25.931986467752797,
+          "max": 26.672531444218645
+        },
+        "p99_ms": {
+          "mean": 48.33826,
+          "min": 43.250209,
+          "max": 53.850544
+        }
+      }
+    },
+    {
+      "case": "motion",
+      "target_rate": 10,
+      "static_hold": false,
+      "official": {
+        "displaylink_cpu_cores": {
+          "mean": 0.770079176,
+          "min": 0.754533484,
+          "max": 0.779562193
+        },
+        "input_pairs_per_second": {
+          "mean": 9.999917,
+          "min": 9.999897,
+          "max": 9.999938
+        },
+        "xorg_cpu_cores": {
+          "mean": 0.07166606766666667,
+          "min": 0.068999569,
+          "max": 0.072999384
+        },
+        "kwin_cpu_cores": {
+          "mean": 0.040999658333333334,
+          "min": 0.03999975,
+          "max": 0.041999646
+        },
+        "player_cpu_cores": {
+          "mean": 0.023807964333333334,
+          "min": 0.021959764,
+          "max": 0.025151524
+        }
+      },
+      "gpu": {
+        "average_cpu_cores": {
+          "mean": 0.20617508434992118,
+          "min": 0.20473260910907035,
+          "max": 0.2069555075881245
+        },
+        "frame_pairs_per_second": {
+          "mean": 9.999916044413302,
+          "min": 9.999887186272709,
+          "max": 9.999931893463852
+        },
+        "p99_ms": {
+          "mean": 40.873641,
+          "min": 40.380162,
+          "max": 41.255403
+        }
+      }
+    },
+    {
+      "case": "motion",
+      "target_rate": 30,
+      "static_hold": false,
+      "official": {
+        "displaylink_cpu_cores": {
+          "mean": 1.0492058083333333,
+          "min": 1.040244141,
+          "max": 1.065760656
+        },
+        "input_pairs_per_second": {
+          "mean": 29.999693999999998,
+          "min": 29.999586,
+          "max": 29.99976
+        },
+        "xorg_cpu_cores": {
+          "mean": 0.11233218766666667,
+          "min": 0.111998455,
+          "max": 0.112999094
+        },
+        "kwin_cpu_cores": {
+          "mean": 0.06499933466666666,
+          "min": 0.063999487,
+          "max": 0.065999089
+        },
+        "player_cpu_cores": {
+          "mean": 0.06280473433333333,
+          "min": 0.061112368,
+          "max": 0.064521118
+        }
+      },
+      "gpu": {
+        "average_cpu_cores": {
+          "mean": 0.5623103509179846,
+          "min": 0.5554186005118259,
+          "max": 0.5696220052938111
+        },
+        "frame_pairs_per_second": {
+          "mean": 29.999783996622376,
+          "min": 29.99972064860126,
+          "max": 29.999818906093175
+        },
+        "p99_ms": {
+          "mean": 37.39996466666666,
+          "min": 36.568574,
+          "max": 38.405918
+        }
+      }
+    }
+  ],
+  "preserved_measurement_artifacts": {
+    "/home/cameronball/Projects/Vino/revdi/target/release/vino-gpu": "gpu-artifacts/official-comparison/run-1/vino-gpu-measured",
+    "/home/cameronball/Projects/Vino/gpu-artifacts/official-comparison/live-display": "gpu-artifacts/official-comparison/run-1/live-display-measured",
+    "/home/cameronball/Projects/Vino/tools/gpu/compare-official.py": "gpu-artifacts/official-comparison/run-1/compare-official-measured.py"
+  },
+  "validation": {
+    "release_clippy": true,
+    "chimera_tests": 24,
+    "prototype_tests": 5,
+    "quick_gpu_surfaces": 24,
+    "quick_gpu_strips": 48,
+    "quick_gpu_framed_heads": 32,
+    "vulkan_errors": 0,
+    "live_pixel_checks_per_run": 32,
+    "live_runs": 12,
+    "sample_cpu_gpu_work_equal": true,
+    "sample_invalid_rate_rejected": true,
+    "sample_output_overwrite_rejected": true,
+    "replay_empty_window_rejected": true,
+    "c_compiler_warnings_as_errors": true
+  },
+  "validated_source_sha256": {
+    "tools/gpu/live-display.c": "733d05189232489d9be54379a5d046ed48324433969db97d7d34279ce301848e",
+    "tools/gpu/compare-official.py": "9d0b3dd16ce3f4a81e9aed7b36740ae4244467a617108f3382ee100d3d994eac",
+    "revdi/gpu-encoder/src/main.rs": "e28661d178837edc3e23406d6a95a97aceaad2626b56db95e765fe2e6859f503",
+    "revdi/gpu-encoder/src/workload.rs": "720b6c9d115fe0e32319700404528ac3243197be6bce82e3174f22f248d42b4f",
+    "revdi/gpu-encoder/src/benchmark.rs": "1693bb8e2b59b9164a52658e9606cadf4262d26baf4160af0914c58c15f7e9d3"
+  }
+}

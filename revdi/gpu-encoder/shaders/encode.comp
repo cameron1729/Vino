@@ -1,0 +1,265 @@
+#version 450
+// One workgroup per strip. Each lane transforms one 4x4 quadrant for all
+// three planes, sharing the pixel loads and keeping the first two Haar levels
+// in registers. Four quadrants cooperate only for the final 8x8 level.
+layout(local_size_x=64) in;
+layout(set=0,binding=0,std430) readonly buffer Pixels { uint pixels[]; };
+layout(set=0,binding=1,std430) readonly buffer Coordinates { uvec2 coords[]; };
+shared uint lasts[48];
+layout(set=0,binding=2,std430) buffer Output { uint output_data[]; };
+layout(set=0,binding=3,std430) writeonly buffer Metadata { uvec2 metadata[]; };
+layout(set=0,binding=4,std430) readonly buffer Cursor { uint cursor_pixels[]; };
+
+layout(push_constant) uniform Parameters {
+    uint width; uint strips; uint output_words; uint groups_x;
+    uint native_xrgb; uint stride; uint visible_height;
+    int cursor_x; int cursor_y;
+    uint cursor_width; uint cursor_height; uint cursor_stride;
+} pc;
+// Transform and pack share these coefficients without a device-memory round trip.
+// Stride 17 keeps neighbouring blocks from concentrating on one memory bank.
+// RGB888 bounds: chroma AC fits signed 11 bits, luma AC signed 10 bits.
+// DC uses signed 11-bit chroma and unsigned 10-bit luma (0..1020).
+shared uint staged[64*17];
+shared int sums_shared[64*3];
+shared uint significant[64*3];
+const uint inverse_morton[16] = uint[16](0,4,1,5,8,12,9,13,2,6,3,7,10,14,11,15);
+int byte_at(uint i) { return int((pixels[i >> 2] >> ((i & 3) * 8)) & 255); }
+ivec3 colour(uvec2 position) {
+    // EVDI registers only the visible rows. Ignore allocation padding entirely,
+    // including the cursor, to preserve the copied path's black bottom rows.
+    if (position.y>=pc.visible_height) return ivec3(0);
+    ivec3 rgb;
+    if (pc.native_xrgb!=0) {
+        uint pixel=pixels[position.y*(pc.stride/4)+position.x];
+        rgb=ivec3(int((pixel>>16)&255),int((pixel>>8)&255),int(pixel&255));
+    } else {
+        uint address=(position.y*pc.width+position.x)*3;
+        rgb=ivec3(byte_at(address),byte_at(address+1),byte_at(address+2));
+    }
+    // Unsigned subtraction clips offscreen positions without signed overflow
+    // for legitimate X11 coordinates such as INT_MIN/INT_MAX.
+    uvec2 cursor_position=position-uvec2(pc.cursor_x,pc.cursor_y);
+    if (all(lessThan(cursor_position,uvec2(pc.cursor_width,pc.cursor_height)))) {
+        uint pixel=cursor_pixels[cursor_position.y*pc.cursor_stride+cursor_position.x];
+        int alpha=int(pixel>>24);
+        ivec3 foreground=ivec3(int((pixel>>16)&255),int((pixel>>8)&255),int(pixel&255));
+        ivec3 mixed=rgb*(255-alpha)+foreground*alpha;
+        rgb=(mixed+((mixed+ivec3(1))<<8))>>16;
+    }
+    int r=rgb.x,g=rgb.y,b=rgb.z;
+    // The old fixed-point inputs were all multiples of 64; Haar only adds
+    // and subtracts before shifting each result by six. Cancel that scale.
+    return ivec3(b-g,r-g,g+((r+b-2*g)>>2));
+}
+ivec3 quantize(ivec3 value,uint index) {
+    if (index==0)
+        return ivec3((value.xy+32)>>6,(value.z+8)>>4);
+    uint chroma_shift=(index<=2 || (index>=4 && index<=11)) ? 4 : index>=48 ? 6 : 5;
+    ivec2 chroma=(value.xy+(1<<(chroma_shift-1)))>>chroma_shift;
+    uint shift=index<=2 ? 4 : index==3 ? 5 : index<=11 ? 2 : index<=15 ? 3 : index<=47 ? 1 : 2;
+    int bias=(index>=16 && index<=47) ? 0 : 1<<(shift-1);
+    int luma=bias==0 ? (value.z<0 ? -(abs(value.z)>>shift) : value.z>>shift) : (value.z+bias)>>shift;
+    return ivec3(chroma,clamp(luma,-2048,2047));
+}
+void store_coefficient(uint base,uint index,ivec3 value,inout uvec3 last) {
+    ivec3 q=quantize(value,index);
+    staged[index*17+base/3]=(uint(q.x)&2047u)|((uint(q.y)&2047u)<<11)|((uint(q.z)&1023u)<<22);
+    last=max(last,mix(uvec3(0),uvec3(index),notEqual(q,ivec3(0))));
+}
+ivec3 partial_sum(uint base,uint quadrant) {
+    uint at=(base/3*4+quadrant)*3;
+    return ivec3(sums_shared[at],sums_shared[at+1],sums_shared[at+2]);
+}
+void transform_strip(uint strip,uint lane) {
+    uint block=lane/4,quadrant=lane%4;
+    uint base=block*3;
+    uvec2 tile=uvec2(quadrant%2,quadrant/2);
+    uvec2 origin=coords[strip]+uvec2((block%8)*8,(block/8)*8)+tile*4;
+    ivec3 sums[4];
+    uvec3 last=uvec3(0);
+    for (uint y=0;y<2;y++) {
+        for (uint x=0;x<2;x++) {
+            uvec2 p=origin+uvec2(x,y)*2;
+            ivec3 a=colour(p),b=colour(p+uvec2(1,0));
+            ivec3 c=colour(p+uvec2(0,1)),d=colour(p+uvec2(1,1));
+            sums[y*2+x]=a+b+c+d;
+            uint at=inverse_morton[(tile.y*2+y)*4+tile.x*2+x];
+            store_coefficient(base,16+at,a-b+c-d,last);
+            store_coefficient(base,32+at,a+b-c-d,last);
+            store_coefficient(base,48+at,a-b-c+d,last);
+        }
+    }
+    ivec3 a=sums[0],b=sums[1],c=sums[2],d=sums[3];
+    store_coefficient(base,4+quadrant,a-b+c-d,last);
+    store_coefficient(base,8+quadrant,a+b-c-d,last);
+    store_coefficient(base,12+quadrant,a-b-c+d,last);
+    ivec3 sum=a+b+c+d;
+    sums_shared[lane*3]=sum.x;
+    sums_shared[lane*3+1]=sum.y;
+    sums_shared[lane*3+2]=sum.z;
+    significant[lane*3]=last.x;
+    significant[lane*3+1]=last.y;
+    significant[lane*3+2]=last.z;
+    barrier();
+    if (quadrant==0) {
+        a=partial_sum(base,0); b=partial_sum(base,1);
+        c=partial_sum(base,2); d=partial_sum(base,3);
+        store_coefficient(base,0,a+b+c+d,last);
+        store_coefficient(base,1,a-b+c-d,last);
+        store_coefficient(base,2,a+b-c-d,last);
+        store_coefficient(base,3,a-b-c+d,last);
+        for (uint i=1;i<4;i++)
+            last=max(last,uvec3(significant[(lane+i)*3],significant[(lane+i)*3+1],significant[(lane+i)*3+2]));
+        lasts[base]=last.x;
+        lasts[base+1]=last.y;
+        lasts[base+2]=last.z;
+    }
+    barrier();
+}
+
+shared uint sync_length[16],sync_offset[16];
+shared uint dc_length[48],dc_offset[48],ac_length[48],ac_offset[48];
+shared uint total_length,row0_start,row1_start;
+// The three packing lanes for one block read its shared colour triplets.
+int coefficient(uint plane,uint index) {
+    uint packed=staged[index*17+plane/3],component=plane%3;
+    if (component==2 && index==0) return int(packed>>22);
+    uint shift=component==0 ? 21 : component==1 ? 10 : 0;
+    return int(packed<<shift)>>(component==2 ? 22 : 21);
+}
+uvec2 unary(uint count,bool terminate,uint payload) {
+    uint bits=payload;
+    bits=(bits|(bits<<8))&0x00ff00ffu;
+    bits=(bits|(bits<<4))&0x0f0f0f0fu;
+    bits=(bits|(bits<<2))&0x33333333u;
+    bits=(bits|(bits<<1))&0x55555555u;
+    uint mask=(1u<<(count*2))-1u;
+    return uvec2(((bits<<1)|0x55555555u)&mask,count*2+(terminate ? 1 : 0));
+}
+uvec2 escape_value(int value,uint maximum) {
+    if (value==0) return uvec2(0,1);
+    uint magnitude=uint(abs(value));
+    uint count=min(uint(findMSB(magnitude))+1,maximum);
+    uint offset=min(magnitude,(1u<<count)-1)-(1u<<(count-1));
+    return unary(count,count<maximum,(offset<<1)|(value>0 ? 1u : 0u));
+}
+uvec2 chroma(uint last) {
+    if (last==0) return uvec2(0,1);
+    uint count=uint(findMSB(last+1));
+    return unary(count,true,last-((1u<<count)-1));
+}
+uvec2 luma(uint last) {
+    uint count=last==0 ? 6 : uint(findMSB(64-last));
+    return unary(count,true,last==0 ? 0 : 64-(1u<<count)-last);
+}
+// Accumulate each stream locally. Only boundary words need atomics; complete
+// interior words belong exclusively to this stream and can be stored directly.
+struct Writer { uint word; uint bits; uint used; bool partial; };
+Writer writer(uint slot,uint position) {
+    return Writer(slot+position/32,0,position%32,position%32!=0);
+}
+void emit(inout Writer w,uvec2 code) {
+    if (code.y==0) return;
+    uint old=w.used;
+    w.bits |= code.x<<old;
+    w.used+=code.y;
+    if (w.used>=32) {
+        if (w.partial) atomicOr(output_data[w.word],w.bits);
+        else output_data[w.word]=w.bits;
+        w.word++;
+        w.bits=w.used==32 ? 0 : code.x>>(32-old);
+        w.used-=32;
+        w.partial=false;
+    }
+}
+void finish(Writer w) {
+    if (w.used!=0) atomicOr(output_data[w.word],w.bits);
+}
+uint even_bytes(uint bits) { return ((bits+7)/8+1)&~1u; }
+void pack_strip(uint strip,uint lane) {
+    uint plane_base=0,slot=strip*pc.output_words;
+    uvec2 dc=uvec2(0);
+    if (lane<48) {
+        uint index=plane_base+lane;
+        int value=coefficient(lane,0);
+        if (lane>=3) value-=coefficient(lane-3,0);
+        dc=escape_value(value,10);
+        dc_length[lane]=dc.y;
+        uint length=0,maximum=lane%3==2 ? 9 : 10;
+        for (uint i=1;i<=lasts[index];i++) length+=escape_value(coefficient(lane,i),maximum).y;
+        ac_length[lane]=length;
+    }
+    if (lane<16) {
+        uint at=plane_base+lane*3;
+        sync_length[lane]=chroma(lasts[at]).y+chroma(lasts[at+1]).y+luma(lasts[at+2]).y;
+    }
+    barrier();
+    // Inclusive scans use the existing length/offset arrays as ping-pong
+    // storage, allowing all streams to find their position in parallel.
+    for (uint distance=1;distance<64;distance*=2) {
+        bool source_lengths=(findLSB(distance)%2)==0;
+        if (lane<48) {
+            uint d=source_lengths ? dc_length[lane] : dc_offset[lane];
+            uint a=source_lengths ? ac_length[lane] : ac_offset[lane];
+            if (lane>=distance) {
+                d+=source_lengths ? dc_length[lane-distance] : dc_offset[lane-distance];
+                a+=source_lengths ? ac_length[lane-distance] : ac_offset[lane-distance];
+            }
+            if (source_lengths) { dc_offset[lane]=d; ac_offset[lane]=a; }
+            else { dc_length[lane]=d; ac_length[lane]=a; }
+        }
+        if (lane<16) {
+            uint s=source_lengths ? sync_length[lane] : sync_offset[lane];
+            if (lane>=distance) s+=source_lengths ? sync_length[lane-distance] : sync_offset[lane-distance];
+            if (source_lengths) sync_offset[lane]=s;
+            else sync_length[lane]=s;
+        }
+        barrier();
+    }
+    if (lane==0) {
+        row0_start=16+even_bytes(sync_length[15]+dc_length[47])+2;
+        row1_start=row0_start+even_bytes(ac_length[23]);
+        total_length=row1_start+even_bytes(ac_length[47]-ac_length[23]);
+        bool fits=total_length<=pc.output_words*4 && total_length<=65535;
+        metadata[strip]=uvec2(fits ? total_length : 0,fits ? 0 : 1);
+        if (!fits) total_length=0;
+    }
+    barrier();
+    if (total_length==0) return;
+    // Atomic boundary merges require zeros, but unused capacity does not.
+    for (uint i=lane;i<(total_length+3)/4;i+=64) output_data[slot+i]=0;
+    memoryBarrierBuffer();
+    barrier();
+    if (lane==0) {
+        output_data[slot]=0x2801|(coords[strip].x<<16);
+        output_data[slot+1]=coords[strip].y;
+        output_data[slot+2]=row0_start<<16;
+        output_data[slot+3]=row1_start;
+    }
+    if (lane<16) {
+        uint at=plane_base+lane*3;
+        Writer w=writer(slot,128+(lane==0 ? 0 : sync_length[lane-1]));
+        emit(w,chroma(lasts[at]));
+        emit(w,chroma(lasts[at+1]));
+        emit(w,luma(lasts[at+2]));
+        finish(w);
+    }
+    if (lane<48) {
+        Writer w=writer(slot,128+sync_length[15]+(lane==0 ? 0 : dc_length[lane-1]));
+        emit(w,dc);
+        finish(w);
+        w=writer(slot,lane<24 ? row0_start*8+(lane==0 ? 0 : ac_length[lane-1]) : row1_start*8+ac_length[lane-1]-ac_length[23]);
+        uint at=plane_base+lane,maximum=lane%3==2 ? 9 : 10;
+        for (uint i=1;i<=lasts[at];i++) emit(w,escape_value(coefficient(lane,i),maximum));
+        finish(w);
+    }
+}
+
+void main() {
+    uint strip=gl_WorkGroupID.x+gl_WorkGroupID.y*pc.groups_x;
+    if (strip>=pc.strips) return;
+    uint lane=gl_LocalInvocationID.x;
+    transform_strip(strip,lane);
+    pack_strip(strip,lane);
+}

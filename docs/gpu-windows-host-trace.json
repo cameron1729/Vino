@@ -1,0 +1,1425 @@
+{
+  "dll_sha256": "91673faee443dc0109ae7a1f3adf2805fba629041cd8a4a466fe607923ed613f",
+  "scope": "static registrations and direct references; runtime selection is not established",
+  "image_base": "0x180000000",
+  "shader_record_constructor_va": "0x1802ed700",
+  "disassembly_range": [
+    "0x1802d8000",
+    "0x18030d000"
+  ],
+  "inventory_sha256": "ecf17015ba498e97d9d1455beca19ceb760f860d479591274ad5df73ec2a97a1",
+  "tracer_sha256": "12236804b138a19e6f39cd47f1d928817653786c6096bc5d1289b34385bb1fbe",
+  "objdump_version": "GNU objdump (GNU Binutils for Ubuntu) 2.42",
+  "references": [
+    {
+      "instruction_va": "0x1802da0f0",
+      "function_va": "0x1802da080",
+      "shader": "shader_12",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802da106",
+      "function_va": "0x1802da080",
+      "shader": "shader_14",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802da11a",
+      "function_va": "0x1802da080",
+      "shader": "shader_13",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802da13f",
+      "function_va": "0x1802da080",
+      "shader": "shader_03",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802da153",
+      "function_va": "0x1802da080",
+      "shader": "shader_04",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802da17a",
+      "function_va": "0x1802da080",
+      "shader": "shader_05",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802da18e",
+      "function_va": "0x1802da080",
+      "shader": "shader_08",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802da806",
+      "function_va": "0x1802da080",
+      "shader": "shader_04",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802daa03",
+      "function_va": "0x1802da080",
+      "shader": "shader_06",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802dac39",
+      "function_va": "0x1802da080",
+      "shader": "shader_07",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802db021",
+      "function_va": "0x1802da080",
+      "shader": "shader_08",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802db151",
+      "function_va": "0x1802da080",
+      "shader": "shader_09",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802db174",
+      "function_va": "0x1802da080",
+      "shader": "shader_11",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802db190",
+      "function_va": "0x1802da080",
+      "shader": "shader_10",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802db1c8",
+      "function_va": "0x1802da080",
+      "shader": "shader_75",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802db1e2",
+      "function_va": "0x1802da080",
+      "shader": "shader_00",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802db1f6",
+      "function_va": "0x1802da080",
+      "shader": "shader_01",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802db210",
+      "function_va": "0x1802da080",
+      "shader": "shader_02",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802db79b",
+      "function_va": "0x1802da080",
+      "shader": "shader_00",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802dbbae",
+      "function_va": "0x1802da080",
+      "shader": "shader_02",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802f1f2c",
+      "function_va": "0x1802f1b60",
+      "shader": "shader_15",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802f202b",
+      "function_va": "0x1802f1b60",
+      "shader": "shader_16",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802f216f",
+      "function_va": "0x1802f1b60",
+      "shader": "shader_17",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802f22eb",
+      "function_va": "0x1802f1b60",
+      "shader": "shader_18",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802f248c",
+      "function_va": "0x1802f1b60",
+      "shader": "shader_19",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802f25a6",
+      "function_va": "0x1802f1b60",
+      "shader": "shader_20",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802f26a0",
+      "function_va": "0x1802f1b60",
+      "shader": "shader_21",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802f27e7",
+      "function_va": "0x1802f1b60",
+      "shader": "shader_22",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802f292e",
+      "function_va": "0x1802f1b60",
+      "shader": "shader_23",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802f2aad",
+      "function_va": "0x1802f1b60",
+      "shader": "shader_24",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802f8497",
+      "function_va": "0x1802f8390",
+      "shader": "shader_55",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802f860e",
+      "function_va": "0x1802f8390",
+      "shader": "shader_57",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802f87b8",
+      "function_va": "0x1802f8390",
+      "shader": "shader_51",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802f8969",
+      "function_va": "0x1802f8390",
+      "shader": "shader_34",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802f8b4b",
+      "function_va": "0x1802f8390",
+      "shader": "shader_47",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802f8d34",
+      "function_va": "0x1802f8390",
+      "shader": "shader_38",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802f8ed3",
+      "function_va": "0x1802f8390",
+      "shader": "shader_36",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802f9079",
+      "function_va": "0x1802f8390",
+      "shader": "shader_72",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802f9252",
+      "function_va": "0x1802f8390",
+      "shader": "shader_30",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802f9432",
+      "function_va": "0x1802f8390",
+      "shader": "shader_48",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802f9643",
+      "function_va": "0x1802f8390",
+      "shader": "shader_50",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802f9856",
+      "function_va": "0x1802f8390",
+      "shader": "shader_52",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802f99f2",
+      "function_va": "0x1802f8390",
+      "shader": "shader_27",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802f9ba3",
+      "function_va": "0x1802f8390",
+      "shader": "shader_26",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802f9da6",
+      "function_va": "0x1802f8390",
+      "shader": "shader_54",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802f9f10",
+      "function_va": "0x1802f8390",
+      "shader": "shader_66",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fa0a4",
+      "function_va": "0x1802f8390",
+      "shader": "shader_41",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fa238",
+      "function_va": "0x1802f8390",
+      "shader": "shader_68",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fa3be",
+      "function_va": "0x1802f8390",
+      "shader": "shader_73",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fa559",
+      "function_va": "0x1802f8390",
+      "shader": "shader_49",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fa764",
+      "function_va": "0x1802f8390",
+      "shader": "shader_40",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fa906",
+      "function_va": "0x1802f8390",
+      "shader": "shader_25",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802faad2",
+      "function_va": "0x1802f8390",
+      "shader": "shader_61",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fac82",
+      "function_va": "0x1802f8390",
+      "shader": "shader_70",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fadd7",
+      "function_va": "0x1802f8390",
+      "shader": "shader_60",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802faf41",
+      "function_va": "0x1802f8390",
+      "shader": "shader_46",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fb11b",
+      "function_va": "0x1802f8390",
+      "shader": "shader_43",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fb278",
+      "function_va": "0x1802f8390",
+      "shader": "shader_32",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fb3ff",
+      "function_va": "0x1802f8390",
+      "shader": "shader_28",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fb56e",
+      "function_va": "0x1802f8390",
+      "shader": "shader_67",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fb6bf",
+      "function_va": "0x1802f8390",
+      "shader": "shader_35",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fb81c",
+      "function_va": "0x1802f8390",
+      "shader": "shader_63",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fb9e9",
+      "function_va": "0x1802f8390",
+      "shader": "shader_56",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fbb4d",
+      "function_va": "0x1802f8390",
+      "shader": "shader_69",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fbcdb",
+      "function_va": "0x1802f8390",
+      "shader": "shader_53",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fbe4d",
+      "function_va": "0x1802f8390",
+      "shader": "shader_31",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fbf9c",
+      "function_va": "0x1802f8390",
+      "shader": "shader_59",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fc138",
+      "function_va": "0x1802f8390",
+      "shader": "shader_44",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fc2cd",
+      "function_va": "0x1802f8390",
+      "shader": "shader_74",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fc470",
+      "function_va": "0x1802f8390",
+      "shader": "shader_33",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fc5c6",
+      "function_va": "0x1802f8390",
+      "shader": "shader_64",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fc762",
+      "function_va": "0x1802f8390",
+      "shader": "shader_71",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fc921",
+      "function_va": "0x1802f8390",
+      "shader": "shader_45",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fcae7",
+      "function_va": "0x1802f8390",
+      "shader": "shader_29",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fcc77",
+      "function_va": "0x1802f8390",
+      "shader": "shader_42",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fce0e",
+      "function_va": "0x1802f8390",
+      "shader": "shader_37",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fcfe4",
+      "function_va": "0x1802f8390",
+      "shader": "shader_65",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fd1c1",
+      "function_va": "0x1802f8390",
+      "shader": "shader_58",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fd37b",
+      "function_va": "0x1802f8390",
+      "shader": "shader_62",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x1802fd53c",
+      "function_va": "0x1802f8390",
+      "shader": "shader_39",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x180308565",
+      "function_va": "0x180308520",
+      "shader": "shader_15",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x180309ab4",
+      "function_va": "0x180309a60",
+      "shader": "shader_75",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x180309cb5",
+      "function_va": "0x180309a60",
+      "shader": "shader_09",
+      "operation": "lea"
+    },
+    {
+      "instruction_va": "0x18030bf75",
+      "function_va": "0x18030bf30",
+      "shader": "shader_55",
+      "operation": "lea"
+    }
+  ],
+  "registrations": [
+    {
+      "shader": "shader_16",
+      "label": "DL3_Diffing",
+      "decode_call_va": "0x1802f2022",
+      "constructor_call_va": "0x1802f203c",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f1b60",
+      "encrypted_size": 146160
+    },
+    {
+      "shader": "shader_17",
+      "label": "DL3_HeaderOptimisation",
+      "decode_call_va": "0x1802f2166",
+      "constructor_call_va": "0x1802f2180",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f1b60",
+      "encrypted_size": 146448
+    },
+    {
+      "shader": "shader_18",
+      "label": "DL3_HeaderOptimisation_Navarro",
+      "decode_call_va": "0x1802f22e2",
+      "constructor_call_va": "0x1802f22fc",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f1b60",
+      "encrypted_size": 144768
+    },
+    {
+      "shader": "shader_20",
+      "label": "DL32_Highlights",
+      "decode_call_va": "0x1802f259d",
+      "constructor_call_va": "0x1802f25b7",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f1b60",
+      "encrypted_size": 84624
+    },
+    {
+      "shader": "shader_21",
+      "label": "DL32_Diffing",
+      "decode_call_va": "0x1802f2697",
+      "constructor_call_va": "0x1802f26b1",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f1b60",
+      "encrypted_size": 87552
+    },
+    {
+      "shader": "shader_22",
+      "label": "DL32_Diffing_Highlights",
+      "decode_call_va": "0x1802f27de",
+      "constructor_call_va": "0x1802f27f8",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f1b60",
+      "encrypted_size": 87248
+    },
+    {
+      "shader": "shader_23",
+      "label": "DL32_HeaderOptimisation",
+      "decode_call_va": "0x1802f2925",
+      "constructor_call_va": "0x1802f293f",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f1b60",
+      "encrypted_size": 87840
+    },
+    {
+      "shader": "shader_24",
+      "label": "DL32_HeaderOptimisation_Navarro",
+      "decode_call_va": "0x1802f2aa4",
+      "constructor_call_va": "0x1802f2abe",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f1b60",
+      "encrypted_size": 86192
+    },
+    {
+      "shader": "shader_55",
+      "label": "dl3_uncompacted",
+      "decode_call_va": "0x1802f8476",
+      "constructor_call_va": "0x1802f84a4",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 66832
+    },
+    {
+      "shader": "shader_57",
+      "label": "dl32_uncompacted",
+      "decode_call_va": "0x1802f85eb",
+      "constructor_call_va": "0x1802f861b",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 61968
+    },
+    {
+      "shader": "shader_51",
+      "label": "dl3_uncompacted_diffing",
+      "decode_call_va": "0x1802f8795",
+      "constructor_call_va": "0x1802f87c5",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 69152
+    },
+    {
+      "shader": "shader_34",
+      "label": "dl32_uncompacted_diffing",
+      "decode_call_va": "0x1802f8946",
+      "constructor_call_va": "0x1802f8976",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 63392
+    },
+    {
+      "shader": "shader_47",
+      "label": "dl3_uncompacted_headeroptimised",
+      "decode_call_va": "0x1802f8b28",
+      "constructor_call_va": "0x1802f8b58",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 68736
+    },
+    {
+      "shader": "shader_38",
+      "label": "dl32_uncompacted_headeroptimised",
+      "decode_call_va": "0x1802f8d11",
+      "constructor_call_va": "0x1802f8d41",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 62544
+    },
+    {
+      "shader": "shader_36",
+      "label": "dl3_uncompacted_gamma",
+      "decode_call_va": "0x1802f8eb0",
+      "constructor_call_va": "0x1802f8ee0",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 69888
+    },
+    {
+      "shader": "shader_72",
+      "label": "dl32_uncompacted_gamma",
+      "decode_call_va": "0x1802f9056",
+      "constructor_call_va": "0x1802f9086",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 63712
+    },
+    {
+      "shader": "shader_30",
+      "label": "dl3_uncompacted_diffing_gamma",
+      "decode_call_va": "0x1802f922f",
+      "constructor_call_va": "0x1802f925f",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 72208
+    },
+    {
+      "shader": "shader_48",
+      "label": "dl32_uncompacted_diffing_gamma",
+      "decode_call_va": "0x1802f940f",
+      "constructor_call_va": "0x1802f943f",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 65136
+    },
+    {
+      "shader": "shader_50",
+      "label": "dl3_uncompacted_headeroptimised_gamma",
+      "decode_call_va": "0x1802f9620",
+      "constructor_call_va": "0x1802f9650",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 71360
+    },
+    {
+      "shader": "shader_52",
+      "label": "dl32_uncompacted_headeroptimised_gamma",
+      "decode_call_va": "0x1802f9833",
+      "constructor_call_va": "0x1802f9863",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 64288
+    },
+    {
+      "shader": "shader_27",
+      "label": "dl3_uncompacted_10bit",
+      "decode_call_va": "0x1802f99cf",
+      "constructor_call_va": "0x1802f99ff",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 66320
+    },
+    {
+      "shader": "shader_26",
+      "label": "dl3_uncompacted_10bit_pq",
+      "decode_call_va": "0x1802f9b80",
+      "constructor_call_va": "0x1802f9bb0",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 71568
+    },
+    {
+      "shader": "shader_54",
+      "label": "dl3_uncompacted_10bit_pq_color_transform",
+      "decode_call_va": "0x1802f9d83",
+      "constructor_call_va": "0x1802f9db3",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 82480
+    },
+    {
+      "shader": "shader_66",
+      "label": "dl3_uncompacted_10bit_wcg",
+      "decode_call_va": "0x1802f9eed",
+      "constructor_call_va": "0x1802f9f1d",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 67600
+    },
+    {
+      "shader": "shader_41",
+      "label": "dl3_uncompacted_10bit_wcg_gamma",
+      "decode_call_va": "0x1802fa081",
+      "constructor_call_va": "0x1802fa0b1",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 70976
+    },
+    {
+      "shader": "shader_68",
+      "label": "dl3_uncompacted_10bit_8bitgamma",
+      "decode_call_va": "0x1802fa215",
+      "constructor_call_va": "0x1802fa245",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 71104
+    },
+    {
+      "shader": "shader_73",
+      "label": "dl3_uncompacted_10bit_diffing",
+      "decode_call_va": "0x1802fa39b",
+      "constructor_call_va": "0x1802fa3cb",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 68640
+    },
+    {
+      "shader": "shader_49",
+      "label": "dl3_uncompacted_10bit_diffing_pq",
+      "decode_call_va": "0x1802fa536",
+      "constructor_call_va": "0x1802fa566",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 73888
+    },
+    {
+      "shader": "shader_40",
+      "label": "dl3_uncompacted_10bit_diffing_pq_color_transform",
+      "decode_call_va": "0x1802fa741",
+      "constructor_call_va": "0x1802fa771",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 84816
+    },
+    {
+      "shader": "shader_25",
+      "label": "dl3_uncompacted_10bit_diffing_wcg",
+      "decode_call_va": "0x1802fa8e3",
+      "constructor_call_va": "0x1802fa913",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 69920
+    },
+    {
+      "shader": "shader_61",
+      "label": "dl3_uncompacted_10bit_diffing_wcg_gamma",
+      "decode_call_va": "0x1802faaaf",
+      "constructor_call_va": "0x1802faadf",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 73296
+    },
+    {
+      "shader": "shader_70",
+      "label": "dl3_uncompacted_10bit_diffing_gamma",
+      "decode_call_va": "0x1802fac5f",
+      "constructor_call_va": "0x1802fac8f",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 73616
+    },
+    {
+      "shader": "shader_60",
+      "label": "dl32_uncompacted_10bit",
+      "decode_call_va": "0x1802fadb4",
+      "constructor_call_va": "0x1802fade4",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 61456
+    },
+    {
+      "shader": "shader_46",
+      "label": "dl32_uncompacted_10bit_pq",
+      "decode_call_va": "0x1802faf1e",
+      "constructor_call_va": "0x1802faf4e",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 64240
+    },
+    {
+      "shader": "shader_43",
+      "label": "dl32_uncompacted_10bit_pq_color_transform",
+      "decode_call_va": "0x1802fb0f8",
+      "constructor_call_va": "0x1802fb128",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 70016
+    },
+    {
+      "shader": "shader_32",
+      "label": "dl32_uncompacted_10bit_wcg",
+      "decode_call_va": "0x1802fb255",
+      "constructor_call_va": "0x1802fb285",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 62400
+    },
+    {
+      "shader": "shader_28",
+      "label": "dl32_uncompacted_10bit_wcg_gamma",
+      "decode_call_va": "0x1802fb3dc",
+      "constructor_call_va": "0x1802fb40c",
+      "constructor_va": "0x1802ed700",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 64144
+    },
+    {
+      "shader": "shader_67",
+      "label": "dl32_uncompacted_10bit_8bitgamma",
+      "decode_call_va": "0x1802fb561",
+      "constructor_call_va": "0x1802fb57f",
+      "constructor_va": "0x1802f66d0",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 64064
+    },
+    {
+      "shader": "shader_35",
+      "label": "dl32_uncompacted_10bit_diffing",
+      "decode_call_va": "0x1802fb6b2",
+      "constructor_call_va": "0x1802fb6cd",
+      "constructor_va": "0x1802f66d0",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 62880
+    },
+    {
+      "shader": "shader_63",
+      "label": "dl32_uncompacted_10bit_diffing_pq",
+      "decode_call_va": "0x1802fb80f",
+      "constructor_call_va": "0x1802fb82a",
+      "constructor_va": "0x1802f66d0",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 65648
+    },
+    {
+      "shader": "shader_56",
+      "label": "dl32_uncompacted_10bit_diffing_pq_color_transform",
+      "decode_call_va": "0x1802fb9dc",
+      "constructor_call_va": "0x1802fb9f7",
+      "constructor_va": "0x1802f66d0",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 71456
+    },
+    {
+      "shader": "shader_69",
+      "label": "dl32_uncompacted_10bit_diffing_wcg",
+      "decode_call_va": "0x1802fbb40",
+      "constructor_call_va": "0x1802fbb5b",
+      "constructor_va": "0x1802f66d0",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 63824
+    },
+    {
+      "shader": "shader_53",
+      "label": "dl32_uncompacted_10bit_diffing_wcg_gamma",
+      "decode_call_va": "0x1802fbcce",
+      "constructor_call_va": "0x1802fbce9",
+      "constructor_va": "0x1802f66d0",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 65584
+    },
+    {
+      "shader": "shader_31",
+      "label": "dl32_uncompacted_10bit_diffing_gamma",
+      "decode_call_va": "0x1802fbe40",
+      "constructor_call_va": "0x1802fbe5b",
+      "constructor_va": "0x1802f66d0",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 65584
+    },
+    {
+      "shader": "shader_59",
+      "label": "dl3_uncompacted_color_transform",
+      "decode_call_va": "0x1802fbf8f",
+      "constructor_call_va": "0x1802fbfaa",
+      "constructor_va": "0x1802f66d0",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 81984
+    },
+    {
+      "shader": "shader_44",
+      "label": "dl3_uncompacted_10bit_8bit_color_transform",
+      "decode_call_va": "0x1802fc12b",
+      "constructor_call_va": "0x1802fc146",
+      "constructor_va": "0x1802f66d0",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 81456
+    },
+    {
+      "shader": "shader_74",
+      "label": "dl3_uncompacted_10bit_wcg_color_transform",
+      "decode_call_va": "0x1802fc2c0",
+      "constructor_call_va": "0x1802fc2db",
+      "constructor_va": "0x1802f66d0",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 82752
+    },
+    {
+      "shader": "shader_33",
+      "label": "dl32_uncompacted_10bit_8bit_color_transform",
+      "decode_call_va": "0x1802fc463",
+      "constructor_call_va": "0x1802fc47e",
+      "constructor_va": "0x1802f66d0",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 61440
+    },
+    {
+      "shader": "shader_64",
+      "label": "dl32_uncompacted_color_transform",
+      "decode_call_va": "0x1802fc5b9",
+      "constructor_call_va": "0x1802fc5d4",
+      "constructor_va": "0x1802f66d0",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 61968
+    },
+    {
+      "shader": "shader_71",
+      "label": "dl32_uncompacted_10bit_wcg_color_transform",
+      "decode_call_va": "0x1802fc755",
+      "constructor_call_va": "0x1802fc770",
+      "constructor_va": "0x1802f66d0",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 70320
+    },
+    {
+      "shader": "shader_45",
+      "label": "dl3_uncompacted_headeroptimised_color_transform",
+      "decode_call_va": "0x1802fc914",
+      "constructor_call_va": "0x1802fc92f",
+      "constructor_va": "0x1802f66d0",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 83664
+    },
+    {
+      "shader": "shader_29",
+      "label": "dl32_uncompacted_headeroptimised_color_transform",
+      "decode_call_va": "0x1802fcada",
+      "constructor_call_va": "0x1802fcaf8",
+      "constructor_va": "0x1802f66d0",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 62544
+    },
+    {
+      "shader": "shader_42",
+      "label": "dl3_uncompacted_diffing_color_transform",
+      "decode_call_va": "0x1802fcc6a",
+      "constructor_call_va": "0x1802fcc88",
+      "constructor_va": "0x1802f66d0",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 84512
+    },
+    {
+      "shader": "shader_37",
+      "label": "dl32_uncompacted_diffing_color_transform",
+      "decode_call_va": "0x1802fce01",
+      "constructor_call_va": "0x1802fce1f",
+      "constructor_va": "0x1802f66d0",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 63392
+    },
+    {
+      "shader": "shader_65",
+      "label": "dl3_uncompacted_10bit_diffing_wcg_color_transform",
+      "decode_call_va": "0x1802fcfd7",
+      "constructor_call_va": "0x1802fcff5",
+      "constructor_va": "0x1802f66d0",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 85280
+    },
+    {
+      "shader": "shader_58",
+      "label": "dl32_uncompacted_10bit_diffing_wcg_color_transform",
+      "decode_call_va": "0x1802fd1b4",
+      "constructor_call_va": "0x1802fd1d2",
+      "constructor_va": "0x1802f66d0",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 71856
+    },
+    {
+      "shader": "shader_62",
+      "label": "dl3_uncompacted_10bit_diffing_color_transform",
+      "decode_call_va": "0x1802fd36e",
+      "constructor_call_va": "0x1802fd38c",
+      "constructor_va": "0x1802f66d0",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 84000
+    },
+    {
+      "shader": "shader_39",
+      "label": "dl32_uncompacted_10bit_diffing_color_transform",
+      "decode_call_va": "0x1802fd52f",
+      "constructor_call_va": "0x1802fd54d",
+      "constructor_va": "0x1802f66d0",
+      "function_va": "0x1802f8390",
+      "encrypted_size": 62864
+    }
+  ],
+  "decoded_labels": [
+    {
+      "label": "SplitShaderEncoder",
+      "decode_call_va": "0x1802d8632",
+      "decode_function_va": "0x180263da0"
+    },
+    {
+      "label": "DL32_HeaderOptimisation_Navarro",
+      "decode_call_va": "0x1802da2b6",
+      "decode_function_va": "0x1802dee10"
+    },
+    {
+      "label": "DL32_HeaderOptimisation",
+      "decode_call_va": "0x1802da38d",
+      "decode_function_va": "0x1802586c0"
+    },
+    {
+      "label": "DL32",
+      "decode_call_va": "0x1802da41c",
+      "decode_function_va": "0x180270470"
+    },
+    {
+      "label": "DL32_Diffing",
+      "decode_call_va": "0x1802da7cd",
+      "decode_function_va": "0x180244500"
+    },
+    {
+      "label": "DL32_Highlights",
+      "decode_call_va": "0x1802da9ca",
+      "decode_function_va": "0x18021b3b0"
+    },
+    {
+      "label": "DL32_Diffing_Highlights",
+      "decode_call_va": "0x1802dac00",
+      "decode_function_va": "0x1802586c0"
+    },
+    {
+      "label": "DL32_Gamma",
+      "decode_call_va": "0x1802daddb",
+      "decode_function_va": "0x18025c9c0"
+    },
+    {
+      "label": "DL32_Diffing_Gamma",
+      "decode_call_va": "0x1802dafe8",
+      "decode_function_va": "0x180263da0"
+    },
+    {
+      "label": "DL3_HeaderOptimisation_Navarro",
+      "decode_call_va": "0x1802db332",
+      "decode_function_va": "0x1802de960"
+    },
+    {
+      "label": "DL3_HeaderOptimisation",
+      "decode_call_va": "0x1802db404",
+      "decode_function_va": "0x180253900"
+    },
+    {
+      "label": "DL3",
+      "decode_call_va": "0x1802db48e",
+      "decode_function_va": "0x1802ded30"
+    },
+    {
+      "label": "DL3_Diffing",
+      "decode_call_va": "0x1802db846",
+      "decode_function_va": "0x1802446f0"
+    },
+    {
+      "label": "DL3_Gamma",
+      "decode_call_va": "0x1802db9c9",
+      "decode_function_va": "0x180220080"
+    },
+    {
+      "label": "DL3_Diffing_Gamma",
+      "decode_call_va": "0x1802dbb81",
+      "decode_function_va": "0x1802280b0"
+    },
+    {
+      "label": "DefaultShaderProvider",
+      "decode_call_va": "0x1802f1cd8",
+      "decode_function_va": "0x18023cdd0"
+    },
+    {
+      "label": "DL3_Diffing",
+      "decode_call_va": "0x1802f2022",
+      "decode_function_va": "0x1802446f0"
+    },
+    {
+      "label": "DL3_HeaderOptimisation",
+      "decode_call_va": "0x1802f2166",
+      "decode_function_va": "0x180253900"
+    },
+    {
+      "label": "DL3_HeaderOptimisation_Navarro",
+      "decode_call_va": "0x1802f22e2",
+      "decode_function_va": "0x1802de960"
+    },
+    {
+      "label": "DL32_Highlights",
+      "decode_call_va": "0x1802f259d",
+      "decode_function_va": "0x18021b3b0"
+    },
+    {
+      "label": "DL32_Diffing",
+      "decode_call_va": "0x1802f2697",
+      "decode_function_va": "0x180244500"
+    },
+    {
+      "label": "DL32_Diffing_Highlights",
+      "decode_call_va": "0x1802f27de",
+      "decode_function_va": "0x1802586c0"
+    },
+    {
+      "label": "DL32_HeaderOptimisation",
+      "decode_call_va": "0x1802f2925",
+      "decode_function_va": "0x1802586c0"
+    },
+    {
+      "label": "DL32_HeaderOptimisation_Navarro",
+      "decode_call_va": "0x1802f2aa4",
+      "decode_function_va": "0x1802dee10"
+    },
+    {
+      "label": "DirectComputeGpuEncoder",
+      "decode_call_va": "0x1802f32d3",
+      "decode_function_va": "0x1802586c0"
+    },
+    {
+      "label": "UncompactedShaderEncoder",
+      "decode_call_va": "0x1802f68eb",
+      "decode_function_va": "0x18028c610"
+    },
+    {
+      "label": "dl3_uncompacted",
+      "decode_call_va": "0x1802f8476",
+      "decode_function_va": "0x18021b3b0"
+    },
+    {
+      "label": "dl32_uncompacted",
+      "decode_call_va": "0x1802f85eb",
+      "decode_function_va": "0x1802536a0"
+    },
+    {
+      "label": "dl3_uncompacted_diffing",
+      "decode_call_va": "0x1802f8795",
+      "decode_function_va": "0x1802586c0"
+    },
+    {
+      "label": "dl32_uncompacted_diffing",
+      "decode_call_va": "0x1802f8946",
+      "decode_function_va": "0x18028c610"
+    },
+    {
+      "label": "dl3_uncompacted_headeroptimised",
+      "decode_call_va": "0x1802f8b28",
+      "decode_function_va": "0x1802dee10"
+    },
+    {
+      "label": "dl32_uncompacted_headeroptimised",
+      "decode_call_va": "0x1802f8d11",
+      "decode_function_va": "0x1802fea20"
+    },
+    {
+      "label": "dl3_uncompacted_gamma",
+      "decode_call_va": "0x1802f8eb0",
+      "decode_function_va": "0x18023cdd0"
+    },
+    {
+      "label": "dl32_uncompacted_gamma",
+      "decode_call_va": "0x1802f9056",
+      "decode_function_va": "0x180253900"
+    },
+    {
+      "label": "dl3_uncompacted_diffing_gamma",
+      "decode_call_va": "0x1802f922f",
+      "decode_function_va": "0x180303910"
+    },
+    {
+      "label": "dl32_uncompacted_diffing_gamma",
+      "decode_call_va": "0x1802f940f",
+      "decode_function_va": "0x1802de960"
+    },
+    {
+      "label": "dl3_uncompacted_headeroptimised_gamma",
+      "decode_call_va": "0x1802f9620",
+      "decode_function_va": "0x180302f70"
+    },
+    {
+      "label": "dl32_uncompacted_headeroptimised_gamma",
+      "decode_call_va": "0x1802f9833",
+      "decode_function_va": "0x1802df1f0"
+    },
+    {
+      "label": "dl3_uncompacted_10bit",
+      "decode_call_va": "0x1802f99cf",
+      "decode_function_va": "0x18023cdd0"
+    },
+    {
+      "label": "dl3_uncompacted_10bit_pq",
+      "decode_call_va": "0x1802f9b80",
+      "decode_function_va": "0x18028c610"
+    },
+    {
+      "label": "dl3_uncompacted_10bit_pq_color_transform",
+      "decode_call_va": "0x1802f9d83",
+      "decode_function_va": "0x1802ff830"
+    },
+    {
+      "label": "dl3_uncompacted_10bit_wcg",
+      "decode_call_va": "0x1802f9eed",
+      "decode_function_va": "0x1802de620"
+    },
+    {
+      "label": "dl3_uncompacted_10bit_wcg_gamma",
+      "decode_call_va": "0x1802fa081",
+      "decode_function_va": "0x1802dee10"
+    },
+    {
+      "label": "dl3_uncompacted_10bit_8bitgamma",
+      "decode_call_va": "0x1802fa215",
+      "decode_function_va": "0x1802dee10"
+    },
+    {
+      "label": "dl3_uncompacted_10bit_diffing",
+      "decode_call_va": "0x1802fa39b",
+      "decode_function_va": "0x180303910"
+    },
+    {
+      "label": "dl3_uncompacted_10bit_diffing_pq",
+      "decode_call_va": "0x1802fa536",
+      "decode_function_va": "0x1802fea20"
+    },
+    {
+      "label": "dl3_uncompacted_10bit_diffing_pq_color_transform",
+      "decode_call_va": "0x1802fa741",
+      "decode_function_va": "0x180301040"
+    },
+    {
+      "label": "dl3_uncompacted_10bit_diffing_wcg",
+      "decode_call_va": "0x1802fa8e3",
+      "decode_function_va": "0x1803015e0"
+    },
+    {
+      "label": "dl3_uncompacted_10bit_diffing_wcg_gamma",
+      "decode_call_va": "0x1802faaaf",
+      "decode_function_va": "0x180302ab0"
+    },
+    {
+      "label": "dl3_uncompacted_10bit_diffing_gamma",
+      "decode_call_va": "0x1802fac5f",
+      "decode_function_va": "0x1802ffd00"
+    },
+    {
+      "label": "dl32_uncompacted_10bit",
+      "decode_call_va": "0x1802fadb4",
+      "decode_function_va": "0x180253900"
+    },
+    {
+      "label": "dl32_uncompacted_10bit_pq",
+      "decode_call_va": "0x1802faf1e",
+      "decode_function_va": "0x1802de620"
+    },
+    {
+      "label": "dl32_uncompacted_10bit_pq_color_transform",
+      "decode_call_va": "0x1802fb0f8",
+      "decode_function_va": "0x1802fe530"
+    },
+    {
+      "label": "dl32_uncompacted_10bit_wcg",
+      "decode_call_va": "0x1802fb255",
+      "decode_function_va": "0x1802233d0"
+    },
+    {
+      "label": "dl32_uncompacted_10bit_wcg_gamma",
+      "decode_call_va": "0x1802fb3dc",
+      "decode_function_va": "0x1802fea20"
+    },
+    {
+      "label": "dl32_uncompacted_10bit_8bitgamma",
+      "decode_call_va": "0x1802fb561",
+      "decode_function_va": "0x1802fea20"
+    },
+    {
+      "label": "dl32_uncompacted_10bit_diffing",
+      "decode_call_va": "0x1802fb6b2",
+      "decode_function_va": "0x1802de960"
+    },
+    {
+      "label": "dl32_uncompacted_10bit_diffing_pq",
+      "decode_call_va": "0x1802fb80f",
+      "decode_function_va": "0x1803015e0"
+    },
+    {
+      "label": "dl32_uncompacted_10bit_diffing_pq_color_transform",
+      "decode_call_va": "0x1802fb9dc",
+      "decode_function_va": "0x1803024f0"
+    },
+    {
+      "label": "dl32_uncompacted_10bit_diffing_wcg",
+      "decode_call_va": "0x1802fbb40",
+      "decode_function_va": "0x1802ff400"
+    },
+    {
+      "label": "dl32_uncompacted_10bit_diffing_wcg_gamma",
+      "decode_call_va": "0x1802fbcce",
+      "decode_function_va": "0x1802ff830"
+    },
+    {
+      "label": "dl32_uncompacted_10bit_diffing_gamma",
+      "decode_call_va": "0x1802fbe40",
+      "decode_function_va": "0x180300150"
+    },
+    {
+      "label": "dl3_uncompacted_color_transform",
+      "decode_call_va": "0x1802fbf8f",
+      "decode_function_va": "0x1802dee10"
+    },
+    {
+      "label": "dl3_uncompacted_10bit_8bit_color_transform",
+      "decode_call_va": "0x1802fc12b",
+      "decode_function_va": "0x180300b30"
+    },
+    {
+      "label": "dl3_uncompacted_10bit_wcg_color_transform",
+      "decode_call_va": "0x1802fc2c0",
+      "decode_function_va": "0x1802fe530"
+    },
+    {
+      "label": "dl32_uncompacted_10bit_8bit_color_transform",
+      "decode_call_va": "0x1802fc463",
+      "decode_function_va": "0x1803033f0"
+    },
+    {
+      "label": "dl32_uncompacted_color_transform",
+      "decode_call_va": "0x1802fc5b9",
+      "decode_function_va": "0x1802fea20"
+    },
+    {
+      "label": "dl32_uncompacted_10bit_wcg_color_transform",
+      "decode_call_va": "0x1802fc755",
+      "decode_function_va": "0x180300b30"
+    },
+    {
+      "label": "dl3_uncompacted_headeroptimised_color_transform",
+      "decode_call_va": "0x1802fc914",
+      "decode_function_va": "0x180301a00"
+    },
+    {
+      "label": "dl32_uncompacted_headeroptimised_color_transform",
+      "decode_call_va": "0x1802fcada",
+      "decode_function_va": "0x180301040"
+    },
+    {
+      "label": "dl3_uncompacted_diffing_color_transform",
+      "decode_call_va": "0x1802fcc6a",
+      "decode_function_va": "0x180302ab0"
+    },
+    {
+      "label": "dl32_uncompacted_diffing_color_transform",
+      "decode_call_va": "0x1802fce01",
+      "decode_function_va": "0x1802ff830"
+    },
+    {
+      "label": "dl3_uncompacted_10bit_diffing_wcg_color_transform",
+      "decode_call_va": "0x1802fcfd7",
+      "decode_function_va": "0x1803024f0"
+    },
+    {
+      "label": "dl32_uncompacted_10bit_diffing_wcg_color_transform",
+      "decode_call_va": "0x1802fd1b4",
+      "decode_function_va": "0x1802fee20"
+    },
+    {
+      "label": "dl3_uncompacted_10bit_diffing_color_transform",
+      "decode_call_va": "0x1802fd36e",
+      "decode_function_va": "0x180301f90"
+    },
+    {
+      "label": "dl32_uncompacted_10bit_diffing_color_transform",
+      "decode_call_va": "0x1802fd52f",
+      "decode_function_va": "0x1803005c0"
+    }
+  ]
+}

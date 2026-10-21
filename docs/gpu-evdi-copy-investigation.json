@@ -1,0 +1,1122 @@
+{
+  "date": "2026-10-20",
+  "status": "Component benchmark and first temporary-module hardware trial passed; reported smooth; matched performance and power validation pending",
+  "artifact": "gpu-artifacts/evdi-copy-20261020",
+  "build": {
+    "kernel": "7.0.0-34-generic",
+    "source": "/usr/src/evdi-1.15.1",
+    "loaded_evdi_srcversion": "12258322BFFCAAE41410871",
+    "source_painter_sha256": "452eb54fb44f7a69eb7db760a393e362a240a2595a25ca50a8f7b89297bf00ee",
+    "patched_painter_sha256": "5fdda0fb624b96dbccc5a50da14dfa7ba64dd58da2852330da2ca834fbed3f68",
+    "correctness": {
+      "passed": true,
+      "cases": 571,
+      "full_frame_row_calls": 1080,
+      "calls_at_32_rows": 34
+    },
+    "modules": {
+      "original": {
+        "relative_path": "before/evdi.ko",
+        "sha256": "4f5442e4ec61a7aa0272a8081ac3edecd4c3721d6e4a6a520fc5fc8650922068",
+        "name": "evdi",
+        "vermagic": "7.0.0-34-generic SMP preempt mod_unload modversions",
+        "srcversion": "12258322BFFCAAE41410871"
+      },
+      "candidate": {
+        "relative_path": "after/evdi.ko",
+        "sha256": "db30a66884ff5e0b5c74ae03b454c15aa37e11e29208ff1e98e19d5faa56a7ca",
+        "name": "evdi",
+        "vermagic": "7.0.0-34-generic SMP preempt mod_unload modversions",
+        "srcversion": "9232839421842403DFD2636"
+      },
+      "isolated_benchmark": {
+        "relative_path": "kernel-bench/vino_evdi_copy_bench.ko",
+        "sha256": "3357d54c0dcad4c8af364d9d3a65590b578a863d6e1b1c93abf48e04f4c7472a",
+        "name": "vino_evdi_copy_bench",
+        "vermagic": "7.0.0-34-generic SMP preempt mod_unload modversions",
+        "srcversion": "72A7A571CB192E9A07D6932"
+      }
+    },
+    "scope": "Build and host correctness checks only; no kernel module installed or loaded",
+    "rebuilt_original_matches_loaded_srcversion": true,
+    "tool_sha256": {
+      "prepare-evdi-copy.py": "83546201c20851f5534f70550c68334e623dde02c80cc64b7e3feb302bc94bc5",
+      "evdi-copy-batching.patch": "d2f1af9f87bf2317f0fbdb524b57317a5eb595ee14ae8530ea15f8069b9671ca",
+      "evdi-copy-common.h": "c88eb9c94316d426bae790deef951386bea4f886892e870157eb23f4b7ddd024",
+      "evdi-copy-test.c": "61e5a8face5fb1f073c02dad93ae5d93c27933b5192aeec025b690d8273d8e03",
+      "evdi-copy-kernel-bench.c": "725ff6a0a15c1943f881bf0329dca3384b468321ecbae10132c138ca4fe1a2de",
+      "evdi-copy-layout.c": "3b562d3687bc9ce1d5380671a5a392af918ae9ab53c8309e78676bf43611aa5a",
+      "bench-evdi-copy.py": "716ebddfc1705b324e0adf1bed38d3ef44a759c3a93e563115e2985cbd3a796b",
+      "test_evdi_copy.py": "43213cae504c13a9a6962d95347a8476709c0298ce96edd126f6abfc4fc8dac6"
+    }
+  },
+  "baseline_profile": {
+    "source_run": "/home/cameronball/Projects/Vino/gpu-artifacts/retransmit-hashes-cx2s3244/live-4965gf8p",
+    "window": {
+      "elapsed_s": [
+        2.035913492,
+        91.127529802
+      ],
+      "monotonic_ns": [
+        1557646879476812,
+        1557735971092521
+      ],
+      "seconds": 89.09161630999999,
+      "process_cpu_seconds": 24.465074214,
+      "cpu_percent_one_core": 27.460579600298423
+    },
+    "frames": {
+      "records": 2895,
+      "new_content": 1789,
+      "retransmit_only": 1106,
+      "duplicate_capture_presented": 766,
+      "recorded_captures": 2555,
+      "recorded_fullscreen_damage": 2555
+    },
+    "categories": [
+      {
+        "name": "EVDI capture ioctls: pixel copies, cache flushes and buffer checks",
+        "period_ns": 13040199375,
+        "share_percent": 53.637866887143446
+      },
+      {
+        "name": "XRGB to RGB conversion",
+        "period_ns": 3613064875,
+        "share_percent": 14.86151302190988
+      },
+      {
+        "name": "Strip change detection/planning (hash loop dominates)",
+        "period_ns": 2341708250,
+        "share_percent": 9.632079371641174
+      },
+      {
+        "name": "Other CPU work",
+        "period_ns": 2160803750,
+        "share_percent": 8.88797023563456
+      },
+      {
+        "name": "Main-thread memory comparisons",
+        "period_ns": 1819095250,
+        "share_percent": 7.482430756510955
+      },
+      {
+        "name": "Main-thread memory copies",
+        "period_ns": 1336683250,
+        "share_percent": 5.498139727159983
+      }
+    ]
+  },
+  "current_framebuffers": [
+    {
+      "card": "/dev/dri/card0",
+      "driver": "evdi",
+      "crtc": 38,
+      "fb_id": 42,
+      "width": 1920,
+      "height": 1080,
+      "fourcc": 875713112,
+      "pitch": 7680,
+      "offset": 0,
+      "modifier_valid": true,
+      "modifier": "0x0000000000000000",
+      "packed_32bit_rows": true
+    },
+    {
+      "card": "/dev/dri/card2",
+      "driver": "evdi",
+      "crtc": 38,
+      "fb_id": 42,
+      "width": 1920,
+      "height": 1080,
+      "fourcc": 875713112,
+      "pitch": 7680,
+      "offset": 0,
+      "modifier_valid": true,
+      "modifier": "0x0000000000000000",
+      "packed_32bit_rows": true
+    },
+    {
+      "card": "/dev/dri/card3",
+      "driver": "evdi",
+      "crtc": 38,
+      "fb_id": 0
+    },
+    {
+      "card": "/dev/dri/card4",
+      "driver": "evdi",
+      "crtc": 38,
+      "fb_id": 0
+    }
+  ],
+  "benchmark_codegen_check": {
+    "copy_original": {
+      "__check_object_size": true,
+      "_copy_to_user": true,
+      "drm_clflush_virt_range": true
+    },
+    "copy_batched": {
+      "__check_object_size": true,
+      "_copy_to_user": true,
+      "drm_clflush_virt_range": true
+    }
+  },
+  "runner_tests": {
+    "passed": true,
+    "count": 9,
+    "log": "gpu-artifacts/evdi-copy-20261020/runner-tests.log"
+  },
+  "live_state_at_preparation": {
+    "evdi_srcversion": "12258322BFFCAAE41410871",
+    "service": "active",
+    "compositor_active": "true",
+    "secure_boot": "SecureBoot disabled",
+    "desktop_log": "gpu-artifacts/evdi-copy-20261020/desktop-xrandr.log"
+  },
+  "batch_rows_to_compare": [
+    0,
+    8,
+    32,
+    128,
+    1080
+  ],
+  "performance_results": {
+    "archive": "gpu-artifacts/evdi-copy-20261020/component-gotld692",
+    "analysis": {
+      "source_run": "/var/tmp/vino-evdi-copy-gotld692",
+      "sample_count": 40,
+      "measured_frames": 2560,
+      "warmup_frames": 320,
+      "fault_checks_passed": 20,
+      "alternating_pair_order_verified": true,
+      "build_matches_prepared_artifact": true,
+      "display_driver_state_unchanged": true,
+      "benchmark_module_removed": true,
+      "summary": [
+        {
+          "rows": 0,
+          "copy_calls_per_frame": 1080,
+          "original_cpu_ms_per_frame": 1.0986605234375002,
+          "batched_cpu_ms_per_frame": 1.0975634375,
+          "paired_cpu_reduction_percent": -2.9973296642492153,
+          "paired_cpu_reduction_percent_all": [
+            -4.805685819494232,
+            5.010858784684835,
+            -5.161622723455261,
+            -1.1889735090041986
+          ],
+          "paired_cpu_reduction_range_percent": [
+            -5.161622723455261,
+            5.010858784684835
+          ],
+          "paired_saved_ms_median": -0.032151945312499985,
+          "batched_cpu_ms_range": [
+            1.062755234375,
+            1.17685128125
+          ],
+          "median_elapsed_ms_per_frame": {
+            "original": 1.1123818828125,
+            "batched": 1.1252078125
+          }
+        },
+        {
+          "rows": 8,
+          "copy_calls_per_frame": 135,
+          "original_cpu_ms_per_frame": 1.0985238671875,
+          "batched_cpu_ms_per_frame": 0.44289190624999997,
+          "paired_cpu_reduction_percent": 59.86529390049577,
+          "paired_cpu_reduction_percent_all": [
+            61.850532843813745,
+            62.29696179200669,
+            57.880054957177805,
+            55.689103709918
+          ],
+          "paired_cpu_reduction_range_percent": [
+            55.689103709918,
+            62.29696179200669
+          ],
+          "paired_saved_ms_median": 0.6574685625,
+          "batched_cpu_ms_range": [
+            0.415891453125,
+            0.46621915625
+          ],
+          "median_elapsed_ms_per_frame": {
+            "original": 1.12686965625,
+            "batched": 0.471609203125
+          }
+        },
+        {
+          "rows": 32,
+          "copy_calls_per_frame": 34,
+          "original_cpu_ms_per_frame": 1.0940740546874999,
+          "batched_cpu_ms_per_frame": 0.3468873984375,
+          "paired_cpu_reduction_percent": 68.63381322865862,
+          "paired_cpu_reduction_percent_all": [
+            66.10467661950288,
+            68.95479456129141,
+            68.8738289247714,
+            68.39379753254586
+          ],
+          "paired_cpu_reduction_range_percent": [
+            66.10467661950288,
+            68.95479456129141
+          ],
+          "paired_saved_ms_median": 0.750942265625,
+          "batched_cpu_ms_range": [
+            0.340854171875,
+            0.36334109375
+          ],
+          "median_elapsed_ms_per_frame": {
+            "original": 1.119892140625,
+            "batched": 0.34694803125
+          }
+        },
+        {
+          "rows": 128,
+          "copy_calls_per_frame": 9,
+          "original_cpu_ms_per_frame": 1.1035515624999999,
+          "batched_cpu_ms_per_frame": 0.3301858203125,
+          "paired_cpu_reduction_percent": 69.79449201655123,
+          "paired_cpu_reduction_percent_all": [
+            69.55275955798612,
+            70.19523851684164,
+            70.03622447511633,
+            67.21788866046856
+          ],
+          "paired_cpu_reduction_range_percent": [
+            67.21788866046856,
+            70.19523851684164
+          ],
+          "paired_saved_ms_median": 0.757211828125,
+          "batched_cpu_ms_range": [
+            0.324515546875,
+            0.364631859375
+          ],
+          "median_elapsed_ms_per_frame": {
+            "original": 1.132057859375,
+            "batched": 0.330358671875
+          }
+        },
+        {
+          "rows": 1080,
+          "copy_calls_per_frame": 1,
+          "original_cpu_ms_per_frame": 1.13053184375,
+          "batched_cpu_ms_per_frame": 0.37438060156249997,
+          "paired_cpu_reduction_percent": 67.20614749883156,
+          "paired_cpu_reduction_percent_all": [
+            61.70387417289363,
+            68.29948406747015,
+            68.8557111863207,
+            66.11281093019296
+          ],
+          "paired_cpu_reduction_range_percent": [
+            61.70387417289363,
+            68.8557111863207
+          ],
+          "paired_saved_ms_median": 0.7517569374999999,
+          "batched_cpu_ms_range": [
+            0.36503384375,
+            0.42218584375
+          ],
+          "median_elapsed_ms_per_frame": {
+            "original": 1.1589704453124998,
+            "batched": 0.3874315390625
+          }
+        }
+      ],
+      "result_sha256": "6ee34c28fe788ad6efcf2d97afe319d7a34bd4944b06dd5af1656901c3350ee5",
+      "scope": "Private-RAM kernel copy/cache-flush benchmark; no live framebuffer or power result"
+    },
+    "raw": {
+      "kernel": "7.0.0-34-generic",
+      "width": 1920,
+      "height": 1080,
+      "source": "private vmalloc RAM, not a GPU-backed framebuffer",
+      "cache_flush": "actual running-kernel drm_clflush_virt_range",
+      "cpu": 15,
+      "original_affinity": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "fault_checks": 20,
+      "samples": [
+        {
+          "rows": 0,
+          "pair": 0,
+          "method": "original",
+          "iterations": 64,
+          "cpu_ns": 69006904,
+          "wall_ns": 69012902,
+          "kernel_elapsed_ns": 68987405,
+          "cpu_ms_per_frame": 1.078232875
+        },
+        {
+          "rows": 0,
+          "pair": 0,
+          "method": "batched",
+          "iterations": 64,
+          "cpu_ns": 72323159,
+          "wall_ns": 75844335,
+          "kernel_elapsed_ns": 75816112,
+          "cpu_ms_per_frame": 1.130049359375
+        },
+        {
+          "rows": 0,
+          "pair": 1,
+          "method": "batched",
+          "iterations": 64,
+          "cpu_ns": 68164961,
+          "wall_ns": 68182265,
+          "kernel_elapsed_ns": 68159192,
+          "cpu_ms_per_frame": 1.065077515625
+        },
+        {
+          "rows": 0,
+          "pair": 1,
+          "method": "original",
+          "iterations": 64,
+          "cpu_ns": 71760793,
+          "wall_ns": 75264394,
+          "kernel_elapsed_ns": 75231663,
+          "cpu_ms_per_frame": 1.121262390625
+        },
+        {
+          "rows": 0,
+          "pair": 2,
+          "method": "original",
+          "iterations": 64,
+          "cpu_ns": 71621643,
+          "wall_ns": 73332724,
+          "kernel_elapsed_ns": 73300514,
+          "cpu_ms_per_frame": 1.119088171875
+        },
+        {
+          "rows": 0,
+          "pair": 2,
+          "method": "batched",
+          "iterations": 64,
+          "cpu_ns": 75318482,
+          "wall_ns": 77470446,
+          "kernel_elapsed_ns": 77444698,
+          "cpu_ms_per_frame": 1.17685128125
+        },
+        {
+          "rows": 0,
+          "pair": 3,
+          "method": "batched",
+          "iterations": 64,
+          "cpu_ns": 68016335,
+          "wall_ns": 68030543,
+          "kernel_elapsed_ns": 68005866,
+          "cpu_ms_per_frame": 1.062755234375
+        },
+        {
+          "rows": 0,
+          "pair": 3,
+          "method": "original",
+          "iterations": 64,
+          "cpu_ns": 67217141,
+          "wall_ns": 69052157,
+          "kernel_elapsed_ns": 69031107,
+          "cpu_ms_per_frame": 1.050267828125
+        },
+        {
+          "rows": 8,
+          "pair": 0,
+          "method": "original",
+          "iterations": 64,
+          "cpu_ns": 69770445,
+          "wall_ns": 71539151,
+          "kernel_elapsed_ns": 71490491,
+          "cpu_ms_per_frame": 1.090163203125
+        },
+        {
+          "rows": 8,
+          "pair": 0,
+          "method": "batched",
+          "iterations": 64,
+          "cpu_ns": 26617053,
+          "wall_ns": 26630163,
+          "kernel_elapsed_ns": 26609413,
+          "cpu_ms_per_frame": 0.415891453125
+        },
+        {
+          "rows": 8,
+          "pair": 1,
+          "method": "batched",
+          "iterations": 64,
+          "cpu_ns": 26880550,
+          "wall_ns": 28741928,
+          "kernel_elapsed_ns": 28716832,
+          "cpu_ms_per_frame": 0.42000859375
+        },
+        {
+          "rows": 8,
+          "pair": 1,
+          "method": "original",
+          "iterations": 64,
+          "cpu_ns": 71295448,
+          "wall_ns": 73082518,
+          "kernel_elapsed_ns": 73060126,
+          "cpu_ms_per_frame": 1.113991375
+        },
+        {
+          "rows": 8,
+          "pair": 2,
+          "method": "original",
+          "iterations": 64,
+          "cpu_ns": 70840610,
+          "wall_ns": 72700165,
+          "kernel_elapsed_ns": 72674087,
+          "cpu_ms_per_frame": 1.10688453125
+        },
+        {
+          "rows": 8,
+          "pair": 2,
+          "method": "batched",
+          "iterations": 64,
+          "cpu_ns": 29838026,
+          "wall_ns": 31744083,
+          "kernel_elapsed_ns": 31719878,
+          "cpu_ms_per_frame": 0.46621915625
+        },
+        {
+          "rows": 8,
+          "pair": 3,
+          "method": "batched",
+          "iterations": 64,
+          "cpu_ns": 29809614,
+          "wall_ns": 31624050,
+          "kernel_elapsed_ns": 31601136,
+          "cpu_ms_per_frame": 0.46577521875
+        },
+        {
+          "rows": 8,
+          "pair": 3,
+          "method": "original",
+          "iterations": 64,
+          "cpu_ns": 67273778,
+          "wall_ns": 67278641,
+          "kernel_elapsed_ns": 67255869,
+          "cpu_ms_per_frame": 1.05115278125
+        },
+        {
+          "rows": 32,
+          "pair": 0,
+          "method": "original",
+          "iterations": 64,
+          "cpu_ns": 68604833,
+          "wall_ns": 70372057,
+          "kernel_elapsed_ns": 70346790,
+          "cpu_ms_per_frame": 1.071950515625
+        },
+        {
+          "rows": 32,
+          "pair": 0,
+          "method": "batched",
+          "iterations": 64,
+          "cpu_ns": 23253830,
+          "wall_ns": 25194917,
+          "kernel_elapsed_ns": 25168859,
+          "cpu_ms_per_frame": 0.36334109375
+        },
+        {
+          "rows": 32,
+          "pair": 1,
+          "method": "batched",
+          "iterations": 64,
+          "cpu_ns": 22295385,
+          "wall_ns": 22299451,
+          "kernel_elapsed_ns": 22279593,
+          "cpu_ms_per_frame": 0.348365390625
+        },
+        {
+          "rows": 32,
+          "pair": 1,
+          "method": "original",
+          "iterations": 64,
+          "cpu_ns": 71815872,
+          "wall_ns": 75347259,
+          "kernel_elapsed_ns": 75321732,
+          "cpu_ms_per_frame": 1.122123
+        },
+        {
+          "rows": 32,
+          "pair": 2,
+          "method": "original",
+          "iterations": 64,
+          "cpu_ns": 71021270,
+          "wall_ns": 72974137,
+          "kernel_elapsed_ns": 72949150,
+          "cpu_ms_per_frame": 1.10970734375
+        },
+        {
+          "rows": 32,
+          "pair": 2,
+          "method": "batched",
+          "iterations": 64,
+          "cpu_ns": 22106202,
+          "wall_ns": 22109897,
+          "kernel_elapsed_ns": 22093908,
+          "cpu_ms_per_frame": 0.34540940625
+        },
+        {
+          "rows": 32,
+          "pair": 3,
+          "method": "batched",
+          "iterations": 64,
+          "cpu_ns": 21814667,
+          "wall_ns": 21818405,
+          "kernel_elapsed_ns": 21801122,
+          "cpu_ms_per_frame": 0.340854171875
+        },
+        {
+          "rows": 32,
+          "pair": 3,
+          "method": "original",
+          "iterations": 64,
+          "cpu_ns": 69020209,
+          "wall_ns": 69035226,
+          "kernel_elapsed_ns": 69012002,
+          "cpu_ms_per_frame": 1.078440765625
+        },
+        {
+          "rows": 128,
+          "pair": 0,
+          "method": "original",
+          "iterations": 64,
+          "cpu_ns": 68213062,
+          "wall_ns": 68218033,
+          "kernel_elapsed_ns": 68190711,
+          "cpu_ms_per_frame": 1.06582909375
+        },
+        {
+          "rows": 128,
+          "pair": 0,
+          "method": "batched",
+          "iterations": 64,
+          "cpu_ns": 20768995,
+          "wall_ns": 20773146,
+          "kernel_elapsed_ns": 20754071,
+          "cpu_ms_per_frame": 0.324515546875
+        },
+        {
+          "rows": 128,
+          "pair": 1,
+          "method": "batched",
+          "iterations": 64,
+          "cpu_ns": 21268738,
+          "wall_ns": 21286523,
+          "kernel_elapsed_ns": 21267056,
+          "cpu_ms_per_frame": 0.33232403125
+        },
+        {
+          "rows": 128,
+          "pair": 1,
+          "method": "original",
+          "iterations": 64,
+          "cpu_ns": 71360202,
+          "wall_ns": 73099390,
+          "kernel_elapsed_ns": 73072691,
+          "cpu_ms_per_frame": 1.11500315625
+        },
+        {
+          "rows": 128,
+          "pair": 2,
+          "method": "original",
+          "iterations": 64,
+          "cpu_ns": 70068096,
+          "wall_ns": 71854069,
+          "kernel_elapsed_ns": 71829523,
+          "cpu_ms_per_frame": 1.094814
+        },
+        {
+          "rows": 128,
+          "pair": 2,
+          "method": "batched",
+          "iterations": 64,
+          "cpu_ns": 20995047,
+          "wall_ns": 20999387,
+          "kernel_elapsed_ns": 20979741,
+          "cpu_ms_per_frame": 0.328047609375
+        },
+        {
+          "rows": 128,
+          "pair": 3,
+          "method": "batched",
+          "iterations": 64,
+          "cpu_ns": 23336439,
+          "wall_ns": 23349668,
+          "kernel_elapsed_ns": 23315695,
+          "cpu_ms_per_frame": 0.364631859375
+        },
+        {
+          "rows": 128,
+          "pair": 3,
+          "method": "original",
+          "iterations": 64,
+          "cpu_ns": 71186504,
+          "wall_ns": 73049337,
+          "kernel_elapsed_ns": 73019371,
+          "cpu_ms_per_frame": 1.112289125
+        },
+        {
+          "rows": 1080,
+          "pair": 0,
+          "method": "original",
+          "iterations": 64,
+          "cpu_ns": 70555163,
+          "wall_ns": 72277368,
+          "kernel_elapsed_ns": 72251911,
+          "cpu_ms_per_frame": 1.102424421875
+        },
+        {
+          "rows": 1080,
+          "pair": 0,
+          "method": "batched",
+          "iterations": 64,
+          "cpu_ns": 27019894,
+          "wall_ns": 28939928,
+          "kernel_elapsed_ns": 28917826,
+          "cpu_ms_per_frame": 0.42218584375
+        },
+        {
+          "rows": 1080,
+          "pair": 1,
+          "method": "batched",
+          "iterations": 64,
+          "cpu_ns": 23506856,
+          "wall_ns": 23510799,
+          "kernel_elapsed_ns": 23492504,
+          "cpu_ms_per_frame": 0.367294625
+        },
+        {
+          "rows": 1080,
+          "pair": 1,
+          "method": "original",
+          "iterations": 64,
+          "cpu_ns": 74152913,
+          "wall_ns": 76070849,
+          "kernel_elapsed_ns": 76045421,
+          "cpu_ms_per_frame": 1.158639265625
+        },
+        {
+          "rows": 1080,
+          "pair": 2,
+          "method": "original",
+          "iterations": 64,
+          "cpu_ns": 78389528,
+          "wall_ns": 82181998,
+          "kernel_elapsed_ns": 82155088,
+          "cpu_ms_per_frame": 1.224836375
+        },
+        {
+          "rows": 1080,
+          "pair": 2,
+          "method": "batched",
+          "iterations": 64,
+          "cpu_ns": 24413861,
+          "wall_ns": 26080438,
+          "kernel_elapsed_ns": 26058958,
+          "cpu_ms_per_frame": 0.381466578125
+        },
+        {
+          "rows": 1080,
+          "pair": 3,
+          "method": "batched",
+          "iterations": 64,
+          "cpu_ns": 23362166,
+          "wall_ns": 23366229,
+          "kernel_elapsed_ns": 23349499,
+          "cpu_ms_per_frame": 0.36503384375
+        },
+        {
+          "rows": 1080,
+          "pair": 3,
+          "method": "original",
+          "iterations": 64,
+          "cpu_ns": 68940997,
+          "wall_ns": 70803992,
+          "kernel_elapsed_ns": 70780328,
+          "cpu_ms_per_frame": 1.077203078125
+        }
+      ],
+      "summary": [
+        {
+          "rows": 0,
+          "copy_calls_per_frame": 1080,
+          "original_cpu_ms_per_frame": 1.0986605234375002,
+          "batched_cpu_ms_per_frame": 1.0975634375,
+          "paired_cpu_reduction_percent": -2.9973296642492153,
+          "paired_cpu_reduction_percent_all": [
+            -4.805685819494232,
+            5.010858784684835,
+            -5.161622723455261,
+            -1.1889735090041986
+          ]
+        },
+        {
+          "rows": 8,
+          "copy_calls_per_frame": 135,
+          "original_cpu_ms_per_frame": 1.0985238671875,
+          "batched_cpu_ms_per_frame": 0.44289190624999997,
+          "paired_cpu_reduction_percent": 59.86529390049577,
+          "paired_cpu_reduction_percent_all": [
+            61.850532843813745,
+            62.29696179200669,
+            57.880054957177805,
+            55.689103709918
+          ]
+        },
+        {
+          "rows": 32,
+          "copy_calls_per_frame": 34,
+          "original_cpu_ms_per_frame": 1.0940740546874999,
+          "batched_cpu_ms_per_frame": 0.3468873984375,
+          "paired_cpu_reduction_percent": 68.63381322865862,
+          "paired_cpu_reduction_percent_all": [
+            66.10467661950288,
+            68.95479456129141,
+            68.8738289247714,
+            68.39379753254586
+          ]
+        },
+        {
+          "rows": 128,
+          "copy_calls_per_frame": 9,
+          "original_cpu_ms_per_frame": 1.1035515624999999,
+          "batched_cpu_ms_per_frame": 0.3301858203125,
+          "paired_cpu_reduction_percent": 69.79449201655123,
+          "paired_cpu_reduction_percent_all": [
+            69.55275955798612,
+            70.19523851684164,
+            70.03622447511633,
+            67.21788866046856
+          ]
+        },
+        {
+          "rows": 1080,
+          "copy_calls_per_frame": 1,
+          "original_cpu_ms_per_frame": 1.13053184375,
+          "batched_cpu_ms_per_frame": 0.37438060156249997,
+          "paired_cpu_reduction_percent": 67.20614749883156,
+          "paired_cpu_reduction_percent_all": [
+            61.70387417289363,
+            68.29948406747015,
+            68.8557111863207,
+            66.11281093019296
+          ]
+        }
+      ],
+      "scope": "Copy/cache-flush component only; excludes GPU capture, fences, encoding, USB and power"
+    },
+    "before": {
+      "evdi_srcversion": "12258322BFFCAAE41410871",
+      "official_service": "active"
+    },
+    "after": {
+      "evdi_srcversion": "12258322BFFCAAE41410871",
+      "official_service": "active"
+    },
+    "cleanup": {
+      "module_unloaded": true,
+      "errors": []
+    },
+    "next_step": {
+      "initial_batch_rows": 128,
+      "comparison_batch_rows": 32,
+      "scope": "Controlled live GPU-backed framebuffer test with temporary candidate EVDI and original module retained for restoration"
+    }
+  },
+  "limitations": [
+    "Private-RAM copy CPU saving is established in the component test; live observations support a capture improvement but workloads were not matched",
+    "Host checks replace kernel memory hooks and cannot prove GPU cache coherence",
+    "Kernel component benchmark uses private vmalloc RAM instead of an imported GPU framebuffer",
+    "First hardware trial is short and visually assessed; automated framebuffer-byte validation and broader stability testing remain outstanding",
+    "Current official-desktop framebuffer metadata is not a historical Vino-trial metadata capture",
+    "No controlled whole-driver CPU, power, heat or fan improvement is established"
+  ],
+  "live_preparation": {
+    "archive": "gpu-artifacts/evdi-copy-20261020/live-switch-preparation",
+    "status": "Preparation completed before successful hardware trial; historical preparation state retained below; see hardware_trial",
+    "tests": {
+      "module_policy_passed": 10,
+      "live_trial_and_comparison_passed": 55,
+      "systemd_simulations": [
+        {
+          "case": "success",
+          "source": "/tmp/vino-module-mock-success-q0l71m_t",
+          "outcome": {
+            "switched": true,
+            "errors": [],
+            "fallback_used": false
+          }
+        },
+        {
+          "case": "fail",
+          "source": "/tmp/vino-module-mock-fail-bymgrkae",
+          "outcome": {
+            "switched": false,
+            "fallback_used": true,
+            "errors": [],
+            "result": "exit-code",
+            "original_restored": true
+          }
+        },
+        {
+          "case": "hang",
+          "source": "/tmp/vino-module-mock-hang-v7ip_wm1",
+          "outcome": {
+            "switched": false,
+            "fallback_used": true,
+            "errors": [],
+            "result": "timeout",
+            "original_restored": true
+          }
+        }
+      ]
+    },
+    "preflight": {
+      "kernel": "7.0.0-34-generic",
+      "loaded_evdi": "12258322BFFCAAE41410871",
+      "candidate_srcversion": "9232839421842403DFD2636",
+      "candidate_sha256": "db30a66884ff5e0b5c74ae03b454c15aa37e11e29208ff1e98e19d5faa56a7ca",
+      "installed_module": "/lib/modules/7.0.0-34-generic/updates/dkms/evdi.ko.zst",
+      "installed_sha256": "2f3e247c3597eb95ed4f9ac76057f7cf2cd14cdd2232570396b774d210c5173b",
+      "current_layout": [
+        {
+          "name": "eDP",
+          "connected": true,
+          "primary": true,
+          "mode": "1920x1200",
+          "x": 960,
+          "y": 1080,
+          "rate": "60.00",
+          "edid": "00ffffffffffff0030ae3d400000000000210104a51e137803cb5591575a91291c505400000001010101010101010101010101010101263d80b870b0284010103e002ebc10000018000000fd00283c4b4b10010a2020202020200000000f00d10a3cd10a28280a0006afad3c000000fe004231343055414e30342e37200a003e"
+        },
+        {
+          "name": "DVI-I-2-2",
+          "connected": true,
+          "primary": false,
+          "mode": "1920x1080",
+          "x": 1920,
+          "y": 0,
+          "rate": "60.00",
+          "edid": "00ffffffffffff0010acdca042504d37051c010380351e78ea0565a756529c270f5054a54b00714f8180a9c0d1c00101010101010101023a801871382d40582c45000f282100001e000000ff004e504e5254383231374d50420a000000fc0044454c4c205032343137480a20000000fd00384c1e5311000a202020202020016c020317b14c9005040302071601141f121365030c001000023a801871382d40582c45000f282100001e011d8018711c1620582c25000f282100009e011d007251d01e206e2855000f282100001e8c0ad08a20e02d10103e96000f282100001800000000000000000000000000000000000000000000000000000000000000003d"
+        },
+        {
+          "name": "DVI-I-1-1",
+          "connected": true,
+          "primary": false,
+          "mode": "1920x1080",
+          "x": 0,
+          "y": 0,
+          "rate": "60.00",
+          "edid": "00ffffffffffff0009d1ce78455400002a19010380351e782e6b35a455559f270c5054a56b80d1c081c081008180a9c0b30001010101023a801871382d40582c4500132b2100001e000000ff005641463033323730534c300a20000000fd00324c1e5311000a202020202020000000fc0042656e5120474c323436300a200151020322f14f90050403020111121314060715161f2309070765030c00100083010000023a801871382d40582c4500132b2100001f011d8018711c1620582c2500132b2100009f011d007251d01e206e285500132b2100001e8c0ad08a20e02d10103e9600132b21000018000000000000000000000000000000000000000000e7"
+        }
+      ],
+      "requires_logout": true,
+      "hardware_changed": false
+    },
+    "source_sha256": {
+      "evdi-module-trial.py": "aed25c74c4e2805f732ae9e98e8a4b950b38ae99057f49c40e801988da3bc9b0",
+      "test_evdi_module_trial.py": "6953925ef12828429b53d9c8dbf9c3dd3c720a87caf2348cdea27499b6086f96",
+      "live-trial.py": "379f22c53cbb64660729323c085092251b9816fab5570fb35545a114d45eff8e",
+      "test_live_trial.py": "af61abbaa93da91f756b6d6b8affc7728a0bfce03641d86d6563a5236167095e",
+      "compare-live.py": "5d4843f18ab5d9f2e5ea8aa65bbc738ab74048fe4cd76add6191fe372848fe59"
+    },
+    "worker_sha256": "3b49629d7bb2b7b766fc1a33a52f72e6dafe950b753784814f337ab05a42d147",
+    "installed_driver_replaced": false,
+    "candidate_loaded": false,
+    "trial_rows": 128,
+    "rows_outside_trial": 0,
+    "trial_duration_seconds": 90
+  },
+  "hardware_trial": {
+    "source_run": "/var/tmp/vino-live-n7g38clw",
+    "archive": "gpu-artifacts/evdi-copy-20261020/live-n7g38clw",
+    "user_observation": "K done, felt good",
+    "batch_rows": 128,
+    "same_worker_and_trial_configuration": true,
+    "observations": {
+      "previous_original_module": {
+        "window_seconds": 89.09161630999999,
+        "process_cpu_percent_one_core": 27.460579600298423,
+        "capture_thread_cpu_percent_one_core": 19.081481180953556,
+        "main_thread_cpu_percent_one_core": 8.384627318924887,
+        "captures": 5963,
+        "captures_per_second": 66.93110134236828,
+        "submitted_records_per_second": 32.49464001109444,
+        "wire_bytes_per_second": 6427555.5402144445,
+        "capture_ioctl_sampled_cpu_ms_per_capture": 2.186852150763039,
+        "capture_thread_cpu_ms_per_capture": 2.8509139694784507,
+        "capture_thread_kernel_cpu_ms_per_capture": 2.208619822237129,
+        "capture_helpers_sampled_cpu_ms_per_capture": {
+          "_copy_to_user": 1.403967507965789,
+          "drm_clflush_virt_range": 0.48119174492705014,
+          "__check_object_size": 0.24860168958577897
+        }
+      },
+      "candidate_128_rows": {
+        "window_seconds": 89.27804423500001,
+        "process_cpu_percent_one_core": 21.866021176063008,
+        "capture_thread_cpu_percent_one_core": 13.553164278722395,
+        "main_thread_cpu_percent_one_core": 8.31111396265456,
+        "captures": 5189,
+        "captures_per_second": 58.121792927512814,
+        "submitted_records_per_second": 39.158563899515286,
+        "wire_bytes_per_second": 2675435.3105145614,
+        "capture_ioctl_sampled_cpu_ms_per_capture": 1.548501613991135,
+        "capture_thread_cpu_ms_per_capture": 2.3318558489111587,
+        "capture_thread_kernel_cpu_ms_per_capture": 1.6342262478319523,
+        "capture_helpers_sampled_cpu_ms_per_capture": {
+          "_copy_to_user": 1.3228600404702255,
+          "drm_clflush_virt_range": 0.1694732848333012,
+          "__check_object_size": 0.017431537868568128
+        }
+      }
+    },
+    "observed_reductions_percent": {
+      "process_cpu_percent_one_core": 20.373052956881576,
+      "captures_per_second": 13.16175625109437,
+      "capture_ioctl_sampled_cpu_ms_per_capture": 29.190383837753732,
+      "capture_thread_cpu_ms_per_capture": 18.206726899663305,
+      "capture_thread_kernel_cpu_ms_per_capture": 26.00690117067631,
+      "capture_helpers_sampled_cpu_ms_per_capture": {
+        "_copy_to_user": 5.777018843767989,
+        "drm_clflush_virt_range": 64.78050868079754,
+        "__check_object_size": 92.98816597038716
+      }
+    },
+    "profile_categories": [
+      {
+        "name": "EVDI capture ioctls: pixel copies, cache flushes and buffer checks",
+        "period_ns": 8035174875,
+        "share_percent": 41.51090342679128
+      },
+      {
+        "name": "XRGB to RGB conversion",
+        "period_ns": 3703517125,
+        "share_percent": 19.132917964693664
+      },
+      {
+        "name": "Strip change detection/planning (hash loop dominates)",
+        "period_ns": 2934673000,
+        "share_percent": 15.160955347871235
+      },
+      {
+        "name": "Main-thread memory comparisons",
+        "period_ns": 1899497250,
+        "share_percent": 9.813084112149532
+      },
+      {
+        "name": "Other CPU work",
+        "period_ns": 1527638000,
+        "share_percent": 7.892004153686397
+      },
+      {
+        "name": "Main-thread memory copies",
+        "period_ns": 1256281250,
+        "share_percent": 6.4901349948078915
+      }
+    ],
+    "profile_quality": {
+      "sample_count": 3852,
+      "lost_samples": 0,
+      "unknown_leaf_samples": 0,
+      "sampled_cpu_seconds": 19.3567815,
+      "sampled_vs_process_cpu_difference_percent": -0.8440646714352296
+    },
+    "worker_sha256": "3b49629d7bb2b7b766fc1a33a52f72e6dafe950b753784814f337ab05a42d147",
+    "kernel": "7.0.0-34-generic",
+    "frames": {
+      "records": 3496,
+      "new_content": 1943,
+      "retransmit_only": 1553,
+      "duplicate_capture_presented": 827,
+      "recorded_captures": 2770,
+      "recorded_fullscreen_damage": 2770
+    },
+    "recovery": {
+      "service_result": "success",
+      "errors": [],
+      "restored": true,
+      "evdi_copy_rows_restored": 0
+    },
+    "desktop_recovery_check": {
+      "source_run": "/var/tmp/vino-live-n7g38clw",
+      "outputs": [
+        {
+          "saved_connector": "eDP",
+          "current_connector": "eDP",
+          "matches": true,
+          "geometry": {
+            "mode": "1920x1200",
+            "x": 960,
+            "y": 1080,
+            "rate": "60.00",
+            "primary": true
+          }
+        },
+        {
+          "saved_connector": "DVI-I-2-2",
+          "current_connector": "DVI-I-1-1",
+          "matches": true,
+          "geometry": {
+            "mode": "1920x1080",
+            "x": 0,
+            "y": 0,
+            "rate": "60.00",
+            "primary": false
+          }
+        },
+        {
+          "saved_connector": "DVI-I-1-1",
+          "current_connector": "DVI-I-2-2",
+          "matches": true,
+          "geometry": {
+            "mode": "1920x1080",
+            "x": 1920,
+            "y": 0,
+            "rate": "60.00",
+            "primary": false
+          }
+        }
+      ],
+      "same_active_count": true,
+      "service": "active",
+      "display_manager_active": true,
+      "compositor_active": true,
+      "loaded_evdi": "9232839421842403DFD2636",
+      "copy_batch_rows": "0",
+      "active_units": ""
+    },
+    "installed_original_module_sha256_after_trial": "2f3e247c3597eb95ed4f9ac76057f7cf2cd14cdd2232570396b774d210c5173b",
+    "results_sha256": "fd6311b1af2f8081213ba638566878bd813c3cf8af35cce4a9b35af573b1b7a4",
+    "limitations": [
+      "Manual workloads differ: capture rate, changed regions, repeat count and wire traffic are not matched",
+      "Observed whole-worker CPU reduction is not an isolated causal effect of batching",
+      "Per-capture ioctl cost is a sampled CPU-period estimate divided by all acknowledged captures, not individual ioctl instrumentation",
+      "Only captures associated with emitted frame records have damage geometry in the log; all of that subset report full-screen damage",
+      "Inclusive helper stacks overlap the capture category; do not sum them with the exclusive profile categories",
+      "Sampling adds overhead and its period accounting differs slightly from process/thread counters",
+      "The user reports good visual behavior; this trial is not an automated framebuffer-byte comparison or long-duration stability test",
+      "No controlled power, heat or fan improvement is established",
+      "The candidate remains loaded with batching disabled; the installed module is unchanged and loads at ordinary reboot"
+    ],
+    "next_validation": "Use the same temporary candidate and unchanged worker with batching disabled and enabled under matched replay before claiming a controlled whole-driver saving"
+  }
+}

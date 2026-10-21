@@ -1,0 +1,43 @@
+{
+  "kernel": "7.0.0-34-generic",
+  "source": "/usr/src/evdi-1.15.1",
+  "shared_capture_abi": 1,
+  "loaded_evdi_srcversion": "9232839421842403DFD2636",
+  "installed_module": "/lib/modules/7.0.0-34-generic/updates/dkms/evdi.ko.zst",
+  "installed_evdi_srcversion": "12258322BFFCAAE41410871",
+  "source_painter_sha256": "452eb54fb44f7a69eb7db760a393e362a240a2595a25ca50a8f7b89297bf00ee",
+  "patched_painter_sha256": "8e4bf7e3230b9592465ba9d9494afc75c8e408d8bcb08c3adb47af727335ad8e",
+  "correctness": {
+    "passed": true,
+    "checks": 47,
+    "scope": "actual ioctl control flow with mock kernel primitives; no real DMA synchronization tested"
+  },
+  "modules": {
+    "original": {
+      "relative_path": "before/evdi.ko",
+      "sha256": "d855beb144b56e2073dde32225359c314a8232654c0d1af1f35382fc0086391a",
+      "name": "evdi",
+      "vermagic": "7.0.0-34-generic SMP preempt mod_unload modversions",
+      "srcversion": "12258322BFFCAAE41410871"
+    },
+    "candidate": {
+      "relative_path": "after/evdi.ko",
+      "sha256": "76a7b666b389553cb3bdc02dc1dd8fee9f636c8f200e1a0816ed6f7ae36a9f00",
+      "name": "evdi",
+      "vermagic": "7.0.0-34-generic SMP preempt mod_unload modversions",
+      "srcversion": "9F72611562082A8AFD64D95"
+    }
+  },
+  "scope": "Isolated build and host fault-injection checks only; no module installed or loaded",
+  "runtime_validation": "Pending: real producer fences, Vulkan import, mode/close races and display recovery",
+  "producer_scope": "Experimental amdgpu-imported linear XRGB8888 with implicit-sync GPU writes and separate cursor; CPU mmap or explicit-sync writers unsupported",
+  "tool_sha256": {
+    "prepare-evdi-shared.py": "9ee9e87bc044c9af36ae51e0453906415482dfa7da092ee24dd2a4ef2f80e239",
+    "evdi-copy-batching.patch": "d2f1af9f87bf2317f0fbdb524b57317a5eb595ee14ae8530ea15f8069b9671ca",
+    "evdi-shared-capture.patch": "75d4a21dd48f786d05a73a64d348ff8ef0fc97abe8c6ae4af3839fe6f2885906",
+    "evdi-shared-capture.h": "5bf32558816bbb4437cde8f0579b4dee5a56ceff723b9284f285e4e751dfdc4b",
+    "evdi-shared-capture-test.c": "306412e1ccfc296a0ab63250e2593e6965c613644f87f9bd5179f6038369a599"
+  },
+  "rebuilt_original_matches_loaded_srcversion": false,
+  "rebuilt_original_matches_installed_srcversion": true
+}

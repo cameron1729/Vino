@@ -32,9 +32,105 @@ pub fn to_rgb888(frame: &Frame<'_>) -> Vec<u8> {
     out
 }
 
+/// Validate the live trial's format before reading pixels or feeding the encoder.
+pub fn validate_trial_mode(mode: Mode) -> Result<(), String> {
+    if mode.width != 1920
+        || mode.height != 1080
+        || mode.refresh_hz != 60
+        || mode.bits_per_pixel != 32
+        || ![u32::from_le_bytes(*b"XR24"), u32::from_le_bytes(*b"AR24")]
+            .contains(&mode.pixel_format)
+    {
+        return Err(format!(
+            "trial requires 1920x1080@60, XRGB/ARGB8888; got {mode:?}"
+        ));
+    }
+    Ok(())
+}
+
+/// Copy validated little-endian XRGB/ARGB into reusable RGB storage, padding the last strip black.
+pub fn copy_trial_rgb(frame: &Frame<'_>, out: &mut Vec<u8>) -> Result<(), String> {
+    if frame.width != 1920
+        || frame.height != 1080
+        || frame.stride < 1920 * 4
+        || frame
+            .stride
+            .checked_mul(frame.height)
+            .is_none_or(|n| n > frame.pixels.len())
+    {
+        return Err("invalid live framebuffer dimensions, stride or length".into());
+    }
+    out.resize(1920 * 1088 * 3, 0);
+    for (source, target) in frame
+        .pixels
+        .chunks_exact(frame.stride)
+        .take(1080)
+        .zip(out.as_chunks_mut::<{ 1920 * 3 }>().0.iter_mut())
+    {
+        for (pixel, rgb) in source[..1920 * 4]
+            .as_chunks::<4>()
+            .0
+            .iter()
+            .zip(target.as_chunks_mut::<3>().0.iter_mut())
+        {
+            rgb.copy_from_slice(&[pixel[2], pixel[1], pixel[0]]);
+        }
+    }
+    out[1920 * 1080 * 3..].fill(0);
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn trial_rejects_bad_format_stride_and_truncation() {
+        let mut mode = Mode {
+            width: 1920,
+            height: 1080,
+            refresh_hz: 60,
+            bits_per_pixel: 32,
+            pixel_format: u32::from_le_bytes(*b"XR24"),
+        };
+        assert!(validate_trial_mode(mode).is_ok());
+        mode.pixel_format = u32::from_le_bytes(*b"XR30");
+        assert!(validate_trial_mode(mode).is_err());
+        let pixels = vec![0; 1920 * 1080 * 4];
+        let mut frame = Frame {
+            pixels: &pixels,
+            width: 1920,
+            height: 1080,
+            stride: 1920 * 4,
+            damage: vec![],
+        };
+        let mut rgb = Vec::new();
+        assert!(copy_trial_rgb(&frame, &mut rgb).is_ok());
+        frame.stride = 1920 * 4 + 4;
+        assert!(copy_trial_rgb(&frame, &mut rgb).is_err());
+        frame.stride = 1920 * 4 - 1;
+        assert!(copy_trial_rgb(&frame, &mut rgb).is_err());
+    }
+
+    #[test]
+    fn trial_conversion_honours_stride_and_clears_padding() {
+        let stride = 1920 * 4 + 16;
+        let mut pixels = vec![0; stride * 1080];
+        pixels[..4].copy_from_slice(&[3, 2, 1, 255]);
+        pixels[stride..stride + 4].copy_from_slice(&[6, 5, 4, 255]);
+        let frame = Frame {
+            pixels: &pixels,
+            width: 1920,
+            height: 1080,
+            stride,
+            damage: vec![],
+        };
+        let mut rgb = vec![99; 1920 * 1088 * 3];
+        copy_trial_rgb(&frame, &mut rgb).unwrap();
+        assert_eq!(&rgb[..3], &[1, 2, 3]);
+        assert_eq!(&rgb[1920 * 3..1920 * 3 + 3], &[4, 5, 6]);
+        assert!(rgb[1920 * 1080 * 3..].iter().all(|&p| p == 0));
+    }
 
     #[test]
     fn converts_xrgb8888_with_stride() {

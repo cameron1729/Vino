@@ -21,6 +21,28 @@ become mixed with kernel API design or build instructions.
 | [`reverse-engineering.md`](reverse-engineering.md) | Evidence policy, capture method, independent oracles, and adding findings |
 | [`ridge.md`](ridge.md) | **★ Dell D6000 / DL-6xxx**: the vendor bring-up decoded end to end, the shared EDID handler that makes a pre-engagement fetch describe the dock rather than the monitor, and the open endpoint stall with four refuted theories |
 | [`navarro.md`](navarro.md) | **★ DL-7000 / DL7400 vs Ridge**: two video endpoints, no per-head HDCP auth, plaintext AKE framing, and the video stream-open sequence that Ridge's arm replaces |
+| [`gpu-encoder.md`](gpu-encoder.md) | Offline Ella Vulkan encoder, correctness checks and CPU/GPU benchmark method |
+| [`gpu-deep-optimization.md`](gpu-deep-optimization.md) | Fused GPU encoding, removed transfers and CPU copies, binary evidence and the next capture target |
+| [`gpu-direct-capture.md`](gpu-direct-capture.md) | Native EVDI capture into mapped GPU storage, partial-update repair and the supervised trial |
+| [`gpu-windows-shaders.md`](gpu-windows-shaders.md) | Reproducible Windows compute-shader inventory and observations |
+| [`gpu-encoder-results.md`](gpu-encoder-results.md) | Measured prototype results and integration verdict |
+| [`gpu-encoder-followup.md`](gpu-encoder-followup.md) | Linux analysis of the Windows shaders and revised packer measurements |
+| [`gpu-official-comparison.md`](gpu-official-comparison.md) | Live DisplayLink service CPU versus the offline GPU prototype with controlled source frames |
+| [`gpu-live-first-target.md`](gpu-live-first-target.md) | One-monitor live GPU trial, selective dock ownership and automatic DisplayLink recovery |
+| [`gpu-live-comparison.md`](gpu-live-comparison.md) | Matched single-monitor live official/GPU comparison with CPU, AMD power and automatic recovery |
+| [`gpu-live-comparison-results.md`](gpu-live-comparison-results.md) | First completed live comparison: CPU usage, mixed power results and throughput limits |
+| [`gpu-live-comparison-evdi-results.md`](gpu-live-comparison-evdi-results.md) | Official/Vino/EVDI comparison at 20 inputs per second, with the lock-affected idle sample excluded |
+| [`gpu-live-power-comparison-results.md`](gpu-live-power-comparison-results.md) | Monitored power comparison: clean recovery and smooth output, with scheduled background work identified |
+| [`gpu-live-cron-off-results.md`](gpu-live-cron-off-results.md) | Comparison with ZiRan cron disabled: scrolling CPU improved, with no demonstrated power or heat benefit |
+| [`gpu-live-direct-comparison-results.md`](gpu-live-direct-comparison-results.md) | Current direct-capture build versus proprietary: CPU wins, power observations and the scrolling kernel-CPU regression |
+| [`gpu-usb-reuse.md`](gpu-usb-reuse.md) | Reused packet buffers and USB transfer objects, cancellation safety and component results |
+| [`gpu-shared-capture.md`](gpu-shared-capture.md) | GPU strip comparison and experimental shared EVDI framebuffer capture |
+| [`gpu-native-revisions.md`](gpu-native-revisions.md) | Exact native strip comparisons, retained revisions and removal of full-screen hashing |
+| [`gpu-idle-results.md`](gpu-idle-results.md) | Duplicate-capture filtering, event-driven waits, CPU measurements and live power diagnostics |
+| [`gpu-cpu-profile-results.md`](gpu-cpu-profile-results.md) | Live CPU profile identifying capture and image hashing costs |
+| [`gpu-retransmit-hash-results.md`](gpu-retransmit-hash-results.md) | Reusing hashes for unchanged retransmissions, correctness checks and component CPU measurements |
+| [`gpu-evdi-copy-investigation.md`](gpu-evdi-copy-investigation.md) | EVDI row-copy batching prototype, isolated kernel benchmark and hardware validation boundary |
+| [`gpu-evdi-live-trial.md`](gpu-evdi-live-trial.md) | Temporary EVDI module switch, recovery and profiled desktop batching trial |
 | [`simd.md`](simd.md) | AVX2 in the encoder, measured in the kernel: 2x on the transform written within a block, why the across-blocks form regresses, and why the entropy coder caps the whole question |
 | [`color-management.md`](color-management.md) | Software `CTM`/`GAMMA_LUT` on the CRTC, shared by vino and evdi: pipeline order, the fused fast path, and the sign-magnitude trap |
 | [`revdi-chimera.md`](revdi-chimera.md) | Revdi ABI compatibility, Chimera data flow, and its DLM-shaped damage path |

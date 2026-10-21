@@ -1,0 +1,206 @@
+{
+  "schema": 1,
+  "preserved_on": "2026-10-22",
+  "purpose": "Small benchmark, validation and build records retained with the source checkpoint",
+  "policy": "Original artifacts are unchanged. Published JSON omits device UUIDs, transient process/thread IDs and local profiler command arrays; measurements and limitations are preserved.",
+  "files": [
+    {
+      "path": "gpu-shared-capture-20261021/gpu-comparison-replay.json",
+      "source": "gpu-artifacts/gpu-shared-capture-20261021/gpu-comparison-replay.json",
+      "source_sha256": "07b23b4d01163a41ee50bc087dcc2de9203aec093ee18164273dac973e2622c9",
+      "published_sha256": "07b23b4d01163a41ee50bc087dcc2de9203aec093ee18164273dac973e2622c9",
+      "published_bytes": 94236,
+      "omitted_json_pointers": []
+    },
+    {
+      "path": "gpu-shared-capture-20261021/gpu-comparison-summary.json",
+      "source": "gpu-artifacts/gpu-shared-capture-20261021/gpu-comparison-summary.json",
+      "source_sha256": "6bc1faca35e7c64c038b9275a8f28a5dec68a97b914c595af44925d9cb36bc46",
+      "published_sha256": "6bc1faca35e7c64c038b9275a8f28a5dec68a97b914c595af44925d9cb36bc46",
+      "published_bytes": 3497,
+      "omitted_json_pointers": []
+    },
+    {
+      "path": "gpu-shared-capture-20261021/private-dma-copy-validation.json",
+      "source": "gpu-artifacts/gpu-shared-capture-20261021/private-dma-copy-validation.json",
+      "source_sha256": "143501ed6cab3c7f8400282a851b405586519e41b72ec81694415f0f84355c4e",
+      "published_sha256": "6dc6fd318ae414775180f3404873a23ff36fd8ed779ad8b57cd401ae1e05948e",
+      "published_bytes": 526,
+      "omitted_json_pointers": [
+        "/device/device_uuid"
+      ]
+    },
+    {
+      "path": "gpu-shared-capture-20261021/private-dma-copy-performance.json",
+      "source": "gpu-artifacts/gpu-shared-capture-20261021/private-dma-copy-performance.json",
+      "source_sha256": "2599b977306603d4e976b8483b78dd7705f5fd6a2795afb611a3632f37e37402",
+      "published_sha256": "e9b6c2e6979401e092f5658835c3b949bdf2c29b511c97369b541779191dbc22",
+      "published_bytes": 527,
+      "omitted_json_pointers": [
+        "/device/device_uuid"
+      ]
+    },
+    {
+      "path": "gpu-shared-capture-20261021/private-dma-gpu-producer-validation.json",
+      "source": "gpu-artifacts/gpu-shared-capture-20261021/private-dma-gpu-producer-validation.json",
+      "source_sha256": "584c2127f369fd5fb90ccfe86de76011cea7354eab690d45697b37344b181014",
+      "published_sha256": "0e72612707bd3817f1dea329ab52d424c18f8b7c89f25f96691ba3fd50cde7d0",
+      "published_bytes": 561,
+      "omitted_json_pointers": [
+        "/device/device_uuid"
+      ]
+    },
+    {
+      "path": "gpu-shared-capture-20261021/validation.json",
+      "source": "gpu-artifacts/gpu-shared-capture-20261021/validation.json",
+      "source_sha256": "af57d9d73ef9123a99832f69c3ab1b76c9fc6383d67cd8c3c648b2bbb29110bf",
+      "published_sha256": "af57d9d73ef9123a99832f69c3ab1b76c9fc6383d67cd8c3c648b2bbb29110bf",
+      "published_bytes": 1305,
+      "omitted_json_pointers": []
+    },
+    {
+      "path": "gpu-shared-capture-20261021/build-manifest.json",
+      "source": "gpu-artifacts/gpu-shared-capture-20261021/after/build-manifest.json",
+      "source_sha256": "5aac3ebaaa66ad9a9b9f7726bf51ceb626c5ee7342d10134c01c54e5f5b8de40",
+      "published_sha256": "5aac3ebaaa66ad9a9b9f7726bf51ceb626c5ee7342d10134c01c54e5f5b8de40",
+      "published_bytes": 2387,
+      "omitted_json_pointers": []
+    },
+    {
+      "path": "gpu-shared-capture-20261021/kernel-build-report.json",
+      "source": "gpu-artifacts/shared-capture-20261021/kernel/prepared-proxy/build-report.json",
+      "source_sha256": "2fbf16e494970d58474558431ac813a0fa419a941e6596a971e925d0926af44d",
+      "published_sha256": "2fbf16e494970d58474558431ac813a0fa419a941e6596a971e925d0926af44d",
+      "published_bytes": 2256,
+      "omitted_json_pointers": []
+    },
+    {
+      "path": "native-revisions-20261021/replay.json",
+      "source": "gpu-artifacts/native-revisions-20261021/replay.json",
+      "source_sha256": "27c8e1f5d2724eb77c170ce8a6f5c7a76646061900a6aa55cfa45d947d6a67ae",
+      "published_sha256": "27c8e1f5d2724eb77c170ce8a6f5c7a76646061900a6aa55cfa45d947d6a67ae",
+      "published_bytes": 56238,
+      "omitted_json_pointers": []
+    },
+    {
+      "path": "native-revisions-20261021/summary.json",
+      "source": "gpu-artifacts/native-revisions-20261021/summary.json",
+      "source_sha256": "fc438d7d024a436164681766640827dc83552ea6c61cb7358f540ced112480bb",
+      "published_sha256": "fc438d7d024a436164681766640827dc83552ea6c61cb7358f540ced112480bb",
+      "published_bytes": 10318,
+      "omitted_json_pointers": []
+    },
+    {
+      "path": "native-revisions-20261021/trial-summary.json",
+      "source": "gpu-artifacts/native-revisions-20261021/live-olt55681/trial-summary.json",
+      "source_sha256": "76980910beb09db6fbc213933c8f5db1cc27e904ee018262323567f5517a522f",
+      "published_sha256": "5d6563ff546db505b11d145f41071acd0586606320f3559fc09a0ee25ce27152",
+      "published_bytes": 3146,
+      "omitted_json_pointers": [
+        "/threads/0/tid",
+        "/threads/1/tid",
+        "/threads/2/tid",
+        "/threads/3/tid",
+        "/threads/4/tid"
+      ]
+    },
+    {
+      "path": "native-revisions-20261021/profile-summary.json",
+      "source": "gpu-artifacts/native-revisions-20261021/live-olt55681/profile-summary.json",
+      "source_sha256": "705d90e2cd26f3347db2ef9a1188179c4a40f217faaa2ba8c0b62fde9d38128b",
+      "published_sha256": "f7b728b526508ada6695729603c97e7305cb406bb91e69c326936f678efec539",
+      "published_bytes": 67943,
+      "omitted_json_pointers": [
+        "/configuration/record_command",
+        "/threads/0/tid",
+        "/threads/1/tid",
+        "/threads/2/tid",
+        "/threads/3/tid",
+        "/threads/4/tid"
+      ]
+    },
+    {
+      "path": "usb-reuse-20261021/packet-benchmark.json",
+      "source": "gpu-artifacts/usb-reuse-20261021/packet-benchmark.json",
+      "source_sha256": "695c0c3f96ea576101030846d3b6dc8a21ce6f2304ee1cb59068cca9068889b5",
+      "published_sha256": "695c0c3f96ea576101030846d3b6dc8a21ce6f2304ee1cb59068cca9068889b5",
+      "published_bytes": 5338,
+      "omitted_json_pointers": []
+    },
+    {
+      "path": "usb-reuse-20261021/trial-summary.json",
+      "source": "gpu-artifacts/usb-reuse-20261021/live-p0v63e_b/trial-summary.json",
+      "source_sha256": "31ebb9139e1bbc8fcd9c29a297f39f5bbdbb009899f03572386716e0c4347d2d",
+      "published_sha256": "bf23ca30c80d46b579731ffc47957b195818ebeae65b3b08962fa34f3f4b9aa0",
+      "published_bytes": 17643,
+      "omitted_json_pointers": [
+        "/runs/0/cpu/threads/0/tid",
+        "/runs/0/cpu/threads/1/tid",
+        "/runs/0/cpu/threads/2/tid",
+        "/runs/0/cpu/threads/3/tid",
+        "/runs/0/cpu/threads/4/tid",
+        "/runs/0/profile/record_command",
+        "/runs/1/cpu/threads/0/tid",
+        "/runs/1/cpu/threads/1/tid",
+        "/runs/1/cpu/threads/2/tid",
+        "/runs/1/cpu/threads/3/tid",
+        "/runs/1/cpu/threads/4/tid",
+        "/runs/1/cpu/threads/5/tid",
+        "/runs/2/cpu/threads/0/tid",
+        "/runs/2/cpu/threads/1/tid",
+        "/runs/2/cpu/threads/2/tid",
+        "/runs/2/cpu/threads/3/tid",
+        "/runs/2/cpu/threads/4/tid",
+        "/runs/2/cpu/threads/5/tid"
+      ]
+    },
+    {
+      "path": "usb-reuse-20261021/profile-summary.json",
+      "source": "gpu-artifacts/usb-reuse-20261021/live-p0v63e_b/profile-summary.json",
+      "source_sha256": "3669604b8e37fc3715d9135725b8ea962ff5df78991c67cc73dd9f90d9a1b8d5",
+      "published_sha256": "939e797ce7efdf986bd5c02281d452c2a48cf653c3caf7e77bcfced10396c823",
+      "published_bytes": 57240,
+      "omitted_json_pointers": [
+        "/configuration/record_command",
+        "/threads/0/tid",
+        "/threads/1/tid",
+        "/threads/2/tid",
+        "/threads/3/tid",
+        "/threads/4/tid"
+      ]
+    },
+    {
+      "path": "direct-20261021/combined-batching.json",
+      "source": "gpu-artifacts/direct-20261021/combined-batching/results.json",
+      "source_sha256": "a42f0084d9b2990bea636be93745f37b7dc42504f8ad87a48342a74cdc090f47",
+      "published_sha256": "704197259cb739c5651290b2aa7783d9560b0fe208712d0f6ce21e95ce9fdda0",
+      "published_bytes": 15088,
+      "omitted_json_pointers": [
+        "/trials/0/last_health/thread_cpu/0/tid",
+        "/trials/0/last_health/thread_cpu/1/tid",
+        "/trials/0/last_health/thread_cpu/2/tid",
+        "/trials/0/last_health/thread_cpu/3/tid",
+        "/trials/0/last_health/thread_cpu/4/tid",
+        "/trials/0/last_health/thread_cpu/5/tid",
+        "/trials/1/last_health/thread_cpu/0/tid",
+        "/trials/1/last_health/thread_cpu/1/tid",
+        "/trials/1/last_health/thread_cpu/2/tid",
+        "/trials/1/last_health/thread_cpu/3/tid",
+        "/trials/1/last_health/thread_cpu/4/tid",
+        "/trials/1/last_health/thread_cpu/5/tid",
+        "/trials/2/last_health/thread_cpu/0/tid",
+        "/trials/2/last_health/thread_cpu/1/tid",
+        "/trials/2/last_health/thread_cpu/2/tid",
+        "/trials/2/last_health/thread_cpu/3/tid",
+        "/trials/2/last_health/thread_cpu/4/tid",
+        "/trials/2/last_health/thread_cpu/5/tid",
+        "/trials/3/last_health/thread_cpu/0/tid",
+        "/trials/3/last_health/thread_cpu/1/tid",
+        "/trials/3/last_health/thread_cpu/2/tid",
+        "/trials/3/last_health/thread_cpu/3/tid",
+        "/trials/3/last_health/thread_cpu/4/tid",
+        "/trials/3/last_health/thread_cpu/5/tid"
+      ]
+    }
+  ]
+}

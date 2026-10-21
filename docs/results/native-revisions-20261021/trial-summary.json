@@ -1,0 +1,116 @@
+{
+  "source_run": "/var/tmp/vino-live-olt55681",
+  "user_report": "Finished; smooth",
+  "running_seconds": 120.016401603,
+  "exit": {
+    "captures": 6719,
+    "elapsed_s": 121.857483463,
+    "error": null,
+    "event": "exit",
+    "frames_submitted": 6248,
+    "monotonic_ns": 1629860680507192,
+    "ok": true,
+    "process_cpu_seconds": 14.563524977,
+    "superseded_captures": 825
+  },
+  "recovery": {
+    "service_result": "success",
+    "errors": [],
+    "restored": true,
+    "evdi_copy_rows_restored": 0
+  },
+  "cpu_window": {
+    "elapsed_s": [
+      1.830563699,
+      121.266742772
+    ],
+    "monotonic_ns": [
+      1629740653587708,
+      1629860089766711
+    ],
+    "seconds": 119.436179073,
+    "process_cpu_seconds": 14.325476831,
+    "cpu_percent_one_core": 11.994252446944234
+  },
+  "threads": [
+    {
+      "name": "worker",
+      "user_seconds": 7.29,
+      "kernel_seconds": 0.82,
+      "cpu_percent_one_core": 6.790237315816279
+    },
+    {
+      "name": "worker:disk$0",
+      "user_seconds": 0.0,
+      "kernel_seconds": 0.0,
+      "cpu_percent_one_core": 0.0
+    },
+    {
+      "name": "worker:disk$0",
+      "user_seconds": 0.0,
+      "kernel_seconds": 0.0,
+      "cpu_percent_one_core": 0.0
+    },
+    {
+      "name": "worker",
+      "user_seconds": 0.0,
+      "kernel_seconds": 0.0,
+      "cpu_percent_one_core": 0.0
+    },
+    {
+      "name": "vino-capture",
+      "user_seconds": 0.28,
+      "kernel_seconds": 5.94,
+      "cpu_percent_one_core": 5.207802232352313
+    }
+  ],
+  "frame_event_count": 6248,
+  "wire_presentations": 6250,
+  "usb_bytes": 530316576,
+  "gpu_totals": {
+    "dispatches": 3759,
+    "elapsed_s": 121.854031905,
+    "encoded_strips": 428763,
+    "event": "gpu_totals",
+    "monotonic_ns": 1629860677056025,
+    "stages": {
+      "cursor_upload_bytes": 1196032,
+      "direct_dispatches": 3759,
+      "fused_ms": 664.8654125172949,
+      "pack_ms": 0.0,
+      "pixel_upload_bytes": 0,
+      "readback_ms": 94.83874300000006,
+      "submit_wait_ms": 1478.7441330000004,
+      "transform_ms": 0.0,
+      "upload_ms": 9.440619999999985
+    }
+  },
+  "direct_path": {
+    "rgb_conversion_ms": 0.0,
+    "snapshot_bytes": 0,
+    "repair_bytes": 0,
+    "pool_exhaustions": 0,
+    "pool_peak_leases": 3
+  },
+  "timing": {
+    "capture_age_p95_ms": 14.6316325,
+    "capture_age_max_ms": 16.664192,
+    "post_setup_encode_max_ms": 3.407565,
+    "post_setup_usb_max_ms": 11.379682,
+    "health_max_gap_s": 1.0358823799999999
+  },
+  "sensor": {
+    "reported_watts_mean": 23.436193277310924,
+    "temperature_c_mean": 60.05042016806723,
+    "scope": "Whole AMD device; not Vino alone or whole-laptop power"
+  },
+  "previous_manual_run_context": {
+    "source": "gpu-artifacts/usb-reuse-20261021/live-p0v63e_b",
+    "cpu_percent_one_core": 14.939746766302683,
+    "captures": 5538,
+    "submitted_frames": 5106,
+    "comparison": "Different freely used desktop activity; not a matched CPU/power benchmark"
+  },
+  "timing_note": "Frame intervals include intentional unchanged-content skips; not a rendered-FPS measurement",
+  "build_sha256": "40e3f25607490ac0e7f5f7e3e8d0516d02288b8efff0ca632066080c8bf8795b"
+}

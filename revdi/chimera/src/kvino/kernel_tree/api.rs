@@ -111,6 +111,10 @@ pub fn heartbeat(counter: u16) -> Result<Vec<u8>> {
     Ok(cp::heartbeat(counter)?.into_vec())
 }
 
+pub fn session_hello(counter: u16) -> [u8; 32] {
+    cp::session_hello(counter)
+}
+
 pub fn stream_marker(counter: u16, head: u8, sub: u16, state: u8) -> Result<Vec<u8>> {
     Ok(cp::stream_marker(counter, head, sub, state)?.into_vec())
 }
@@ -245,6 +249,14 @@ pub fn connector_marker(dock: DockProfile, content: &mut [u8], head: u8) {
 pub fn perhead_push(ks: &[u8; 16], out_riv: &[u8; 8], wire: &[u8]) -> Option<(u8, Vec<u8>)> {
     let push = cp::per_connector_hdcp_push(ks, out_riv, wire)?;
     Some((push.msg_id, push.payload[..push.payload_len].to_vec()))
+}
+
+/// Printable firmware status text; sealed replies require a valid authentication tag.
+/// The native decoder also accepts plaintext-framed replies from Navarro.
+pub fn dock_trace_line(ks: &[u8; 16], riv: &[u8; 8], wire: &[u8]) -> Option<String> {
+    let inner = cp::inner_plaintext(ks, riv, wire)?;
+    let line = cp::dock_trace_line(&inner)?;
+    String::from_utf8(line.into_vec()).ok()
 }
 
 /// The fresh per-head `rrx` from an `AKE_Send_rrx` push, if this frame is one.
@@ -398,6 +410,18 @@ impl DockProfile {
         self.profile.topology.video_on_ctrl_pipe
     }
 
+    pub fn split_full_packet_frame(&self) -> bool {
+        self.profile.quirks.split_full_packet_frame
+    }
+
+    pub fn setup_polls_before_open(&self, head: u8) -> u8 {
+        self.profile.protocol.setup_polls.before_open(head)
+    }
+
+    pub fn setup_polls_after_opens(&self) -> u8 {
+        self.profile.protocol.setup_polls.after_stream_opens
+    }
+
     /// How many buffers the dock rotates through as it presents frames.
     pub fn dock_buffers(&self) -> u32 {
         u32::from(self.profile.protocol.dock_buffers)
@@ -431,6 +455,13 @@ impl DockProfile {
     pub fn strip_dims(&self) -> (usize, usize) {
         let geom = self.geometry();
         (geom.strip_w(), geom.strip_h())
+    }
+
+    /// Whole-band permutation used by the native generic framer, when it has one.
+    /// Match the native layout predicate; the permutation itself stays in the vendored source.
+    pub fn frame_band_order(&self) -> Option<&'static [u8]> {
+        let geometry = self.geometry();
+        (geometry.interlaced_bands && geometry.strip_w() == 64).then(video::haar::ella_rows_1080p)
     }
 
     /// Shortest interval between two frames on one connector, in milliseconds.
@@ -717,25 +748,22 @@ pub fn encode_strip(
 
 /// `video::haar::frame_records` -- frame encoded strip bodies into video records.
 ///
-/// The generic interlaced order, on every dock and for every frame.
+/// The native generic order, including Ella's measured band permutation.
 ///
 /// The driver has a second order for a whole surface on a dock that selects its connectors by
 /// shift -- the vendor's measured producer permutation, which splits particular bands at particular
 /// columns. Using it here blanks the dock: it describes the strips in the order the driver's own
 /// full-surface path produces them, and the strips reaching this function do not arrive in that
 /// order. Reproducing it needs the producing side to match first.
-pub fn frame_records(dock: DockProfile, strips: &[Vec<u8>], head: u8) -> Result<Vec<Vec<u8>>> {
-    let owned: Vec<KVec<u8>> = strips
-        .iter()
-        .map(|s| {
-            let mut k = KVec::with_capacity(s.len(), GFP_KERNEL)?;
-            k.extend_from_slice(s, GFP_KERNEL)?;
-            Ok(k)
-        })
-        .collect::<Result<Vec<_>>>()?;
+pub fn frame_records<S: AsRef<[u8]>>(
+    dock: DockProfile,
+    strips: &[S],
+    head: u8,
+) -> Result<Vec<Vec<u8>>> {
+    let borrowed: Vec<&[u8]> = strips.iter().map(AsRef::as_ref).collect();
     Ok(frames_out(video::haar::frame_records(
         dock.geometry(),
-        &owned,
+        &borrowed,
         head,
     )?))
 }
@@ -1007,6 +1035,35 @@ pub fn stream_prefix(
         return Ok(Vec::new());
     }
     navarro_prologue(dock, head, key, nonce, seal_seq, width, height)
+}
+
+/// Content-stream announcement sent immediately after the downstream Stream_Manage restatement.
+pub fn content_stream_announcement(dock: DockProfile, head: u8) -> Option<[u8; 32]> {
+    dock.video_on_ctrl_pipe()
+        .then(|| cp::stream_announce(dock.geometry().stream_id(head), cp::STREAM_ANNOUNCE_MARKER))
+}
+
+/// Ella opens its sealed stream during setup, before the mode-set decoder configuration.
+/// Return separate records so the caller preserves the vendor's two USB transfers.
+pub fn shared_stream_open(
+    dock: DockProfile,
+    head: u8,
+    key: &[u8; 16],
+    nonce: &[u8; 8],
+    seal_seq: &mut u32,
+) -> Result<(Vec<u8>, [u8; 32])> {
+    let content = cp::stream_open(dock.stream_marker_kind());
+    let seq = take_blocks(seal_seq, content.len());
+    let open = cp::seal_video_arm(
+        key,
+        nonce,
+        dock.geometry().stream_id(head),
+        0x000a,
+        seq,
+        &content,
+    )?;
+    let announce = cp::stream_announce(u16::from(dock.geometry().connector_selector(head)), 0);
+    Ok((open.into_vec(), announce))
 }
 
 /// The DL7400 stream prologue: two announcements, the sealed pipe descriptor, the frame
@@ -1298,6 +1355,24 @@ impl From<vino_driver::Family> for Family {
 mod production_builders {
     use super::*;
 
+    #[test]
+    fn firmware_trace_requires_a_valid_reply_tag() {
+        let key = [0x5a; 16];
+        let nonce = [0x11; 8];
+        let mut body = [0; 32];
+        body[..2].copy_from_slice(&0x14u16.to_le_bytes());
+        body[2..4].copy_from_slice(&0x0cu16.to_le_bytes());
+        body[8..22].copy_from_slice(b"decoder failed");
+        let mut wire = seal_interactive(&key, &nonce, 0x14, 7, &body).unwrap();
+        wire[8..10].copy_from_slice(&0x45u16.to_le_bytes());
+        assert_eq!(
+            dock_trace_line(&key, &nonce, &wire).as_deref(),
+            Some("decoder failed")
+        );
+        *wire.last_mut().unwrap() ^= 1;
+        assert_eq!(dock_trace_line(&key, &nonce, &wire), None);
+    }
+
     fn ridge() -> DockProfile {
         DockProfile::for_family(Family::Ridge).expect("Ridge is a family vino drives")
     }
@@ -1311,11 +1386,16 @@ mod production_builders {
     /// a new call site is added that hardcodes the depth instead of reading it.
     #[test]
     fn the_stream_prologue_states_the_link_depth() {
-        let deep = DockProfile::for_family(Family::Navarro).expect("Navarro").ten_bit();
+        let deep = DockProfile::for_family(Family::Navarro)
+            .expect("Navarro")
+            .ten_bit();
         let shallow = DockProfile::for_family(Family::Navarro).expect("Navarro");
         assert!(deep.is_ten_bit() && !shallow.is_ten_bit());
         assert!(matches!(deep.geometry().depth(), video::haar::Depth::Ten));
-        assert!(matches!(shallow.geometry().depth(), video::haar::Depth::Eight));
+        assert!(matches!(
+            shallow.geometry().depth(),
+            video::haar::Depth::Eight
+        ));
 
         let key = [0u8; 16];
         let nonce = [0u8; 8];
@@ -1434,18 +1514,30 @@ mod production_builders {
         // A dock that shares its pipes carries nothing with the frame: its ring descriptor and
         // decoder configuration are ordinary control records inside the mode-set bracket.
         let ella = DockProfile::for_family(Family::Ella).expect("Ella");
+        for head in 0..2 {
+            let announcement = content_stream_announcement(ella, head).unwrap();
+            assert_eq!(&announcement[8..12], &[8 | head, 0, 0, 0]);
+            assert_eq!(&announcement[16..20], &[8 | head, 0, 6, 0]);
+        }
+        assert!(content_stream_announcement(ridge, 0).is_none());
         let mut ella_seq = 0;
+        let (open, announce) = shared_stream_open(ella, 0, &key, &nonce, &mut ella_seq).unwrap();
+        assert_eq!(open.len(), 48);
+        assert_eq!(&open[8..12], &[0x08, 0, 0x0a, 0]);
+        assert_eq!(&open[12..16], &0u32.to_le_bytes());
+        assert_eq!(ella_seq, 1);
+        assert_eq!(announce, cp::stream_announce(0, 0));
         assert!(
             stream_prefix(ella, 0, &key, &nonce, &mut ella_seq, 1920, 1080)
                 .unwrap()
                 .is_empty()
         );
         assert_eq!(stream_ring_record(ella, 0).map(|r| r.len()), Some(48));
-        assert!(
-            stream_config_message(ella, 0, &key, &nonce, &mut ella_seq, 1920, 1080)
-                .unwrap()
-                .is_some()
-        );
+        let config = stream_config_message(ella, 0, &key, &nonce, &mut ella_seq, 1920, 1080)
+            .unwrap()
+            .unwrap();
+        assert_eq!(&config[12..16], &1u32.to_le_bytes());
+        assert_eq!(ella_seq, 20); // One open block plus the nineteen config blocks.
     }
 
     /// A frame's report is the record that keeps the dock believing in the stream.

@@ -1,0 +1,62 @@
+#version 450
+// Exact logical RGB comparison, one workgroup per 64x16 strip. Both inputs
+// remain in their immutable native capture allocations; only these flags return
+// to the CPU. Each lane visits a column, coalescing reads across the workgroup.
+layout(local_size_x=64) in;
+layout(set=0,binding=0,std430) readonly buffer Previous { uint previous_pixels[]; };
+layout(set=0,binding=1,std430) readonly buffer Current { uint current_pixels[]; };
+layout(set=0,binding=2,std430) readonly buffer PreviousCursor { uint previous_cursor[]; };
+layout(set=0,binding=3,std430) readonly buffer CurrentCursor { uint current_cursor[]; };
+layout(set=0,binding=4,std430) writeonly buffer Changes { uint changed_strips[]; };
+layout(push_constant) uniform Parameters {
+    uint columns; uint strips; uint groups_x;
+    uint previous_stride; uint previous_height;
+    uint current_stride; uint current_height;
+    int previous_x; int previous_y;
+    uint previous_width; uint previous_cursor_height; uint previous_cursor_stride;
+    int current_x; int current_y;
+    uint current_width; uint current_cursor_height; uint current_cursor_stride;
+} pc;
+shared uint changed;
+
+uint blend(uint background,uint cursor) {
+    uint alpha=cursor>>24;
+    uvec3 rgb=uvec3((background>>16)&255u,(background>>8)&255u,background&255u);
+    uvec3 foreground=uvec3((cursor>>16)&255u,(cursor>>8)&255u,cursor&255u);
+    uvec3 mixed=rgb*(255u-alpha)+foreground*alpha;
+    rgb=(mixed+((mixed+uvec3(1))<<8))>>16;
+    return (rgb.x<<16)|(rgb.y<<8)|rgb.z;
+}
+uint previous_colour(uvec2 p) {
+    // Codec padding is black, including cursor coverage in those rows.
+    if (p.y>=pc.previous_height) return 0;
+    uint rgb=previous_pixels[p.y*pc.previous_stride+p.x]&0x00ffffffu;
+    uvec2 at=p-uvec2(pc.previous_x,pc.previous_y);
+    if (all(lessThan(at,uvec2(pc.previous_width,pc.previous_cursor_height))))
+        rgb=blend(rgb,previous_cursor[at.y*pc.previous_cursor_stride+at.x]);
+    return rgb;
+}
+uint current_colour(uvec2 p) {
+    if (p.y>=pc.current_height) return 0;
+    uint rgb=current_pixels[p.y*pc.current_stride+p.x]&0x00ffffffu;
+    uvec2 at=p-uvec2(pc.current_x,pc.current_y);
+    if (all(lessThan(at,uvec2(pc.current_width,pc.current_cursor_height))))
+        rgb=blend(rgb,current_cursor[at.y*pc.current_cursor_stride+at.x]);
+    return rgb;
+}
+void main() {
+    uint strip=gl_WorkGroupID.y*pc.groups_x+gl_WorkGroupID.x;
+    if (strip>=pc.strips) return;
+    uint lane=gl_LocalInvocationID.x;
+    if (lane==0) changed=0;
+    barrier();
+    uvec2 p=uvec2((strip%pc.columns)*64+lane,(strip/pc.columns)*16);
+    for (uint y=0;y<16;y++) {
+        if (previous_colour(p+uvec2(0,y))!=current_colour(p+uvec2(0,y))) {
+            atomicOr(changed,1u);
+            break;
+        }
+    }
+    barrier();
+    if (lane==0) changed_strips[strip]=changed;
+}

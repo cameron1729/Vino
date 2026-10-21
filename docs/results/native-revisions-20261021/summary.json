@@ -1,0 +1,312 @@
+{
+  "scope": "Private RAM replay including simulated dirty capture writes, snapshot/repair, comparison, planning, GPU encoding and framing; compares copied input, original direct comparison plus hashing, and exact native strip revisions; excludes EVDI kernel, compositor, USB and physical display",
+  "geometry": [
+    1920,
+    1080
+  ],
+  "warmup_frames": 16,
+  "output_matches": true,
+  "cases": {
+    "idle": {
+      "paths": {
+        "direct": {
+          "rounds": 3,
+          "frames_per_round": 96,
+          "median_ms_per_frame": {
+            "comparison_ms": 0.2612936979166667,
+            "cpu_ms": 0.6406971250000014,
+            "elapsed_ms": 0.6393622916666667,
+            "encoding_framing_ms": 0.00016861458333333336,
+            "planning_ms": 0.003465208333333334,
+            "repair_ms": 0.0026954791666666668,
+            "simulated_grab_ms": 0.36944623958333334,
+            "snapshot_ms": 0.0
+          },
+          "cpu_ms_per_frame_by_round": [
+            0.5619893541666645,
+            0.7292975416666702,
+            0.6406971250000014
+          ]
+        },
+        "direct-revisions": {
+          "rounds": 3,
+          "frames_per_round": 96,
+          "median_ms_per_frame": {
+            "comparison_ms": 0.29221019791666675,
+            "cpu_ms": 0.6821626770833292,
+            "elapsed_ms": 0.6805715833333333,
+            "encoding_framing_ms": 0.0002331770833333334,
+            "planning_ms": 0.004248166666666667,
+            "repair_ms": 0.002926385416666666,
+            "simulated_grab_ms": 0.3815353020833334,
+            "snapshot_ms": 0.0
+          },
+          "cpu_ms_per_frame_by_round": [
+            0.6444011874999985,
+            0.6821626770833292,
+            0.7018179791666578
+          ]
+        }
+      },
+      "median_cpu_saving_percent": -6.4719428986555405
+    },
+    "small": {
+      "paths": {
+        "direct": {
+          "rounds": 3,
+          "frames_per_round": 96,
+          "median_ms_per_frame": {
+            "comparison_ms": 0.00023778125000000006,
+            "cpu_ms": 1.1136870937499925,
+            "elapsed_ms": 1.2400010104166663,
+            "encoding_framing_ms": 0.1684318437500001,
+            "planning_ms": 1.0711698437499995,
+            "repair_ms": 0.0023918125000000003,
+            "simulated_grab_ms": 0.0004441562500000003,
+            "snapshot_ms": 0.0
+          },
+          "cpu_ms_per_frame_by_round": [
+            1.1136870937499925,
+            1.1425194270833334,
+            1.0617457395833014
+          ]
+        },
+        "direct-revisions": {
+          "rounds": 3,
+          "frames_per_round": 96,
+          "median_ms_per_frame": {
+            "comparison_ms": 0.26617195833333324,
+            "cpu_ms": 0.31681604166664573,
+            "elapsed_ms": 0.4696801458333331,
+            "encoding_framing_ms": 0.21039475000000005,
+            "planning_ms": 0.003320822916666667,
+            "repair_ms": 0.0026502291666666666,
+            "simulated_grab_ms": 0.00042310416666666646,
+            "snapshot_ms": 0.0
+          },
+          "cpu_ms_per_frame_by_round": [
+            0.31681604166664573,
+            0.317020583333336,
+            0.2947130624999706
+          ]
+        }
+      },
+      "median_cpu_saving_percent": 71.55250846987309
+    },
+    "scroll": {
+      "paths": {
+        "direct": {
+          "rounds": 3,
+          "frames_per_round": 96,
+          "median_ms_per_frame": {
+            "comparison_ms": 0.0009894895833333333,
+            "cpu_ms": 4.079071458333327,
+            "elapsed_ms": 6.116940583333334,
+            "encoding_framing_ms": 4.340557854166665,
+            "planning_ms": 1.1412553541666663,
+            "repair_ms": 0.005537718749999999,
+            "simulated_grab_ms": 0.6237322708333334,
+            "snapshot_ms": 0.0
+          },
+          "cpu_ms_per_frame_by_round": [
+            4.079071458333327,
+            3.87014549999995,
+            4.228428447916684
+          ]
+        },
+        "direct-revisions": {
+          "rounds": 3,
+          "frames_per_round": 96,
+          "median_ms_per_frame": {
+            "comparison_ms": 0.06751218749999999,
+            "cpu_ms": 2.8526252083333503,
+            "elapsed_ms": 4.877641906250001,
+            "encoding_framing_ms": 4.189363166666667,
+            "planning_ms": 0.00491159375,
+            "repair_ms": 0.005483322916666666,
+            "simulated_grab_ms": 0.5822326562500001,
+            "snapshot_ms": 0.0
+          },
+          "cpu_ms_per_frame_by_round": [
+            2.8526252083333503,
+            2.913996718749966,
+            2.8016413750000217
+          ]
+        }
+      },
+      "median_cpu_saving_percent": 30.066799822651102
+    },
+    "motion": {
+      "paths": {
+        "direct": {
+          "rounds": 3,
+          "frames_per_round": 96,
+          "median_ms_per_frame": {
+            "comparison_ms": 0.00067053125,
+            "cpu_ms": 2.6410009791667526,
+            "elapsed_ms": 3.960851947916668,
+            "encoding_framing_ms": 2.3206561666666667,
+            "planning_ms": 1.082448760416667,
+            "repair_ms": 0.004673156250000002,
+            "simulated_grab_ms": 0.5515973333333332,
+            "snapshot_ms": 0.0
+          },
+          "cpu_ms_per_frame_by_round": [
+            2.6653240729166896,
+            2.6326631875000053,
+            2.6410009791667526
+          ]
+        },
+        "direct-revisions": {
+          "rounds": 3,
+          "frames_per_round": 96,
+          "median_ms_per_frame": {
+            "comparison_ms": 0.03234039583333333,
+            "cpu_ms": 1.4699586562499956,
+            "elapsed_ms": 2.7785635312500006,
+            "encoding_framing_ms": 2.218041708333333,
+            "planning_ms": 0.0036205520833333337,
+            "repair_ms": 0.0036224270833333347,
+            "simulated_grab_ms": 0.5198929479166668,
+            "snapshot_ms": 0.0
+          },
+          "cpu_ms_per_frame_by_round": [
+            1.5192252916666387,
+            1.4699586562499956,
+            1.455674729166617
+          ]
+        }
+      },
+      "median_cpu_saving_percent": 44.34085152388796
+    },
+    "noise": {
+      "paths": {
+        "direct": {
+          "rounds": 3,
+          "frames_per_round": 96,
+          "median_ms_per_frame": {
+            "comparison_ms": 0.0010439791666666664,
+            "cpu_ms": 4.83838076041665,
+            "elapsed_ms": 7.001224999999995,
+            "encoding_framing_ms": 5.139403687499999,
+            "planning_ms": 1.2028001145833334,
+            "repair_ms": 0.005968583333333336,
+            "simulated_grab_ms": 0.6533952708333334,
+            "snapshot_ms": 0.0
+          },
+          "cpu_ms_per_frame_by_round": [
+            4.83838076041665,
+            4.820028385416815,
+            4.996818989583308
+          ]
+        },
+        "direct-revisions": {
+          "rounds": 3,
+          "frames_per_round": 96,
+          "median_ms_per_frame": {
+            "comparison_ms": 0.05531031249999999,
+            "cpu_ms": 3.6830899479166987,
+            "elapsed_ms": 5.864799302083335,
+            "encoding_framing_ms": 5.170744822916668,
+            "planning_ms": 0.005068395833333332,
+            "repair_ms": 0.005697499999999999,
+            "simulated_grab_ms": 0.6232510624999997,
+            "snapshot_ms": 0.0
+          },
+          "cpu_ms_per_frame_by_round": [
+            3.6830899479166987,
+            3.709058833333207,
+            3.6819013854166847
+          ]
+        }
+      },
+      "median_cpu_saving_percent": 23.877633235307126
+    },
+    "cursor": {
+      "paths": {
+        "direct": {
+          "rounds": 3,
+          "frames_per_round": 96,
+          "median_ms_per_frame": {
+            "comparison_ms": 0.3467780729166667,
+            "cpu_ms": 1.2169139687504185,
+            "elapsed_ms": 1.3025385624999999,
+            "encoding_framing_ms": 0.13787852083333335,
+            "planning_ms": 0.4496258124999999,
+            "repair_ms": 0.004113104166666668,
+            "simulated_grab_ms": 0.38400158333333323,
+            "snapshot_ms": 0.0
+          },
+          "cpu_ms_per_frame_by_round": [
+            1.18264695833318,
+            1.3158919583332818,
+            1.2169139687504185
+          ]
+        },
+        "direct-revisions": {
+          "rounds": 3,
+          "frames_per_round": 96,
+          "median_ms_per_frame": {
+            "comparison_ms": 0.41738033333333324,
+            "cpu_ms": 0.8417368229167247,
+            "elapsed_ms": 0.9327390520833334,
+            "encoding_framing_ms": 0.1498275520833334,
+            "planning_ms": 0.004472041666666665,
+            "repair_ms": 0.003874625000000001,
+            "simulated_grab_ms": 0.36243643750000004,
+            "snapshot_ms": 0.0
+          },
+          "cpu_ms_per_frame_by_round": [
+            0.8417368229167247,
+            0.8383440729165841,
+            0.8906625624998696
+          ]
+        }
+      },
+      "median_cpu_saving_percent": 30.830211129792715
+    },
+    "cursor-only": {
+      "paths": {
+        "direct": {
+          "rounds": 3,
+          "frames_per_round": 96,
+          "median_ms_per_frame": {
+            "comparison_ms": 3.516666666666671e-05,
+            "cpu_ms": 0.44131593750004566,
+            "elapsed_ms": 0.5368896875000001,
+            "encoding_framing_ms": 0.11702074999999995,
+            "planning_ms": 0.41826918750000003,
+            "repair_ms": 0.0,
+            "simulated_grab_ms": 0.0,
+            "snapshot_ms": 0.0
+          },
+          "cpu_ms_per_frame_by_round": [
+            0.44131593750004566,
+            0.5383338229167217,
+            0.42492131250022186
+          ]
+        },
+        "direct-revisions": {
+          "rounds": 3,
+          "frames_per_round": 96,
+          "median_ms_per_frame": {
+            "comparison_ms": 0.0007250312500000004,
+            "cpu_ms": 0.019887822916568137,
+            "elapsed_ms": 0.0881971666666667,
+            "encoding_framing_ms": 0.08470060416666668,
+            "planning_ms": 0.002514624999999999,
+            "repair_ms": 0.0,
+            "simulated_grab_ms": 0.0,
+            "snapshot_ms": 0.0
+          },
+          "cpu_ms_per_frame_by_round": [
+            0.020603822916693087,
+            0.019887822916568137,
+            0.01647442708338076
+          ]
+        }
+      },
+      "median_cpu_saving_percent": 95.49351808384077
+    }
+  }
+}

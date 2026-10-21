@@ -18,6 +18,7 @@ mod ffi;
 pub mod safe;
 mod uapi;
 
+use core::cell::Cell;
 use core::ffi::{c_char, c_int, c_uint, c_void};
 use std::ffi::{CStr, CString};
 use std::fs;
@@ -146,6 +147,8 @@ pub struct evdi_device_context {
     buffer_to_update: c_int,
     frame_buffers: Vec<evdi_buffer>,
     device_index: c_int,
+    // Tracks successful cursor policy requests and the C ABI's bitmap-mapping fallback.
+    cursor_events_enabled: Cell<bool>,
 }
 
 pub type evdi_handle = *mut evdi_device_context;
@@ -595,6 +598,7 @@ pub extern "C" fn evdi_open(device: c_int) -> evdi_handle {
         buffer_to_update: 0,
         frame_buffers: Vec::new(),
         device_index: device,
+        cursor_events_enabled: Cell::new(false),
     });
     GLOBALS.lock().unwrap().card_in_use[device as usize] = true;
     evdi_log!("Using /dev/dri/card{device}");
@@ -780,12 +784,13 @@ pub unsafe extern "C" fn evdi_enable_cursor_events(handle: evdi_handle, enable: 
         },
         enable: enable as u8,
     };
-    do_ioctl(
+    let result = do_ioctl(
         ctx.fd,
         uapi::ioctl_enable_cursor_events(),
         (&mut cmd as *mut uapi::DrmEvdiEnableCursorEvents).cast(),
         "enable cursor events",
     );
+    ctx.cursor_events_enabled.set(enable && result == 0);
 }
 
 /// # Safety
@@ -797,19 +802,28 @@ pub unsafe extern "C" fn evdi_grab_pixels(
     rects: *mut evdi_rect,
     num_rects: *mut c_int,
 ) {
+    let _ = grab_pixels_checked(handle, rects, num_rects);
+}
+
+/// Internal checked entry point for the owned Rust client; the public C ABI remains void.
+unsafe fn grab_pixels_checked(
+    handle: evdi_handle,
+    rects: *mut evdi_rect,
+    num_rects: *mut c_int,
+) -> Result<(), c_int> {
     // Guard once up front: every exit path below writes through `num_rects`.
     if num_rects.is_null() {
-        return;
+        return Err(22);
     }
     let Some(ctx) = ctx(handle) else {
         *num_rects = 0;
-        return;
+        return Err(22);
     };
 
     let Some(dest) = find_buffer(ctx, ctx.buffer_to_update).copied() else {
         evdi_log!("Buffer {} not found. Not grabbing.", ctx.buffer_to_update);
         *num_rects = 0;
-        return;
+        return Err(22);
     };
 
     let mut kernel_dirts = [uapi::DrmClipRect::default(); MAX_DIRTS];
@@ -840,10 +854,13 @@ pub unsafe extern "C" fn evdi_grab_pixels(
             };
         }
         *num_rects = grab.num_rects;
+        Ok(())
     } else {
+        let errno = ffi::errno();
         evdi_log!("Grabbing pixels for buffer {} failed.", dest.id);
         evdi_log!("Ignore if caused by change of mode.");
         *num_rects = 0;
+        Err(errno)
     }
 }
 
@@ -868,7 +885,13 @@ pub unsafe extern "C" fn evdi_unregister_buffer(handle: evdi_handle, buffer_id: 
 /// `handle` must be live.
 #[no_mangle]
 pub unsafe extern "C" fn evdi_request_update(handle: evdi_handle, buffer_id: c_int) -> bool {
-    let Some(ctx) = ctx(handle) else { return false };
+    request_update_checked(handle, buffer_id).unwrap_or(false)
+}
+
+unsafe fn request_update_checked(handle: evdi_handle, buffer_id: c_int) -> Result<bool, c_int> {
+    let Some(ctx) = ctx(handle) else {
+        return Err(22);
+    };
     ctx.buffer_to_update = buffer_id;
     let mut cmd = uapi::DrmEvdiRequestUpdate::default();
     let result = do_ioctl(
@@ -877,7 +900,11 @@ pub unsafe extern "C" fn evdi_request_update(handle: evdi_handle, buffer_id: c_i
         (&mut cmd as *mut uapi::DrmEvdiRequestUpdate).cast(),
         "request_update",
     );
-    result == 1
+    if result < 0 {
+        Err(ffi::errno())
+    } else {
+        Ok(result == 1)
+    }
 }
 
 /// # Safety
@@ -967,26 +994,25 @@ unsafe fn to_evdi_cursor_set(
                 }
                 ffi::munmap(ptr, size);
             } else {
-                evdi_log!("Error: mmap failed");
+                evdi_log!(
+                    "Error: cursor mmap failed (handle {}, length {}, errno {})",
+                    ev.buffer_handle,
+                    ev.buffer_length,
+                    ffi::errno()
+                );
             }
         } else {
-            evdi_log!("Error: DRM_IOCTL_MODE_MAP_DUMB failed");
-        }
-        // The kernel mints a fresh GEM handle for every CURSOR_SET; we own it now and have our
-        // own copy of the bitmap (the compositor still pins the BO via its plane state), so
-        // close it — otherwise this file's handle table grows by one per cursor change for the
-        // life of the session. Upstream libevdi leaks these; we don't have to.
-        if ev.buffer_handle != 0 {
-            let mut gem_close = ffi::DrmGemClose {
-                handle: ev.buffer_handle,
-                pad: 0,
-            };
-            ffi::drm_ioctl(
-                ctx.fd,
-                ffi::drm_ioctl_gem_close(),
-                (&mut gem_close as *mut ffi::DrmGemClose).cast(),
+            evdi_log!(
+                "Error: cursor DRM_IOCTL_MODE_MAP_DUMB failed (handle {}, length {})",
+                ev.buffer_handle,
+                ev.buffer_length
             );
         }
+        // EVDI's evdi_painter_get_gem_handle reuses the existing handle for a cursor
+        // object. Other queued (or concurrently generated) events can already refer
+        // to it, so this event does not own a handle reference we can GEM_CLOSE.
+        // Keep it valid until evdi_close closes the DRM fd and releases its handles.
+        // Always copy the current bitmap: reusing a handle does not make it immutable.
     }
     cs
 }
@@ -1082,6 +1108,7 @@ unsafe fn dispatch_event(
                 if cs.enabled != 0 && cs.buffer.is_null() {
                     evdi_log!("Error: Cursor buffer is null!");
                     evdi_log!("Disabling cursor events");
+                    ctx.cursor_events_enabled.set(false);
                     // The handle is shared &; re-issue the ioctl directly.
                     let mut cmd = uapi::DrmEvdiEnableCursorEvents {
                         base: uapi::DrmEvent {

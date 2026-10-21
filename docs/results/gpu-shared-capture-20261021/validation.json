@@ -1,0 +1,35 @@
+{
+  "timestamp_utc": "2026-10-21T00:22:16.704220+00:00",
+  "rust": {
+    "chimera_unit_passed": 83,
+    "native_revision_integration_passed": 5,
+    "evdi_client_passed": 16,
+    "gpu_library_unit_passed": 7,
+    "worker_argument_passed": 2
+  },
+  "python_tests_passed": 132,
+  "kernel_host_checks_passed": 47,
+  "kernel_builds_passed": [
+    "original",
+    "candidate"
+  ],
+  "gpu_scalar_comparison_checks": 71,
+  "private_gpu_dma_copies": 28,
+  "private_gpu_compare_checks": 22,
+  "private_gpu_encode_checks": 2,
+  "private_gpu_producer_checks": 4,
+  "vulkan_validation_errors": 0,
+  "replay_output_matches": true,
+  "replay_samples": 78,
+  "live_shared_capture_tested": false,
+  "module_installed_or_loaded": false,
+  "prepared_kernel": "gpu-artifacts/shared-capture-20261021/kernel/prepared-proxy",
+  "candidate_srcversion": "9F72611562082A8AFD64D95",
+  "candidate_sha256": "76a7b666b389553cb3bdc02dc1dd8fee9f636c8f200e1a0816ed6f7ae36a9f00",
+  "worker_sha256": "5c21e786a1e935227821f58d5a2301930daa724b4f5a0efd4c5e5ab962a0bd85",
+  "notes": [
+    "GPU private checks use private buffers and do not prove live kernel interoperability",
+    "Whole Python suite needs private Xvfb and D-Bus outside the sandbox",
+    "Module recovery state models passed; new live module recovery remains untested"
+  ]
+}

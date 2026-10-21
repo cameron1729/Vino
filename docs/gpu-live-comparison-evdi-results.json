@@ -1,0 +1,590 @@
+{
+  "source_run": "/var/tmp/vino-compare-toc_di9u",
+  "status": "Execution and recovery succeeded; final official idle sample excluded for screen-lock overlap",
+  "comparison_start": "2026-10-20T19:56:59.727385+08:00",
+  "comparison_finish": "2026-10-20T20:12:29.317430+08:00",
+  "duration_seconds": 929.5900447368622,
+  "first_lock_greeter_log": "2026-10-20T20:12:01.018697+08:00",
+  "first_lock_greeter_log_monotonic_s": 1588243.291505,
+  "lock_observation_note": "This is the greeter's first recorded startup message, not an instrumented lock-state transition",
+  "raw_samples": 18,
+  "retained_samples": 17,
+  "active_samples_retained": 12,
+  "excluded_samples": [
+    {
+      "block": "block-05",
+      "condition": "official-evdi-0",
+      "case": "idle",
+      "repeat": 1,
+      "driver_cpu_percent_one_core": 7.589178397469734,
+      "display_stack_cpu_percent_one_core": 10.422433978003786,
+      "background_cpu_cores": 0.7730849176276889,
+      "amd_reported_watts": 11.41578242277231,
+      "input_rate": 0.0,
+      "vino_changed_updates": null,
+      "monitor_fps_verified": false,
+      "start_monotonic_s": 1588241.512113837,
+      "end_monotonic_s": 1588271.512175976,
+      "exclusion": "Screen-lock greeter startup occurred during the measurement"
+    }
+  ],
+  "per_run": [
+    {
+      "block": "block-00",
+      "condition": "official-evdi-0",
+      "case": "idle",
+      "repeat": 0,
+      "driver_cpu_percent_one_core": 1.1499881247680708,
+      "display_stack_cpu_percent_one_core": 1.783307575284307,
+      "background_cpu_cores": 0.5528210817662357,
+      "amd_reported_watts": 9.024151359280363,
+      "input_rate": 0.0,
+      "vino_changed_updates": null,
+      "monitor_fps_verified": false,
+      "start_monotonic_s": 1587373.335287312,
+      "end_monotonic_s": 1587403.335351121
+    },
+    {
+      "block": "block-00",
+      "condition": "official-evdi-0",
+      "case": "scroll",
+      "repeat": 0,
+      "driver_cpu_percent_one_core": 40.78062906431268,
+      "display_stack_cpu_percent_one_core": 49.61371743686192,
+      "background_cpu_cores": 0.6924965289064904,
+      "amd_reported_watts": 14.751904051385393,
+      "input_rate": 19.999955,
+      "vino_changed_updates": null,
+      "monitor_fps_verified": false,
+      "start_monotonic_s": 1587418.526070677,
+      "end_monotonic_s": 1587448.526138572
+    },
+    {
+      "block": "block-00",
+      "condition": "official-evdi-0",
+      "case": "motion",
+      "repeat": 0,
+      "driver_cpu_percent_one_core": 22.211318198382067,
+      "display_stack_cpu_percent_one_core": 31.210958206478523,
+      "background_cpu_cores": 0.6768508588205734,
+      "amd_reported_watts": 11.927341955737724,
+      "input_rate": 19.999926,
+      "vino_changed_updates": null,
+      "monitor_fps_verified": false,
+      "start_monotonic_s": 1587463.708752668,
+      "end_monotonic_s": 1587493.708863144
+    },
+    {
+      "block": "block-01",
+      "condition": "gpu-evdi-0",
+      "case": "idle",
+      "repeat": 0,
+      "driver_cpu_percent_one_core": 1.099967383896106,
+      "display_stack_cpu_percent_one_core": 1.8999436630933044,
+      "background_cpu_cores": 1.0673016858363387,
+      "amd_reported_watts": 15.41081071184011,
+      "input_rate": 0.0,
+      "vino_changed_updates": 0,
+      "monitor_fps_verified": false,
+      "start_monotonic_s": 1587528.036954553,
+      "end_monotonic_s": 1587558.037052116
+    },
+    {
+      "block": "block-01",
+      "condition": "gpu-evdi-0",
+      "case": "scroll",
+      "repeat": 0,
+      "driver_cpu_percent_one_core": 32.69924353346754,
+      "display_stack_cpu_percent_one_core": 39.465753663226835,
+      "background_cpu_cores": 1.1399736277660548,
+      "amd_reported_watts": 17.627451036423295,
+      "input_rate": 19.999959,
+      "vino_changed_updates": 601,
+      "monitor_fps_verified": false,
+      "start_monotonic_s": 1587573.212478463,
+      "end_monotonic_s": 1587603.212540667
+    },
+    {
+      "block": "block-01",
+      "condition": "gpu-evdi-0",
+      "case": "motion",
+      "repeat": 0,
+      "driver_cpu_percent_one_core": 26.199207631108894,
+      "display_stack_cpu_percent_one_core": 33.03233430334471,
+      "background_cpu_cores": 0.60164847040719,
+      "amd_reported_watts": 10.689643701086572,
+      "input_rate": 19.999957,
+      "vino_changed_updates": 601,
+      "monitor_fps_verified": false,
+      "start_monotonic_s": 1587618.379435785,
+      "end_monotonic_s": 1587648.379499935
+    },
+    {
+      "block": "block-02",
+      "condition": "gpu-evdi-128",
+      "case": "idle",
+      "repeat": 0,
+      "driver_cpu_percent_one_core": 1.5999604094884323,
+      "display_stack_cpu_percent_one_core": 2.96659325925979,
+      "background_cpu_cores": 0.7806473497962311,
+      "amd_reported_watts": 11.746226095841884,
+      "input_rate": 0.0,
+      "vino_changed_updates": 0,
+      "monitor_fps_verified": false,
+      "start_monotonic_s": 1587684.724742586,
+      "end_monotonic_s": 1587714.724808676
+    },
+    {
+      "block": "block-02",
+      "condition": "gpu-evdi-128",
+      "case": "scroll",
+      "repeat": 0,
+      "driver_cpu_percent_one_core": 29.932758986567936,
+      "display_stack_cpu_percent_one_core": 37.23261891759067,
+      "background_cpu_cores": 0.47799082837129114,
+      "amd_reported_watts": 9.715749062250062,
+      "input_rate": 19.99995,
+      "vino_changed_updates": 601,
+      "monitor_fps_verified": false,
+      "start_monotonic_s": 1587729.894274442,
+      "end_monotonic_s": 1587759.894349852
+    },
+    {
+      "block": "block-02",
+      "condition": "gpu-evdi-128",
+      "case": "motion",
+      "repeat": 0,
+      "driver_cpu_percent_one_core": 25.09914612074196,
+      "display_stack_cpu_percent_one_core": 32.03224358835726,
+      "background_cpu_cores": 0.6066460284101308,
+      "amd_reported_watts": 11.122608976894908,
+      "input_rate": 19.999931,
+      "vino_changed_updates": 600,
+      "monitor_fps_verified": false,
+      "start_monotonic_s": 1587775.067660731,
+      "end_monotonic_s": 1587805.067764797
+    },
+    {
+      "block": "block-03",
+      "condition": "gpu-evdi-128",
+      "case": "scroll",
+      "repeat": 1,
+      "driver_cpu_percent_one_core": 29.09911704544178,
+      "display_stack_cpu_percent_one_core": 35.998907685082635,
+      "background_cpu_cores": 0.7723098991252939,
+      "amd_reported_watts": 13.732379585505916,
+      "input_rate": 19.999946,
+      "vino_changed_updates": 599,
+      "monitor_fps_verified": false,
+      "start_monotonic_s": 1587841.361927063,
+      "end_monotonic_s": 1587871.362007495
+    },
+    {
+      "block": "block-03",
+      "condition": "gpu-evdi-128",
+      "case": "motion",
+      "repeat": 1,
+      "driver_cpu_percent_one_core": 24.26613909851765,
+      "display_stack_cpu_percent_one_core": 31.03265865483508,
+      "background_cpu_cores": 0.7403172381566995,
+      "amd_reported_watts": 13.450636343494677,
+      "input_rate": 19.999959,
+      "vino_changed_updates": 601,
+      "monitor_fps_verified": false,
+      "start_monotonic_s": 1587886.529942307,
+      "end_monotonic_s": 1587916.530004464
+    },
+    {
+      "block": "block-03",
+      "condition": "gpu-evdi-128",
+      "case": "idle",
+      "repeat": 1,
+      "driver_cpu_percent_one_core": 1.166642681632428,
+      "display_stack_cpu_percent_one_core": 2.1666221230316385,
+      "background_cpu_cores": 0.8629822579343565,
+      "amd_reported_watts": 13.645696336007399,
+      "input_rate": 0.0,
+      "vino_changed_updates": 0,
+      "monitor_fps_verified": false,
+      "start_monotonic_s": 1587931.702215529,
+      "end_monotonic_s": 1587961.702275595
+    },
+    {
+      "block": "block-04",
+      "condition": "gpu-evdi-0",
+      "case": "scroll",
+      "repeat": 1,
+      "driver_cpu_percent_one_core": 31.899185380450383,
+      "display_stack_cpu_percent_one_core": 37.83236719624989,
+      "background_cpu_cores": 1.9392838092247315,
+      "amd_reported_watts": 24.650695598872904,
+      "input_rate": 19.999958,
+      "vino_changed_updates": 600,
+      "monitor_fps_verified": false,
+      "start_monotonic_s": 1587998.071681244,
+      "end_monotonic_s": 1588028.071744316
+    },
+    {
+      "block": "block-04",
+      "condition": "gpu-evdi-0",
+      "case": "motion",
+      "repeat": 1,
+      "driver_cpu_percent_one_core": 26.39943466404383,
+      "display_stack_cpu_percent_one_core": 33.065958569105405,
+      "background_cpu_cores": 0.8176491569545604,
+      "amd_reported_watts": 13.457976843161315,
+      "input_rate": 19.999947,
+      "vino_changed_updates": 603,
+      "monitor_fps_verified": false,
+      "start_monotonic_s": 1588043.238642113,
+      "end_monotonic_s": 1588073.238722291
+    },
+    {
+      "block": "block-04",
+      "condition": "gpu-evdi-0",
+      "case": "idle",
+      "repeat": 1,
+      "driver_cpu_percent_one_core": 1.0666448292964332,
+      "display_stack_cpu_percent_one_core": 1.8999611021842326,
+      "background_cpu_cores": 1.6639659336981072,
+      "amd_reported_watts": 25.499604374672696,
+      "input_rate": 0.0,
+      "vino_changed_updates": 0,
+      "monitor_fps_verified": false,
+      "start_monotonic_s": 1588088.403464106,
+      "end_monotonic_s": 1588118.403527295
+    },
+    {
+      "block": "block-05",
+      "condition": "official-evdi-0",
+      "case": "scroll",
+      "repeat": 1,
+      "driver_cpu_percent_one_core": 40.90519096023216,
+      "display_stack_cpu_percent_one_core": 49.504917155079106,
+      "background_cpu_cores": 1.2552284349951304,
+      "amd_reported_watts": 18.107873687573623,
+      "input_rate": 19.999938,
+      "vino_changed_updates": null,
+      "monitor_fps_verified": false,
+      "start_monotonic_s": 1588151.141097581,
+      "end_monotonic_s": 1588181.141190179
+    },
+    {
+      "block": "block-05",
+      "condition": "official-evdi-0",
+      "case": "motion",
+      "repeat": 1,
+      "driver_cpu_percent_one_core": 27.366781075351515,
+      "display_stack_cpu_percent_one_core": 36.56650802344876,
+      "background_cpu_cores": 0.5523076739343495,
+      "amd_reported_watts": 10.301407816068325,
+      "input_rate": 19.999922,
+      "vino_changed_updates": null,
+      "monitor_fps_verified": false,
+      "start_monotonic_s": 1588196.329944823,
+      "end_monotonic_s": 1588226.330061568
+    },
+    {
+      "block": "block-05",
+      "condition": "official-evdi-0",
+      "case": "idle",
+      "repeat": 1,
+      "driver_cpu_percent_one_core": 7.589178397469734,
+      "display_stack_cpu_percent_one_core": 10.422433978003786,
+      "background_cpu_cores": 0.7730849176276889,
+      "amd_reported_watts": 11.41578242277231,
+      "input_rate": 0.0,
+      "vino_changed_updates": null,
+      "monitor_fps_verified": false,
+      "start_monotonic_s": 1588241.512113837,
+      "end_monotonic_s": 1588271.512175976,
+      "exclusion": "Screen-lock greeter startup occurred during the measurement"
+    }
+  ],
+  "summary": [
+    {
+      "case": "idle",
+      "condition": "official-evdi-0",
+      "retained_repetitions": 1,
+      "metrics": {
+        "driver_cpu_percent_one_core": {
+          "mean": 1.1499881247680708,
+          "min": 1.1499881247680708,
+          "max": 1.1499881247680708
+        },
+        "display_stack_cpu_percent_one_core": {
+          "mean": 1.783307575284307,
+          "min": 1.783307575284307,
+          "max": 1.783307575284307
+        },
+        "background_cpu_cores": {
+          "mean": 0.5528210817662357,
+          "min": 0.5528210817662357,
+          "max": 0.5528210817662357
+        },
+        "amd_reported_watts": {
+          "mean": 9.024151359280363,
+          "min": 9.024151359280363,
+          "max": 9.024151359280363
+        }
+      }
+    },
+    {
+      "case": "idle",
+      "condition": "gpu-evdi-0",
+      "retained_repetitions": 2,
+      "metrics": {
+        "driver_cpu_percent_one_core": {
+          "mean": 1.0833061065962695,
+          "min": 1.0666448292964332,
+          "max": 1.099967383896106
+        },
+        "display_stack_cpu_percent_one_core": {
+          "mean": 1.8999523826387685,
+          "min": 1.8999436630933044,
+          "max": 1.8999611021842326
+        },
+        "background_cpu_cores": {
+          "mean": 1.365633809767223,
+          "min": 1.0673016858363387,
+          "max": 1.6639659336981072
+        },
+        "amd_reported_watts": {
+          "mean": 20.455207543256403,
+          "min": 15.41081071184011,
+          "max": 25.499604374672696
+        }
+      }
+    },
+    {
+      "case": "idle",
+      "condition": "gpu-evdi-128",
+      "retained_repetitions": 2,
+      "metrics": {
+        "driver_cpu_percent_one_core": {
+          "mean": 1.38330154556043,
+          "min": 1.166642681632428,
+          "max": 1.5999604094884323
+        },
+        "display_stack_cpu_percent_one_core": {
+          "mean": 2.5666076911457143,
+          "min": 2.1666221230316385,
+          "max": 2.96659325925979
+        },
+        "background_cpu_cores": {
+          "mean": 0.8218148038652937,
+          "min": 0.7806473497962311,
+          "max": 0.8629822579343565
+        },
+        "amd_reported_watts": {
+          "mean": 12.69596121592464,
+          "min": 11.746226095841884,
+          "max": 13.645696336007399
+        }
+      }
+    },
+    {
+      "case": "scroll",
+      "condition": "official-evdi-0",
+      "retained_repetitions": 2,
+      "metrics": {
+        "driver_cpu_percent_one_core": {
+          "mean": 40.84291001227242,
+          "min": 40.78062906431268,
+          "max": 40.90519096023216
+        },
+        "display_stack_cpu_percent_one_core": {
+          "mean": 49.559317295970516,
+          "min": 49.504917155079106,
+          "max": 49.61371743686192
+        },
+        "background_cpu_cores": {
+          "mean": 0.9738624819508104,
+          "min": 0.6924965289064904,
+          "max": 1.2552284349951304
+        },
+        "amd_reported_watts": {
+          "mean": 16.42988886947951,
+          "min": 14.751904051385393,
+          "max": 18.107873687573623
+        }
+      }
+    },
+    {
+      "case": "scroll",
+      "condition": "gpu-evdi-0",
+      "retained_repetitions": 2,
+      "metrics": {
+        "driver_cpu_percent_one_core": {
+          "mean": 32.299214456958964,
+          "min": 31.899185380450383,
+          "max": 32.69924353346754
+        },
+        "display_stack_cpu_percent_one_core": {
+          "mean": 38.64906042973836,
+          "min": 37.83236719624989,
+          "max": 39.465753663226835
+        },
+        "background_cpu_cores": {
+          "mean": 1.5396287184953932,
+          "min": 1.1399736277660548,
+          "max": 1.9392838092247315
+        },
+        "amd_reported_watts": {
+          "mean": 21.139073317648098,
+          "min": 17.627451036423295,
+          "max": 24.650695598872904
+        }
+      }
+    },
+    {
+      "case": "scroll",
+      "condition": "gpu-evdi-128",
+      "retained_repetitions": 2,
+      "metrics": {
+        "driver_cpu_percent_one_core": {
+          "mean": 29.51593801600486,
+          "min": 29.09911704544178,
+          "max": 29.932758986567936
+        },
+        "display_stack_cpu_percent_one_core": {
+          "mean": 36.615763301336656,
+          "min": 35.998907685082635,
+          "max": 37.23261891759067
+        },
+        "background_cpu_cores": {
+          "mean": 0.6251503637482925,
+          "min": 0.47799082837129114,
+          "max": 0.7723098991252939
+        },
+        "amd_reported_watts": {
+          "mean": 11.72406432387799,
+          "min": 9.715749062250062,
+          "max": 13.732379585505916
+        }
+      }
+    },
+    {
+      "case": "motion",
+      "condition": "official-evdi-0",
+      "retained_repetitions": 2,
+      "metrics": {
+        "driver_cpu_percent_one_core": {
+          "mean": 24.789049636866793,
+          "min": 22.211318198382067,
+          "max": 27.366781075351515
+        },
+        "display_stack_cpu_percent_one_core": {
+          "mean": 33.88873311496364,
+          "min": 31.210958206478523,
+          "max": 36.56650802344876
+        },
+        "background_cpu_cores": {
+          "mean": 0.6145792663774614,
+          "min": 0.5523076739343495,
+          "max": 0.6768508588205734
+        },
+        "amd_reported_watts": {
+          "mean": 11.114374885903025,
+          "min": 10.301407816068325,
+          "max": 11.927341955737724
+        }
+      }
+    },
+    {
+      "case": "motion",
+      "condition": "gpu-evdi-0",
+      "retained_repetitions": 2,
+      "metrics": {
+        "driver_cpu_percent_one_core": {
+          "mean": 26.299321147576364,
+          "min": 26.199207631108894,
+          "max": 26.39943466404383
+        },
+        "display_stack_cpu_percent_one_core": {
+          "mean": 33.04914643622506,
+          "min": 33.03233430334471,
+          "max": 33.065958569105405
+        },
+        "background_cpu_cores": {
+          "mean": 0.7096488136808752,
+          "min": 0.60164847040719,
+          "max": 0.8176491569545604
+        },
+        "amd_reported_watts": {
+          "mean": 12.073810272123943,
+          "min": 10.689643701086572,
+          "max": 13.457976843161315
+        }
+      }
+    },
+    {
+      "case": "motion",
+      "condition": "gpu-evdi-128",
+      "retained_repetitions": 2,
+      "metrics": {
+        "driver_cpu_percent_one_core": {
+          "mean": 24.682642609629806,
+          "min": 24.26613909851765,
+          "max": 25.09914612074196
+        },
+        "display_stack_cpu_percent_one_core": {
+          "mean": 31.532451121596168,
+          "min": 31.03265865483508,
+          "max": 32.03224358835726
+        },
+        "background_cpu_cores": {
+          "mean": 0.6734816332834151,
+          "min": 0.6066460284101308,
+          "max": 0.7403172381566995
+        },
+        "amd_reported_watts": {
+          "mean": 12.286622660194793,
+          "min": 11.122608976894908,
+          "max": 13.450636343494677
+        }
+      }
+    }
+  ],
+  "active_comparisons": [
+    {
+      "case": "scroll",
+      "vino_normal_vs_official_cpu_reduction_percent": 20.918430035338464,
+      "vino_batched_vs_official_cpu_reduction_percent": 27.73301900590347,
+      "batching_within_vino_cpu_reduction_percent": 8.617164496873508,
+      "vino_batched_vs_official_observed_power_delta_watts": -4.705824545601519
+    },
+    {
+      "case": "motion",
+      "vino_normal_vs_official_cpu_reduction_percent": -6.092494600775122,
+      "vino_batched_vs_official_cpu_reduction_percent": 0.4292501277609939,
+      "batching_within_vino_cpu_reduction_percent": 6.147225355645903,
+      "vino_batched_vs_official_observed_power_delta_watts": 1.1722477742917672
+    }
+  ],
+  "checks": {
+    "raw_cpu_and_power_recomputed": true,
+    "vino_events_recomputed": true,
+    "all_four_vino_workers_exited_successfully": true,
+    "desktop_recovery_verified": true,
+    "input_pacing_warnings": 0,
+    "vino_throughput_warnings": 0,
+    "batch_settings_verified": true
+  },
+  "limitations": [
+    "The harness did not monitor or inhibit screen locking; the final official idle sample is excluded using journal evidence",
+    "Remaining official idle evidence has one repetition, so the balanced idle comparison is incomplete",
+    "No visual quality/smoothness confirmation was provided for this unattended run",
+    "Vino changed-update counts closely match input counts but do not measure monitor presentation, exact source-image coverage or official output cadence",
+    "This is a 20-input-images/s synthetic workload on a 60 Hz display; it does not establish full-screen 60-FPS performance",
+    "Power/background load vary substantially between samples; observed power differences do not establish a causal power, heat or fan benefit",
+    "AMD PPT is a device/processor reading, not wall or whole-laptop power"
+  ],
+  "input_sha256": {
+    "measurements.json": "ba66408c864e9b236431b0c47edb8608ca10bdc9a58552fec5faad3b413998f4",
+    "recovery.json": "0a28c5ba39fc88b788b51bc5cef50e6a68e6ba89ee62d6049636a627ed059f72",
+    "desktop-recovery-check.json": "19cba0bc11c3760759e4138b458a1c7bcc69ea90721f65e9b55288e76f313d4e",
+    "lock-evidence.json": "7d290c2e0e8acfae7774a1a56320a3efa776c7b84727b0cce5815e059a8e7781"
+  },
+  "analyzer_sha256": "544776dd3f4548c158096918fb03ed40e02d2281ef23aec54748ffacaf7d5e0b"
+}

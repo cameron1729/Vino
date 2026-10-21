@@ -1,4 +1,4 @@
 [submodule "linux"]
 	path = linux
-	url = ../linux
+	url = https://github.com/FireBurn/linux.git
 	branch = vino

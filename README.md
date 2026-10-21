@@ -1,5 +1,27 @@
 # Vino upstream workspace
 
+## GPU encoder prototype branch
+
+The `gpu-encoder-prototype` branch adds the Vulkan userspace encoder, supervised
+desktop trials, capture optimizations and measured results. Start with
+[`docs/gpu-encoder.md`](docs/gpu-encoder.md); the latest experimental work is
+documented in [`docs/gpu-shared-capture.md`](docs/gpu-shared-capture.md), with
+preserved evidence under [`docs/results/`](docs/results/README.md).
+
+Companion EVDI changes are preserved on
+[`cameron1729/evdi:gpu-shared-capture`](https://github.com/cameron1729/evdi/tree/gpu-shared-capture),
+based on upstream `v1.15.1`. The combined shared-framebuffer capture path still
+needs live validation. The previously tested direct-capture path remains available.
+
+This checkout was cloned from `https://github.com/FireBurn/Vino.git`. That remote
+was unavailable when this checkpoint was preserved on 2026-10-22. The historical
+`linux/` submodule was never initialized here; its Git pointer is retained, but
+its source is not included in this backup. The userspace GPU prototype under
+`revdi/` does not require that submodule. Proprietary binaries, extracted shaders
+and generated builds remain excluded from Git.
+
+## Original workspace
+
 This repository is the review and reproducibility workspace for Vino, a Rust
 DRM/KMS driver for DisplayLink DL3 USB display devices. It contains the working
 kernel tree, the Revdi/Chimera source, generated kernel patches, protocol and

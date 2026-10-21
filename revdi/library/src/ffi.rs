@@ -11,14 +11,14 @@ use core::ffi::{c_char, c_int, c_uint, c_ulong, c_void};
 
 extern "C" {
     /// `open(2)` — called without `O_CREAT`, so the variadic `mode` argument is
-    /// unused and the 2-argument form is ABI-correct.
-    pub fn open(path: *const c_char, flags: c_int) -> c_int;
+    /// unused. The declaration must still match libc's variadic signature.
+    pub fn open(path: *const c_char, flags: c_int, ...) -> c_int;
     pub fn close(fd: c_int) -> c_int;
     pub fn read(fd: c_int, buf: *mut c_void, count: usize) -> isize;
     pub fn poll(fds: *mut PollFd, nfds: usize, timeout: c_int) -> c_int;
     /// `ioctl(2)` — the request carries a single pointer argument for every
-    /// call site here, so the fixed 3-argument form matches the C ABI.
-    pub fn ioctl(fd: c_int, request: c_ulong, arg: *mut c_void) -> c_int;
+    /// call site here. Preserve libc's variadic signature.
+    pub fn ioctl(fd: c_int, request: c_ulong, ...) -> c_int;
     pub fn mmap(
         addr: *mut c_void,
         len: usize,
@@ -129,6 +129,7 @@ pub struct DrmModeMapDumb {
 /// `struct drm_gem_close { __u32 handle; __u32 pad; }`.
 #[repr(C)]
 #[derive(Default)]
+#[cfg(test)]
 pub struct DrmGemClose {
     pub handle: u32,
     pub pad: u32,
@@ -146,6 +147,7 @@ pub fn drm_ioctl_drop_master() -> c_ulong {
 pub fn drm_ioctl_mode_map_dumb() -> c_ulong {
     drm_iowr(0xb3, core::mem::size_of::<DrmModeMapDumb>())
 }
+#[cfg(test)]
 pub fn drm_ioctl_gem_close() -> c_ulong {
     drm_iow(0x09, core::mem::size_of::<DrmGemClose>())
 }
@@ -157,6 +159,14 @@ pub fn drm_ioctl_gem_close() -> c_ulong {
 /// `arg` must point to a valid argument object of the size encoded in
 /// `request`, and `fd` must be an open file descriptor.
 pub unsafe fn drm_ioctl(fd: c_int, request: c_ulong, arg: *mut c_void) -> c_int {
+    #[cfg(test)]
+    if let Some(result) = IOCTL_MOCK.with(|mock| {
+        mock.borrow_mut()
+            .as_mut()
+            .and_then(|mock| mock(fd, request, arg))
+    }) {
+        return result;
+    }
     loop {
         let ret = ioctl(fd, request, arg);
         if ret == -1 && (errno() == EINTR || errno() == EAGAIN) {
@@ -164,4 +174,51 @@ pub unsafe fn drm_ioctl(fd: c_int, request: c_ulong, arg: *mut c_void) -> c_int 
         }
         return ret;
     }
+}
+
+#[cfg(test)]
+type IoctlMock = Box<dyn FnMut(c_int, c_ulong, *mut c_void) -> Option<c_int>>;
+
+#[cfg(test)]
+thread_local! {
+    static IOCTL_MOCK: std::cell::RefCell<Option<IoctlMock>> = std::cell::RefCell::new(None);
+}
+
+/// A test-local ioctl replacement; other test threads and all release builds use real ioctls.
+#[cfg(test)]
+pub struct MockIoctlGuard {
+    // Guard must be dropped on the same thread that installed its hook.
+    _not_send: std::marker::PhantomData<std::rc::Rc<()>>,
+}
+
+#[cfg(test)]
+pub fn mock_ioctl(
+    mock: impl FnMut(c_int, c_ulong, *mut c_void) -> Option<c_int> + 'static,
+) -> MockIoctlGuard {
+    IOCTL_MOCK.with(|slot| {
+        let mut slot = slot.borrow_mut();
+        assert!(
+            slot.is_none(),
+            "an ioctl mock is already active on this test thread"
+        );
+        *slot = Some(Box::new(mock));
+    });
+    MockIoctlGuard {
+        _not_send: std::marker::PhantomData,
+    }
+}
+
+#[cfg(test)]
+impl Drop for MockIoctlGuard {
+    fn drop(&mut self) {
+        IOCTL_MOCK.with(|slot| {
+            slot.borrow_mut().take();
+        });
+    }
+}
+
+#[cfg(test)]
+pub fn set_errno(value: c_int) {
+    // SAFETY: errno storage belongs to this test thread.
+    unsafe { *__errno_location() = value };
 }

@@ -1,0 +1,92 @@
+{
+  "scope": "Private RAM replay including simulated dirty capture writes, snapshot/repair, comparison, planning, GPU encoding and framing; compares copied input, original direct comparison plus hashing, CPU exact native strip revisions, and GPU exact native strip revisions (CPU fast path for cursor-only input); excludes EVDI kernel, compositor, USB and physical display",
+  "frames_per_sample": 32,
+  "rounds": 3,
+  "output_matches": true,
+  "comparison": [
+    {
+      "case": "idle",
+      "cpu_before_ms": 0.8711584479166655,
+      "cpu_gpu_ms": 0.7788573020833294,
+      "cpu_saving_percent": 10.595219050457471,
+      "wall_before_ms": 0.87222165625,
+      "wall_gpu_ms": 1.1677791041666667,
+      "comparison_wall_before_ms": 0.38669060416666656,
+      "comparison_wall_gpu_ms": 0.45460212499999997,
+      "gpu_compare_dispatches": 96,
+      "gpu_compare_ms": 0.28819799642884736
+    },
+    {
+      "case": "small",
+      "cpu_before_ms": 0.5051296770833366,
+      "cpu_gpu_ms": 0.0898991562499963,
+      "cpu_saving_percent": 82.2027569694416,
+      "wall_before_ms": 0.6398505416666667,
+      "wall_gpu_ms": 0.47833442708333324,
+      "comparison_wall_before_ms": 0.43194644791666664,
+      "comparison_wall_gpu_ms": 0.3486032083333333,
+      "gpu_compare_dispatches": 96,
+      "gpu_compare_ms": 0.25754183267140385
+    },
+    {
+      "case": "scroll",
+      "cpu_before_ms": 3.237518916666654,
+      "cpu_gpu_ms": 3.1558197500000156,
+      "cpu_saving_percent": 2.5235116386827405,
+      "wall_before_ms": 5.295065375,
+      "wall_gpu_ms": 5.58885328125,
+      "comparison_wall_before_ms": 0.0854565625,
+      "comparison_wall_gpu_ms": 0.5587567499999999,
+      "gpu_compare_dispatches": 96,
+      "gpu_compare_ms": 0.35668812852799886
+    },
+    {
+      "case": "motion",
+      "cpu_before_ms": 1.8900976250000194,
+      "cpu_gpu_ms": 1.7807995729166919,
+      "cpu_saving_percent": 5.782667024055243,
+      "wall_before_ms": 3.2576573124999997,
+      "wall_gpu_ms": 3.200907447916667,
+      "comparison_wall_before_ms": 0.05771619791666666,
+      "comparison_wall_gpu_ms": 0.21235672916666667,
+      "gpu_compare_dispatches": 96,
+      "gpu_compare_ms": 0.030710850997209545
+    },
+    {
+      "case": "noise",
+      "cpu_before_ms": 4.2943832499999814,
+      "cpu_gpu_ms": 4.373832197916566,
+      "cpu_saving_percent": -1.8500665471947508,
+      "wall_before_ms": 6.655195385416667,
+      "wall_gpu_ms": 6.719869999999999,
+      "comparison_wall_before_ms": 0.06336325,
+      "comparison_wall_gpu_ms": 0.2596279583333333,
+      "gpu_compare_dispatches": 96,
+      "gpu_compare_ms": 0.03626264948308467
+    },
+    {
+      "case": "cursor",
+      "cpu_before_ms": 1.3837498645834216,
+      "cpu_gpu_ms": 0.8892464791666536,
+      "cpu_saving_percent": 35.73647218138218,
+      "wall_before_ms": 1.4902494375,
+      "wall_gpu_ms": 1.3664184375,
+      "comparison_wall_before_ms": 0.6891694479166666,
+      "comparison_wall_gpu_ms": 0.4758685104166667,
+      "gpu_compare_dispatches": 96,
+      "gpu_compare_ms": 0.29266565169584746
+    },
+    {
+      "case": "cursor-only",
+      "cpu_before_ms": 0.024685833333402723,
+      "cpu_gpu_ms": 0.023880250000028507,
+      "cpu_saving_percent": 3.2633426730795057,
+      "wall_before_ms": 0.09006530208333334,
+      "wall_gpu_ms": 0.09311123958333332,
+      "comparison_wall_before_ms": 0.0010006354166666666,
+      "comparison_wall_gpu_ms": 0.0011224791666666666,
+      "gpu_compare_dispatches": 0,
+      "gpu_compare_ms": 0.0
+    }
+  ]
+}

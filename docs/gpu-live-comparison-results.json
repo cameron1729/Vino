@@ -1,0 +1,2789 @@
+{
+  "schema": 1,
+  "source_run": "/var/tmp/vino-compare-pi080821",
+  "method": "single Dell 1920x1080/60; ABBA; 2 repeats, 15s warmup, 30s measurement per case; full live paths; validation off",
+  "checks": {
+    "all_12_samples_complete": true,
+    "cpu_and_power_sampling_valid": true,
+    "external_power_unchanged_at_checks": true,
+    "gpu_workers_exited_cleanly": true,
+    "original_layout_restored": true
+  },
+  "user_observation": {
+    "quote": "k finished and smooth",
+    "scope": "overall perceived smoothness; no instrumented monitor FPS or pixel-quality comparison"
+  },
+  "interpretation": {
+    "observed_active_driver_cpu_lower": true,
+    "equal_output_cpu_efficiency_established": false,
+    "power_or_heat_improvement_established": false,
+    "reason": "Vino submitted about 29 scrolling and 47 motion USB updates/s for 60 input images/s; official output rate unmeasured; power and background load varied"
+  },
+  "summary": [
+    {
+      "case": "idle",
+      "backends": {
+        "official": {
+          "driver_cpu_percent_one_core": {
+            "mean": 18.33480927684402,
+            "min": 7.728697679975211,
+            "max": 28.940920873712827
+          },
+          "display_stack_cpu_percent_one_core": {
+            "mean": 27.134491990370556,
+            "min": 12.4285158662788,
+            "max": 41.84046811446231
+          },
+          "system_busy_cpu_cores": {
+            "mean": 1.2554539787006525,
+            "min": 1.0909577960116652,
+            "max": 1.4199501613896397
+          },
+          "cpu_outside_display_player_sampler_cores": {
+            "mean": 0.9786092619945883,
+            "min": 0.9610061898902127,
+            "max": 0.9962123340989638
+          },
+          "amd_reported_watts": {
+            "mean": 14.469257156852562,
+            "min": 12.82290698560082,
+            "max": 16.115607328104304
+          },
+          "temperature_mean_c": {
+            "mean": 52.09229733146742,
+            "min": 49.81498069325865,
+            "max": 54.3696139696762
+          },
+          "input_frames_per_second": {
+            "mean": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "input_deadline_misses": {
+            "mean": 1,
+            "min": 0,
+            "max": 2
+          },
+          "x_submission_p99_ms": {
+            "mean": 0.2524715,
+            "min": 0.208741,
+            "max": 0.296202
+          },
+          "max_input_gap_ms": {
+            "mean": 42.2331615,
+            "min": 32.990881,
+            "max": 51.475442
+          }
+        },
+        "gpu": {
+          "driver_cpu_percent_one_core": {
+            "mean": 14.33293771573093,
+            "min": 3.3332308497124563,
+            "max": 25.332644581749403
+          },
+          "display_stack_cpu_percent_one_core": {
+            "mean": 21.63273788280877,
+            "min": 4.099873945144866,
+            "max": 39.16560182047267
+          },
+          "system_busy_cpu_cores": {
+            "mean": 1.6804524744343299,
+            "min": 1.032634917240298,
+            "max": 2.3282700316283615
+          },
+          "cpu_outside_display_player_sampler_cores": {
+            "mean": 1.4591252398449435,
+            "min": 0.9869696545992519,
+            "max": 1.931280825090635
+          },
+          "amd_reported_watts": {
+            "mean": 19.5175517300297,
+            "min": 18.07558775488352,
+            "max": 20.959515705175885
+          },
+          "temperature_mean_c": {
+            "mean": 54.6388513394059,
+            "min": 51.3183186364862,
+            "max": 57.9593840423256
+          },
+          "input_frames_per_second": {
+            "mean": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "input_deadline_misses": {
+            "mean": 0,
+            "min": 0,
+            "max": 0
+          },
+          "x_submission_p99_ms": {
+            "mean": 0.28701699999999997,
+            "min": 0.271858,
+            "max": 0.302176
+          },
+          "max_input_gap_ms": {
+            "mean": 17.6684625,
+            "min": 17.631075,
+            "max": 17.70585
+          },
+          "usb_presentations_per_second": {
+            "mean": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "usb_MB_per_second": {
+            "mean": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          }
+        }
+      },
+      "observed_driver_cpu_reduction_percent": 21.826633158203947,
+      "observed_display_stack_cpu_reduction_percent": 20.275869212934737,
+      "observed_amd_power_delta_watts": 5.04829457317714
+    },
+    {
+      "case": "scroll",
+      "backends": {
+        "official": {
+          "driver_cpu_percent_one_core": {
+            "mean": 85.35797277730926,
+            "min": 85.24741703007199,
+            "max": 85.46852852454653
+          },
+          "display_stack_cpu_percent_one_core": {
+            "mean": 106.17394528527858,
+            "min": 105.50117866669683,
+            "max": 106.84671190386032
+          },
+          "system_busy_cpu_cores": {
+            "mean": 2.169261153782851,
+            "min": 1.868602940050524,
+            "max": 2.469919367515178
+          },
+          "cpu_outside_display_player_sampler_cores": {
+            "mean": 1.0165247321072188,
+            "min": 0.7305939839094,
+            "max": 1.3024554803050379
+          },
+          "amd_reported_watts": {
+            "mean": 23.64048008578585,
+            "min": 22.135619212428683,
+            "max": 25.145340959143017
+          },
+          "temperature_mean_c": {
+            "mean": 59.25275837909043,
+            "min": 57.685149937862334,
+            "max": 60.820366820318526
+          },
+          "input_frames_per_second": {
+            "mean": 59.999821,
+            "min": 59.99977,
+            "max": 59.999872
+          },
+          "input_deadline_misses": {
+            "mean": 395.5,
+            "min": 116,
+            "max": 675
+          },
+          "x_submission_p99_ms": {
+            "mean": 24.810491,
+            "min": 20.764959,
+            "max": 28.856023
+          },
+          "max_input_gap_ms": {
+            "mean": 44.9540245,
+            "min": 44.874909,
+            "max": 45.03314
+          }
+        },
+        "gpu": {
+          "driver_cpu_percent_one_core": {
+            "mean": 44.29844183476152,
+            "min": 43.23182702502496,
+            "max": 45.36505664449807
+          },
+          "display_stack_cpu_percent_one_core": {
+            "mean": 64.7643884300891,
+            "min": 62.59781893061105,
+            "max": 66.93095792956716
+          },
+          "system_busy_cpu_cores": {
+            "mean": 1.876433964245011,
+            "min": 1.7276064724057554,
+            "max": 2.0252614560842668
+          },
+          "cpu_outside_display_player_sampler_cores": {
+            "mean": 1.1529594129297038,
+            "min": 1.0246309658846815,
+            "max": 1.2812878599747264
+          },
+          "amd_reported_watts": {
+            "mean": 22.461446270182805,
+            "min": 21.552031824930232,
+            "max": 23.37086071543538
+          },
+          "temperature_mean_c": {
+            "mean": 59.90735608533156,
+            "min": 59.7175326031474,
+            "max": 60.09717956751572
+          },
+          "input_frames_per_second": {
+            "mean": 59.999862,
+            "min": 59.999848,
+            "max": 59.999876
+          },
+          "input_deadline_misses": {
+            "mean": 0,
+            "min": 0,
+            "max": 0
+          },
+          "x_submission_p99_ms": {
+            "mean": 5.5796775,
+            "min": 5.033632,
+            "max": 6.125723
+          },
+          "max_input_gap_ms": {
+            "mean": 22.8740935,
+            "min": 22.633732,
+            "max": 23.114455
+          },
+          "usb_presentations_per_second": {
+            "mean": 29.1832662380259,
+            "min": 28.766607447728575,
+            "max": 29.599925028323224
+          },
+          "usb_MB_per_second": {
+            "mean": 94.97280613188168,
+            "min": 94.53365072635995,
+            "max": 95.41196153740341
+          }
+        }
+      },
+      "observed_driver_cpu_reduction_percent": 48.102748468111,
+      "observed_display_stack_cpu_reduction_percent": 39.00161828208062,
+      "observed_amd_power_delta_watts": -1.179033815603045
+    },
+    {
+      "case": "motion",
+      "backends": {
+        "official": {
+          "driver_cpu_percent_one_core": {
+            "mean": 52.81408462160525,
+            "min": 51.34751624511603,
+            "max": 54.28065299809447
+          },
+          "display_stack_cpu_percent_one_core": {
+            "mean": 72.17998271222237,
+            "min": 70.64681574067978,
+            "max": 73.71314968376497
+          },
+          "system_busy_cpu_cores": {
+            "mean": 1.7770970137154236,
+            "min": 1.5242677074358215,
+            "max": 2.0299263199950257
+          },
+          "cpu_outside_display_player_sampler_cores": {
+            "mean": 0.9808001698869392,
+            "min": 0.7044731029130116,
+            "max": 1.2571272368608668
+          },
+          "amd_reported_watts": {
+            "mean": 20.50229958783182,
+            "min": 18.04472687320497,
+            "max": 22.95987230245867
+          },
+          "temperature_mean_c": {
+            "mean": 57.8328324096353,
+            "min": 56.13346607885689,
+            "max": 59.53219874041371
+          },
+          "input_frames_per_second": {
+            "mean": 59.999845500000006,
+            "min": 59.999819,
+            "max": 59.999872
+          },
+          "input_deadline_misses": {
+            "mean": 0,
+            "min": 0,
+            "max": 0
+          },
+          "x_submission_p99_ms": {
+            "mean": 4.502997,
+            "min": 3.774016,
+            "max": 5.231978
+          },
+          "max_input_gap_ms": {
+            "mean": 20.344730499999997,
+            "min": 19.834144,
+            "max": 20.855317
+          }
+        },
+        "gpu": {
+          "driver_cpu_percent_one_core": {
+            "mean": 41.39869374124483,
+            "min": 39.89859999623601,
+            "max": 42.89878748625364
+          },
+          "display_stack_cpu_percent_one_core": {
+            "mean": 61.28139753904274,
+            "min": 59.69790525752169,
+            "max": 62.864889820563796
+          },
+          "system_busy_cpu_cores": {
+            "mean": 1.9167717068581522,
+            "min": 1.6502866887760719,
+            "max": 2.183256724940233
+          },
+          "cpu_outside_display_player_sampler_cores": {
+            "mean": 1.2281267791725714,
+            "min": 0.9396401081957767,
+            "max": 1.516613450149366
+          },
+          "amd_reported_watts": {
+            "mean": 21.66062243251512,
+            "min": 20.001375495918786,
+            "max": 23.319869369111448
+          },
+          "temperature_mean_c": {
+            "mean": 58.89471879191322,
+            "min": 57.568332111714895,
+            "max": 60.221105472111546
+          },
+          "input_frames_per_second": {
+            "mean": 59.9998705,
+            "min": 59.999869,
+            "max": 59.999872
+          },
+          "input_deadline_misses": {
+            "mean": 1,
+            "min": 0,
+            "max": 2
+          },
+          "x_submission_p99_ms": {
+            "mean": 5.3739565,
+            "min": 4.506017,
+            "max": 6.241896
+          },
+          "max_input_gap_ms": {
+            "mean": 35.302354,
+            "min": 21.620984,
+            "max": 48.983724
+          },
+          "usb_presentations_per_second": {
+            "mean": 46.59989942675877,
+            "min": 45.89990231888788,
+            "max": 47.29989653462965
+          },
+          "usb_MB_per_second": {
+            "mean": 53.48638484024208,
+            "min": 53.00089360703162,
+            "max": 53.97187607345255
+          }
+        }
+      },
+      "observed_driver_cpu_reduction_percent": 21.61429278221476,
+      "observed_display_stack_cpu_reduction_percent": 15.099179528251883,
+      "observed_amd_power_delta_watts": 1.1583228446832976
+    }
+  ],
+  "per_run": [
+    {
+      "block": "block-00",
+      "repeat": 0,
+      "case": "idle",
+      "backend": "official",
+      "driver_cpu_percent_one_core": 7.728697679975211,
+      "display_stack_cpu_percent_one_core": 12.4285158662788,
+      "system_busy_cpu_cores": 1.0909577960116652,
+      "amd_reported_watts": 12.82290698560082,
+      "temperature_mean_c": 49.81498069325865,
+      "temperature_start_c": 50.0,
+      "temperature_end_c": 48.0,
+      "input_frames_per_second": 0.0,
+      "input_deadline_misses": 0,
+      "x_submission_p99_ms": 0.296202,
+      "max_input_gap_ms": 32.990881,
+      "cpu_outside_display_player_sampler_cores": 0.9610061898902127
+    },
+    {
+      "block": "block-00",
+      "repeat": 0,
+      "case": "scroll",
+      "backend": "official",
+      "driver_cpu_percent_one_core": 85.46852852454653,
+      "display_stack_cpu_percent_one_core": 105.50117866669683,
+      "system_busy_cpu_cores": 1.868602940050524,
+      "amd_reported_watts": 22.135619212428683,
+      "temperature_mean_c": 57.685149937862334,
+      "temperature_start_c": 54.0,
+      "temperature_end_c": 58.0,
+      "input_frames_per_second": 59.999872,
+      "input_deadline_misses": 116,
+      "x_submission_p99_ms": 20.764959,
+      "max_input_gap_ms": 44.874909,
+      "cpu_outside_display_player_sampler_cores": 0.7305939839094
+    },
+    {
+      "block": "block-00",
+      "repeat": 0,
+      "case": "motion",
+      "backend": "official",
+      "driver_cpu_percent_one_core": 54.28065299809447,
+      "display_stack_cpu_percent_one_core": 73.71314968376497,
+      "system_busy_cpu_cores": 1.5242677074358215,
+      "amd_reported_watts": 18.04472687320497,
+      "temperature_mean_c": 56.13346607885689,
+      "temperature_start_c": 56.0,
+      "temperature_end_c": 56.0,
+      "input_frames_per_second": 59.999819,
+      "input_deadline_misses": 0,
+      "x_submission_p99_ms": 5.231978,
+      "max_input_gap_ms": 20.855317,
+      "cpu_outside_display_player_sampler_cores": 0.7044731029130116
+    },
+    {
+      "block": "block-01",
+      "repeat": 0,
+      "case": "idle",
+      "backend": "gpu",
+      "driver_cpu_percent_one_core": 3.3332308497124563,
+      "display_stack_cpu_percent_one_core": 4.099873945144866,
+      "system_busy_cpu_cores": 1.032634917240298,
+      "amd_reported_watts": 18.07558775488352,
+      "temperature_mean_c": 51.3183186364862,
+      "temperature_start_c": 49.0,
+      "temperature_end_c": 58.0,
+      "input_frames_per_second": 0.0,
+      "input_deadline_misses": 0,
+      "x_submission_p99_ms": 0.271858,
+      "max_input_gap_ms": 17.631075,
+      "cpu_outside_display_player_sampler_cores": 0.9869696545992519,
+      "usb_presentations_per_second": 0.0,
+      "usb_MB_per_second": 0.0,
+      "usb_presentations": 0,
+      "usb_bytes": 0,
+      "frame_log_records": 116,
+      "encode_ms_mean_per_presenting_record": null,
+      "usb_ms_mean_per_presenting_record": null,
+      "capture_age_ms_mean_per_presenting_record": null
+    },
+    {
+      "block": "block-01",
+      "repeat": 0,
+      "case": "scroll",
+      "backend": "gpu",
+      "driver_cpu_percent_one_core": 43.23182702502496,
+      "display_stack_cpu_percent_one_core": 62.59781893061105,
+      "system_busy_cpu_cores": 1.7276064724057554,
+      "amd_reported_watts": 21.552031824930232,
+      "temperature_mean_c": 59.7175326031474,
+      "temperature_start_c": 57.0,
+      "temperature_end_c": 61.0,
+      "input_frames_per_second": 59.999848,
+      "input_deadline_misses": 0,
+      "x_submission_p99_ms": 6.125723,
+      "max_input_gap_ms": 23.114455,
+      "cpu_outside_display_player_sampler_cores": 1.0246309658846815,
+      "usb_presentations_per_second": 29.599925028323224,
+      "usb_MB_per_second": 95.41196153740341,
+      "usb_presentations": 888,
+      "usb_bytes": 2862366096,
+      "frame_log_records": 888,
+      "encode_ms_mean_per_presenting_record": 13.538582625,
+      "usb_ms_mean_per_presenting_record": 20.06201990990991,
+      "capture_age_ms_mean_per_presenting_record": 8.531163150900902
+    },
+    {
+      "block": "block-01",
+      "repeat": 0,
+      "case": "motion",
+      "backend": "gpu",
+      "driver_cpu_percent_one_core": 42.89878748625364,
+      "display_stack_cpu_percent_one_core": 62.864889820563796,
+      "system_busy_cpu_cores": 1.6502866887760719,
+      "amd_reported_watts": 20.001375495918786,
+      "temperature_mean_c": 57.568332111714895,
+      "temperature_start_c": 60.0,
+      "temperature_end_c": 58.0,
+      "input_frames_per_second": 59.999872,
+      "input_deadline_misses": 2,
+      "x_submission_p99_ms": 6.241896,
+      "max_input_gap_ms": 48.983724,
+      "cpu_outside_display_player_sampler_cores": 0.9396401081957767,
+      "usb_presentations_per_second": 45.89990231888788,
+      "usb_MB_per_second": 53.00089360703162,
+      "usb_presentations": 1377,
+      "usb_bytes": 1590030192,
+      "frame_log_records": 1378,
+      "encode_ms_mean_per_presenting_record": 10.636344124909224,
+      "usb_ms_mean_per_presenting_record": 11.073640618736384,
+      "capture_age_ms_mean_per_presenting_record": 7.2699747465504725
+    },
+    {
+      "block": "block-02",
+      "repeat": 1,
+      "case": "scroll",
+      "backend": "gpu",
+      "driver_cpu_percent_one_core": 45.36505664449807,
+      "display_stack_cpu_percent_one_core": 66.93095792956716,
+      "system_busy_cpu_cores": 2.0252614560842668,
+      "amd_reported_watts": 23.37086071543538,
+      "temperature_mean_c": 60.09717956751572,
+      "temperature_start_c": 61.0,
+      "temperature_end_c": 60.0,
+      "input_frames_per_second": 59.999876,
+      "input_deadline_misses": 0,
+      "x_submission_p99_ms": 5.033632,
+      "max_input_gap_ms": 22.633732,
+      "cpu_outside_display_player_sampler_cores": 1.2812878599747264,
+      "usb_presentations_per_second": 28.766607447728575,
+      "usb_MB_per_second": 94.53365072635995,
+      "usb_presentations": 863,
+      "usb_bytes": 2836015360,
+      "frame_log_records": 863,
+      "encode_ms_mean_per_presenting_record": 13.587324738122827,
+      "usb_ms_mean_per_presenting_record": 20.834393422943222,
+      "capture_age_ms_mean_per_presenting_record": 7.560759305909618
+    },
+    {
+      "block": "block-02",
+      "repeat": 1,
+      "case": "motion",
+      "backend": "gpu",
+      "driver_cpu_percent_one_core": 39.89859999623601,
+      "display_stack_cpu_percent_one_core": 59.69790525752169,
+      "system_busy_cpu_cores": 2.183256724940233,
+      "amd_reported_watts": 23.319869369111448,
+      "temperature_mean_c": 60.221105472111546,
+      "temperature_start_c": 60.0,
+      "temperature_end_c": 60.0,
+      "input_frames_per_second": 59.999869,
+      "input_deadline_misses": 0,
+      "x_submission_p99_ms": 4.506017,
+      "max_input_gap_ms": 21.620984,
+      "cpu_outside_display_player_sampler_cores": 1.516613450149366,
+      "usb_presentations_per_second": 47.29989653462965,
+      "usb_MB_per_second": 53.97187607345255,
+      "usb_presentations": 1419,
+      "usb_bytes": 1619159824,
+      "frame_log_records": 1419,
+      "encode_ms_mean_per_presenting_record": 10.038884394644116,
+      "usb_ms_mean_per_presenting_record": 11.048325992952783,
+      "capture_age_ms_mean_per_presenting_record": 7.435279591261452
+    },
+    {
+      "block": "block-02",
+      "repeat": 1,
+      "case": "idle",
+      "backend": "gpu",
+      "driver_cpu_percent_one_core": 25.332644581749403,
+      "display_stack_cpu_percent_one_core": 39.16560182047267,
+      "system_busy_cpu_cores": 2.3282700316283615,
+      "amd_reported_watts": 20.959515705175885,
+      "temperature_mean_c": 57.9593840423256,
+      "temperature_start_c": 57.0,
+      "temperature_end_c": 56.0,
+      "input_frames_per_second": 0.0,
+      "input_deadline_misses": 0,
+      "x_submission_p99_ms": 0.302176,
+      "max_input_gap_ms": 17.70585,
+      "cpu_outside_display_player_sampler_cores": 1.931280825090635,
+      "usb_presentations_per_second": 0.0,
+      "usb_MB_per_second": 0.0,
+      "usb_presentations": 0,
+      "usb_bytes": 0,
+      "frame_log_records": 1443,
+      "encode_ms_mean_per_presenting_record": null,
+      "usb_ms_mean_per_presenting_record": null,
+      "capture_age_ms_mean_per_presenting_record": null
+    },
+    {
+      "block": "block-03",
+      "repeat": 1,
+      "case": "scroll",
+      "backend": "official",
+      "driver_cpu_percent_one_core": 85.24741703007199,
+      "display_stack_cpu_percent_one_core": 106.84671190386032,
+      "system_busy_cpu_cores": 2.469919367515178,
+      "amd_reported_watts": 25.145340959143017,
+      "temperature_mean_c": 60.820366820318526,
+      "temperature_start_c": 61.0,
+      "temperature_end_c": 60.0,
+      "input_frames_per_second": 59.99977,
+      "input_deadline_misses": 675,
+      "x_submission_p99_ms": 28.856023,
+      "max_input_gap_ms": 45.03314,
+      "cpu_outside_display_player_sampler_cores": 1.3024554803050379
+    },
+    {
+      "block": "block-03",
+      "repeat": 1,
+      "case": "motion",
+      "backend": "official",
+      "driver_cpu_percent_one_core": 51.34751624511603,
+      "display_stack_cpu_percent_one_core": 70.64681574067978,
+      "system_busy_cpu_cores": 2.0299263199950257,
+      "amd_reported_watts": 22.95987230245867,
+      "temperature_mean_c": 59.53219874041371,
+      "temperature_start_c": 58.0,
+      "temperature_end_c": 59.0,
+      "input_frames_per_second": 59.999872,
+      "input_deadline_misses": 0,
+      "x_submission_p99_ms": 3.774016,
+      "max_input_gap_ms": 19.834144,
+      "cpu_outside_display_player_sampler_cores": 1.2571272368608668
+    },
+    {
+      "block": "block-03",
+      "repeat": 1,
+      "case": "idle",
+      "backend": "official",
+      "driver_cpu_percent_one_core": 28.940920873712827,
+      "display_stack_cpu_percent_one_core": 41.84046811446231,
+      "system_busy_cpu_cores": 1.4199501613896397,
+      "amd_reported_watts": 16.115607328104304,
+      "temperature_mean_c": 54.3696139696762,
+      "temperature_start_c": 56.0,
+      "temperature_end_c": 53.0,
+      "input_frames_per_second": 0.0,
+      "input_deadline_misses": 2,
+      "x_submission_p99_ms": 0.208741,
+      "max_input_gap_ms": 51.475442,
+      "cpu_outside_display_player_sampler_cores": 0.9962123340989638
+    }
+  ],
+  "source_sha256": {
+    "measurements.json": "522c6cf5311fad42957c46b1e56a08187a66cd7862e06c242e1ecfda8b1eb2fe",
+    "recovery.json": "b5c39d489950c6a24b8f6d04584d31531c16af4d08d6d892bf3220bb74985e92",
+    "block-00/idle-power.json": "e7bd2c5d463305dce0a9f2ec2c5611c8d8a75935208311360662c75c9c8c9db6",
+    "block-00/motion-power.json": "0922e9437282723e88fa9973fc25682307459d939951569fafb3b644f329ac00",
+    "block-00/scroll-power.json": "bdad7defe7e5a4b3f822e731bfc472caffa57f3b111541c8b2b3375411673540",
+    "block-01/idle-power.json": "f2b87559dd8840e122bcc41caae2c451bcfe2bec9a2b202c86cceac5d4ce2b7a",
+    "block-01/motion-power.json": "b8e173fc939d89af2581f61fd3f20dc8162f17e86e1f3833a41f7300d24ec128",
+    "block-01/scroll-power.json": "cf93b2d60c9d4e9f7f4f01e8402d8c6503212c02d6af202a28484efd5ee9c5b3",
+    "block-02/idle-power.json": "6a3e6bdb6cc276aae2367471a622a2fbe5d389de0b71943d7579da65e256c1de",
+    "block-02/motion-power.json": "22da40700cacf6fc20ebd72fe7362ff824f46e7950c8d45876bf7b2f20e04674",
+    "block-02/scroll-power.json": "75323f8adff0fd2b2777018e3b55e5fdfbc8a9dfd828231469a5e75e5072ad82",
+    "block-03/idle-power.json": "7bb0c34eb608943bc9722f02c9cde04245c3b0b90e40c955112d2f22f7d9406e",
+    "block-03/motion-power.json": "ccf1cd5600cd78b090b138d9aab0e183ad4e2f5430f69cb72238f323af9e882c",
+    "block-03/scroll-power.json": "1bceb0abc7b11570f50bea2de62ec33dc0d457ecd0bab78e674c69a1295216d7",
+    "block-01/events.jsonl": "b28444ad33652dd8649068cb2c8321c1bbb4e3385abdf3eef6c1354804884bb7",
+    "block-02/events.jsonl": "b1a5973d7e15d7a30a01532bff5ba8d615aa084bc04c66303d512f76a443621f"
+  },
+  "recovery": {
+    "service_result": "success",
+    "errors": [],
+    "restored": true
+  },
+  "measurements": {
+    "schema": 2,
+    "complete": true,
+    "started_unix": 1792337084.1637108,
+    "runs": [
+      {
+        "block": "block-00",
+        "repeat": 0,
+        "backend": "official",
+        "cases": [
+          "idle",
+          "scroll",
+          "motion"
+        ],
+        "case": "idle",
+        "measurement": {
+          "event": "done",
+          "start_monotonic_s": 1427036.596025554,
+          "end_monotonic_s": 1427066.596091838,
+          "seconds": 30.000066284,
+          "static_hold": true,
+          "frames_submitted": 0,
+          "input_frames_per_second": 0.0,
+          "input_deadline_misses": 0,
+          "x_submission_p99_ms": 0.296202,
+          "max_lateness_ms": 16.385984,
+          "max_input_gap_ms": 32.990881,
+          "cpu_interval_seconds": 30.00116055784747,
+          "external_power_before": {
+            "/sys/class/power_supply/AC/online": "1",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:001/online": "0",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:002/online": "0"
+          },
+          "cpu_cores": {
+            "Xorg": 0.029665519048282907,
+            "kwin_x11": 0.01733266281475298,
+            "driver": 0.07733034178883276,
+            "player": 0.0019999226324698186,
+            "sampler": 0.003666524826194668
+          },
+          "system_busy_cpu_cores": 1.0909577960116652,
+          "power": {
+            "sample_count": 151,
+            "sampled_seconds": 30.00209805020131,
+            "max_gap_seconds": 0.20196942798793316,
+            "mean_watts": 12.82290698560082,
+            "estimated_joules": 384.71411267060716,
+            "temperature_start_c": 50.0,
+            "temperature_end_c": 48.0,
+            "temperature_max_c": 54.0
+          },
+          "pixel_checks_passed": 16,
+          "counters_before": {
+            "processes": {
+              "Xorg": {
+                "pid": 2873,
+                "start_ticks": 10889,
+                "cpu_seconds": 29549.06
+              },
+              "kwin_x11": {
+                "pid": 3934,
+                "start_ticks": 12627,
+                "cpu_seconds": 23301.53
+              },
+              "driver": {
+                "pid": 2288784,
+                "start_ticks": 145823050,
+                "cpu_seconds": 108.01
+              },
+              "player": {
+                "pid": 3245572,
+                "start_ticks": 146010945,
+                "cpu_seconds": 0.05
+              },
+              "sampler": {
+                "pid": 3244380,
+                "start_ticks": 146009429,
+                "cpu_seconds": 0.06
+              }
+            },
+            "system_cpu_seconds": 2350462.41,
+            "official_service_cpu_seconds": 108.027995,
+            "monotonic_s": 1427036.5957592782
+          },
+          "counters_after": {
+            "processes": {
+              "Xorg": {
+                "pid": 2873,
+                "start_ticks": 10889,
+                "cpu_seconds": 29549.95
+              },
+              "kwin_x11": {
+                "pid": 3934,
+                "start_ticks": 12627,
+                "cpu_seconds": 23302.05
+              },
+              "driver": {
+                "pid": 2288784,
+                "start_ticks": 145823050,
+                "cpu_seconds": 110.33
+              },
+              "player": {
+                "pid": 3245572,
+                "start_ticks": 146010945,
+                "cpu_seconds": 0.11
+              },
+              "sampler": {
+                "pid": 3244380,
+                "start_ticks": 146009429,
+                "cpu_seconds": 0.17
+              }
+            },
+            "system_cpu_seconds": 2350495.14,
+            "official_service_cpu_seconds": 110.346694,
+            "monotonic_s": 1427066.596919836
+          },
+          "official_service_cpu_cores": 0.0772869767997521,
+          "driver_cpu_cores": 0.0772869767997521,
+          "display_stack_cpu_cores": 0.124285158662788,
+          "external_power_after": {
+            "/sys/class/power_supply/AC/online": "1",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:001/online": "0",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:002/online": "0"
+          },
+          "input_pacing_ok": true,
+          "input_pacing_warnings": [],
+          "input_deadline_miss_percent": 0.0,
+          "sampling_ok": true,
+          "measurement_errors": []
+        }
+      },
+      {
+        "block": "block-00",
+        "repeat": 0,
+        "backend": "official",
+        "cases": [
+          "idle",
+          "scroll",
+          "motion"
+        ],
+        "case": "scroll",
+        "measurement": {
+          "event": "done",
+          "start_monotonic_s": 1427081.769462296,
+          "end_monotonic_s": 1427111.769526148,
+          "seconds": 30.000063852,
+          "static_hold": false,
+          "frames_submitted": 1800,
+          "input_frames_per_second": 59.999872,
+          "input_deadline_misses": 116,
+          "x_submission_p99_ms": 20.764959,
+          "max_lateness_ms": 40.640025,
+          "max_input_gap_ms": 44.874909,
+          "cpu_interval_seconds": 30.001023116521537,
+          "external_power_before": {
+            "/sys/class/power_supply/AC/online": "1",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:001/online": "0",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:002/online": "0"
+          },
+          "cpu_cores": {
+            "Xorg": 0.12999556664619516,
+            "kwin_x11": 0.07033093477530794,
+            "driver": 0.8546375202077717,
+            "player": 0.07933062785079939,
+            "sampler": 0.0036665416233562743
+          },
+          "system_busy_cpu_cores": 1.868602940050524,
+          "power": {
+            "sample_count": 151,
+            "sampled_seconds": 30.002225945005193,
+            "max_gap_seconds": 0.20201575313694775,
+            "mean_watts": 22.135619212428683,
+            "estimated_joules": 664.1178490438832,
+            "temperature_start_c": 54.0,
+            "temperature_end_c": 58.0,
+            "temperature_max_c": 60.0
+          },
+          "pixel_checks_passed": 16,
+          "counters_before": {
+            "processes": {
+              "Xorg": {
+                "pid": 2873,
+                "start_ticks": 10889,
+                "cpu_seconds": 29551.95
+              },
+              "kwin_x11": {
+                "pid": 3934,
+                "start_ticks": 12627,
+                "cpu_seconds": 23303.23
+              },
+              "driver": {
+                "pid": 2288784,
+                "start_ticks": 145823050,
+                "cpu_seconds": 123.2
+              },
+              "player": {
+                "pid": 3267256,
+                "start_ticks": 146015462,
+                "cpu_seconds": 1.1
+              },
+              "sampler": {
+                "pid": 3244380,
+                "start_ticks": 146009429,
+                "cpu_seconds": 0.2
+              }
+            },
+            "system_cpu_seconds": 2350520.36,
+            "official_service_cpu_seconds": 123.220155,
+            "monotonic_s": 1427081.769172511
+          },
+          "counters_after": {
+            "processes": {
+              "Xorg": {
+                "pid": 2873,
+                "start_ticks": 10889,
+                "cpu_seconds": 29555.85
+              },
+              "kwin_x11": {
+                "pid": 3934,
+                "start_ticks": 12627,
+                "cpu_seconds": 23305.34
+              },
+              "driver": {
+                "pid": 2288784,
+                "start_ticks": 145823050,
+                "cpu_seconds": 148.84
+              },
+              "player": {
+                "pid": 3267256,
+                "start_ticks": 146015462,
+                "cpu_seconds": 3.48
+              },
+              "sampler": {
+                "pid": 3244380,
+                "start_ticks": 146009429,
+                "cpu_seconds": 0.31
+              }
+            },
+            "system_cpu_seconds": 2350576.42,
+            "official_service_cpu_seconds": 148.861588,
+            "monotonic_s": 1427111.7701956276
+          },
+          "official_service_cpu_cores": 0.8546852852454653,
+          "driver_cpu_cores": 0.8546852852454653,
+          "display_stack_cpu_cores": 1.0550117866669684,
+          "external_power_after": {
+            "/sys/class/power_supply/AC/online": "1",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:001/online": "0",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:002/online": "0"
+          },
+          "input_pacing_ok": false,
+          "input_pacing_warnings": [
+            "116/1800 replay deadlines missed (6.4%; warning threshold 1%)"
+          ],
+          "input_deadline_miss_percent": 6.444444444444445,
+          "sampling_ok": true,
+          "measurement_errors": []
+        }
+      },
+      {
+        "block": "block-00",
+        "repeat": 0,
+        "backend": "official",
+        "cases": [
+          "idle",
+          "scroll",
+          "motion"
+        ],
+        "case": "motion",
+        "measurement": {
+          "event": "done",
+          "start_monotonic_s": 1427126.98786398,
+          "end_monotonic_s": 1427156.987954515,
+          "seconds": 30.000090535,
+          "static_hold": false,
+          "frames_submitted": 1800,
+          "input_frames_per_second": 59.999819,
+          "input_deadline_misses": 0,
+          "x_submission_p99_ms": 5.231978,
+          "max_lateness_ms": 6.022191,
+          "max_input_gap_ms": 20.855317,
+          "cpu_interval_seconds": 30.001291621476412,
+          "external_power_before": {
+            "/sys/class/power_supply/AC/online": "1",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:001/online": "0",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:002/online": "0"
+          },
+          "cpu_cores": {
+            "Xorg": 0.12132810966703059,
+            "kwin_x11": 0.07299685718967446,
+            "driver": 0.5426433036751648,
+            "player": 0.0786632798939428,
+            "sampler": 0.00399982779121743
+          },
+          "system_busy_cpu_cores": 1.5242677074358215,
+          "power": {
+            "sample_count": 151,
+            "sampled_seconds": 30.00252704299055,
+            "max_gap_seconds": 0.20213090488687158,
+            "mean_watts": 18.04472687320497,
+            "estimated_joules": 541.3874059967104,
+            "temperature_start_c": 56.0,
+            "temperature_end_c": 56.0,
+            "temperature_max_c": 60.0
+          },
+          "pixel_checks_passed": 16,
+          "counters_before": {
+            "processes": {
+              "Xorg": {
+                "pid": 2873,
+                "start_ticks": 10889,
+                "cpu_seconds": 29557.6
+              },
+              "kwin_x11": {
+                "pid": 3934,
+                "start_ticks": 12627,
+                "cpu_seconds": 23306.41
+              },
+              "driver": {
+                "pid": 2288784,
+                "start_ticks": 145823050,
+                "cpu_seconds": 157.16
+              },
+              "player": {
+                "pid": 3278536,
+                "start_ticks": 146019984,
+                "cpu_seconds": 1.0
+              },
+              "sampler": {
+                "pid": 3244380,
+                "start_ticks": 146009429,
+                "cpu_seconds": 0.33
+              }
+            },
+            "system_cpu_seconds": 2350598.56,
+            "official_service_cpu_seconds": 157.17746,
+            "monotonic_s": 1427126.9875530605
+          },
+          "counters_after": {
+            "processes": {
+              "Xorg": {
+                "pid": 2873,
+                "start_ticks": 10889,
+                "cpu_seconds": 29561.24
+              },
+              "kwin_x11": {
+                "pid": 3934,
+                "start_ticks": 12627,
+                "cpu_seconds": 23308.6
+              },
+              "driver": {
+                "pid": 2288784,
+                "start_ticks": 145823050,
+                "cpu_seconds": 173.44
+              },
+              "player": {
+                "pid": 3278536,
+                "start_ticks": 146019984,
+                "cpu_seconds": 3.36
+              },
+              "sampler": {
+                "pid": 3244380,
+                "start_ticks": 146009429,
+                "cpu_seconds": 0.45
+              }
+            },
+            "system_cpu_seconds": 2350644.29,
+            "official_service_cpu_seconds": 173.462357,
+            "monotonic_s": 1427156.988844682
+          },
+          "official_service_cpu_cores": 0.5428065299809447,
+          "driver_cpu_cores": 0.5428065299809447,
+          "display_stack_cpu_cores": 0.7371314968376497,
+          "external_power_after": {
+            "/sys/class/power_supply/AC/online": "1",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:001/online": "0",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:002/online": "0"
+          },
+          "input_pacing_ok": true,
+          "input_pacing_warnings": [],
+          "input_deadline_miss_percent": 0.0,
+          "sampling_ok": true,
+          "measurement_errors": []
+        }
+      },
+      {
+        "block": "block-01",
+        "repeat": 0,
+        "backend": "gpu",
+        "cases": [
+          "idle",
+          "scroll",
+          "motion"
+        ],
+        "case": "idle",
+        "measurement": {
+          "event": "done",
+          "start_monotonic_s": 1427191.453656168,
+          "end_monotonic_s": 1427221.45371756,
+          "seconds": 30.000061392,
+          "static_hold": true,
+          "frames_submitted": 0,
+          "input_frames_per_second": 0.0,
+          "input_deadline_misses": 0,
+          "x_submission_p99_ms": 0.271858,
+          "max_lateness_ms": 1.069455,
+          "max_input_gap_ms": 17.631075,
+          "cpu_interval_seconds": 30.000922380946577,
+          "external_power_before": {
+            "/sys/class/power_supply/AC/online": "1",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:001/online": "0",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:002/online": "0"
+          },
+          "cpu_cores": {
+            "Xorg": 0.005999815529492122,
+            "kwin_x11": 0.0016666154248319756,
+            "driver": 0.03333230849712456,
+            "player": 0.0013332923398849817,
+            "sampler": 0.0033332308497124553
+          },
+          "system_busy_cpu_cores": 1.032634917240298,
+          "power": {
+            "sample_count": 151,
+            "sampled_seconds": 30.002308561000973,
+            "max_gap_seconds": 0.2025054320693016,
+            "mean_watts": 18.07558775488352,
+            "estimated_joules": 542.3093612434662,
+            "temperature_start_c": 49.0,
+            "temperature_end_c": 58.0,
+            "temperature_max_c": 59.0
+          },
+          "pixel_checks_passed": 16,
+          "counters_before": {
+            "processes": {
+              "Xorg": {
+                "pid": 2873,
+                "start_ticks": 10889,
+                "cpu_seconds": 29563.38
+              },
+              "kwin_x11": {
+                "pid": 3934,
+                "start_ticks": 12627,
+                "cpu_seconds": 23309.91
+              },
+              "driver": {
+                "pid": 3292139,
+                "start_ticks": 146024711,
+                "cpu_seconds": 5.15
+              },
+              "player": {
+                "pid": 3293800,
+                "start_ticks": 146026419,
+                "cpu_seconds": 0.17
+              },
+              "sampler": {
+                "pid": 3244380,
+                "start_ticks": 146009429,
+                "cpu_seconds": 0.5
+              }
+            },
+            "system_cpu_seconds": 2350685.34,
+            "monotonic_s": 1427191.4533001431
+          },
+          "counters_after": {
+            "processes": {
+              "Xorg": {
+                "pid": 2873,
+                "start_ticks": 10889,
+                "cpu_seconds": 29563.56
+              },
+              "kwin_x11": {
+                "pid": 3934,
+                "start_ticks": 12627,
+                "cpu_seconds": 23309.96
+              },
+              "driver": {
+                "pid": 3292139,
+                "start_ticks": 146024711,
+                "cpu_seconds": 6.15
+              },
+              "player": {
+                "pid": 3293800,
+                "start_ticks": 146026419,
+                "cpu_seconds": 0.21
+              },
+              "sampler": {
+                "pid": 3244380,
+                "start_ticks": 146009429,
+                "cpu_seconds": 0.6
+              }
+            },
+            "system_cpu_seconds": 2350716.32,
+            "monotonic_s": 1427221.454222524
+          },
+          "driver_cpu_cores": 0.03333230849712456,
+          "display_stack_cpu_cores": 0.04099873945144866,
+          "external_power_after": {
+            "/sys/class/power_supply/AC/online": "1",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:001/online": "0",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:002/online": "0"
+          },
+          "input_pacing_ok": true,
+          "input_pacing_warnings": [],
+          "input_deadline_miss_percent": 0.0,
+          "sampling_ok": true,
+          "measurement_errors": [],
+          "vino_usb": {
+            "bytes": 0,
+            "presentations": 0,
+            "note": "USB submissions, not measured monitor output"
+          }
+        }
+      },
+      {
+        "block": "block-01",
+        "repeat": 0,
+        "backend": "gpu",
+        "cases": [
+          "idle",
+          "scroll",
+          "motion"
+        ],
+        "case": "scroll",
+        "measurement": {
+          "event": "done",
+          "start_monotonic_s": 1427236.686553029,
+          "end_monotonic_s": 1427266.686629014,
+          "seconds": 30.000075985,
+          "static_hold": false,
+          "frames_submitted": 1800,
+          "input_frames_per_second": 59.999848,
+          "input_deadline_misses": 0,
+          "x_submission_p99_ms": 6.125723,
+          "max_lateness_ms": 9.261909,
+          "max_input_gap_ms": 23.114455,
+          "cpu_interval_seconds": 30.0010452773422,
+          "external_power_before": {
+            "/sys/class/power_supply/AC/online": "1",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:001/online": "0",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:002/online": "0"
+          },
+          "cpu_cores": {
+            "Xorg": 0.12432900139050232,
+            "kwin_x11": 0.06933091766535862,
+            "driver": 0.4323182702502496,
+            "player": 0.07299745658041995,
+            "sampler": 0.003999860634543558
+          },
+          "system_busy_cpu_cores": 1.7276064724057554,
+          "power": {
+            "sample_count": 151,
+            "sampled_seconds": 30.001873325090855,
+            "max_gap_seconds": 0.20182539313100278,
+            "mean_watts": 21.552031824930232,
+            "estimated_joules": 646.6013287098835,
+            "temperature_start_c": 57.0,
+            "temperature_end_c": 61.0,
+            "temperature_max_c": 63.0
+          },
+          "pixel_checks_passed": 16,
+          "counters_before": {
+            "processes": {
+              "Xorg": {
+                "pid": 2873,
+                "start_ticks": 10889,
+                "cpu_seconds": 29565.51
+              },
+              "kwin_x11": {
+                "pid": 3934,
+                "start_ticks": 12627,
+                "cpu_seconds": 23311.08
+              },
+              "driver": {
+                "pid": 3292139,
+                "start_ticks": 146024711,
+                "cpu_seconds": 12.97
+              },
+              "player": {
+                "pid": 3316463,
+                "start_ticks": 146030948,
+                "cpu_seconds": 1.26
+              },
+              "sampler": {
+                "pid": 3244380,
+                "start_ticks": 146009429,
+                "cpu_seconds": 0.63
+              }
+            },
+            "system_cpu_seconds": 2350740.19,
+            "monotonic_s": 1427236.686333408
+          },
+          "counters_after": {
+            "processes": {
+              "Xorg": {
+                "pid": 2873,
+                "start_ticks": 10889,
+                "cpu_seconds": 29569.24
+              },
+              "kwin_x11": {
+                "pid": 3934,
+                "start_ticks": 12627,
+                "cpu_seconds": 23313.16
+              },
+              "driver": {
+                "pid": 3292139,
+                "start_ticks": 146024711,
+                "cpu_seconds": 25.94
+              },
+              "player": {
+                "pid": 3316463,
+                "start_ticks": 146030948,
+                "cpu_seconds": 3.45
+              },
+              "sampler": {
+                "pid": 3244380,
+                "start_ticks": 146009429,
+                "cpu_seconds": 0.75
+              }
+            },
+            "system_cpu_seconds": 2350792.02,
+            "monotonic_s": 1427266.6873786855
+          },
+          "driver_cpu_cores": 0.4323182702502496,
+          "display_stack_cpu_cores": 0.6259781893061105,
+          "external_power_after": {
+            "/sys/class/power_supply/AC/online": "1",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:001/online": "0",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:002/online": "0"
+          },
+          "input_pacing_ok": true,
+          "input_pacing_warnings": [],
+          "input_deadline_miss_percent": 0.0,
+          "sampling_ok": true,
+          "measurement_errors": [],
+          "vino_usb": {
+            "bytes": 2862366096,
+            "presentations": 888,
+            "note": "USB submissions, not measured monitor output"
+          }
+        }
+      },
+      {
+        "block": "block-01",
+        "repeat": 0,
+        "backend": "gpu",
+        "cases": [
+          "idle",
+          "scroll",
+          "motion"
+        ],
+        "case": "motion",
+        "measurement": {
+          "event": "done",
+          "start_monotonic_s": 1427281.993531349,
+          "end_monotonic_s": 1427311.993595193,
+          "seconds": 30.000063844,
+          "static_hold": false,
+          "frames_submitted": 1800,
+          "input_frames_per_second": 59.999872,
+          "input_deadline_misses": 2,
+          "x_submission_p99_ms": 6.241896,
+          "max_lateness_ms": 36.255975,
+          "max_input_gap_ms": 48.983724,
+          "cpu_interval_seconds": 30.000847935676575,
+          "external_power_before": {
+            "/sys/class/power_supply/AC/online": "1",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:001/online": "0",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:002/online": "0"
+          },
+          "cpu_cores": {
+            "Xorg": 0.1279963822433723,
+            "kwin_x11": 0.07166464109972932,
+            "driver": 0.42898787486253637,
+            "player": 0.07799779542955203,
+            "sampler": 0.003999886945105232
+          },
+          "system_busy_cpu_cores": 1.6502866887760719,
+          "power": {
+            "sample_count": 151,
+            "sampled_seconds": 30.00188895710744,
+            "max_gap_seconds": 0.2018919859547168,
+            "mean_watts": 20.001375495918786,
+            "estimated_joules": 600.0790466179652,
+            "temperature_start_c": 60.0,
+            "temperature_end_c": 58.0,
+            "temperature_max_c": 60.0
+          },
+          "pixel_checks_passed": 16,
+          "counters_before": {
+            "processes": {
+              "Xorg": {
+                "pid": 2873,
+                "start_ticks": 10889,
+                "cpu_seconds": 29571.04
+              },
+              "kwin_x11": {
+                "pid": 3934,
+                "start_ticks": 12627,
+                "cpu_seconds": 23314.15
+              },
+              "driver": {
+                "pid": 3292139,
+                "start_ticks": 146024711,
+                "cpu_seconds": 32.19
+              },
+              "player": {
+                "pid": 3330163,
+                "start_ticks": 146035472,
+                "cpu_seconds": 1.09
+              },
+              "sampler": {
+                "pid": 3244380,
+                "start_ticks": 146009429,
+                "cpu_seconds": 0.78
+              }
+            },
+            "system_cpu_seconds": 2350817.51,
+            "monotonic_s": 1427281.9932906735
+          },
+          "counters_after": {
+            "processes": {
+              "Xorg": {
+                "pid": 2873,
+                "start_ticks": 10889,
+                "cpu_seconds": 29574.88
+              },
+              "kwin_x11": {
+                "pid": 3934,
+                "start_ticks": 12627,
+                "cpu_seconds": 23316.3
+              },
+              "driver": {
+                "pid": 3292139,
+                "start_ticks": 146024711,
+                "cpu_seconds": 45.06
+              },
+              "player": {
+                "pid": 3330163,
+                "start_ticks": 146035472,
+                "cpu_seconds": 3.43
+              },
+              "sampler": {
+                "pid": 3244380,
+                "start_ticks": 146009429,
+                "cpu_seconds": 0.9
+              }
+            },
+            "system_cpu_seconds": 2350867.02,
+            "monotonic_s": 1427311.9941386092
+          },
+          "driver_cpu_cores": 0.42898787486253637,
+          "display_stack_cpu_cores": 0.628648898205638,
+          "external_power_after": {
+            "/sys/class/power_supply/AC/online": "1",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:001/online": "0",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:002/online": "0"
+          },
+          "input_pacing_ok": true,
+          "input_pacing_warnings": [],
+          "input_deadline_miss_percent": 0.1111111111111111,
+          "sampling_ok": true,
+          "measurement_errors": [],
+          "vino_usb": {
+            "bytes": 1590030192,
+            "presentations": 1377,
+            "note": "USB submissions, not measured monitor output"
+          }
+        }
+      },
+      {
+        "block": "block-02",
+        "repeat": 1,
+        "backend": "gpu",
+        "cases": [
+          "scroll",
+          "motion",
+          "idle"
+        ],
+        "case": "scroll",
+        "measurement": {
+          "event": "done",
+          "start_monotonic_s": 1427349.214366828,
+          "end_monotonic_s": 1427379.214428586,
+          "seconds": 30.000061758,
+          "static_hold": false,
+          "frames_submitted": 1800,
+          "input_frames_per_second": 59.999876,
+          "input_deadline_misses": 0,
+          "x_submission_p99_ms": 5.033632,
+          "max_lateness_ms": 8.108529,
+          "max_input_gap_ms": 22.633732,
+          "cpu_interval_seconds": 30.001064710784703,
+          "external_power_before": {
+            "/sys/class/power_supply/AC/online": "1",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:001/online": "0",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:002/online": "0"
+          },
+          "cpu_cores": {
+            "Xorg": 0.1459948185913172,
+            "kwin_x11": 0.06966419425937366,
+            "driver": 0.4536505664449807,
+            "player": 0.07066415877026885,
+            "sampler": 0.003999858043600119
+          },
+          "system_busy_cpu_cores": 2.0252614560842668,
+          "power": {
+            "sample_count": 151,
+            "sampled_seconds": 30.00216300203465,
+            "max_gap_seconds": 0.2018902190029621,
+            "mean_watts": 23.37086071543538,
+            "estimated_joules": 701.1763726823405,
+            "temperature_start_c": 61.0,
+            "temperature_end_c": 60.0,
+            "temperature_max_c": 62.0
+          },
+          "pixel_checks_passed": 16,
+          "counters_before": {
+            "processes": {
+              "Xorg": {
+                "pid": 2873,
+                "start_ticks": 10889,
+                "cpu_seconds": 29579.29
+              },
+              "kwin_x11": {
+                "pid": 3934,
+                "start_ticks": 12627,
+                "cpu_seconds": 23318.87
+              },
+              "driver": {
+                "pid": 3341800,
+                "start_ticks": 146040435,
+                "cpu_seconds": 11.56
+              },
+              "player": {
+                "pid": 3354014,
+                "start_ticks": 146042163,
+                "cpu_seconds": 0.97
+              },
+              "sampler": {
+                "pid": 3244380,
+                "start_ticks": 146009429,
+                "cpu_seconds": 1.01
+              }
+            },
+            "system_cpu_seconds": 2350955.67,
+            "monotonic_s": 1427349.214102413
+          },
+          "counters_after": {
+            "processes": {
+              "Xorg": {
+                "pid": 2873,
+                "start_ticks": 10889,
+                "cpu_seconds": 29583.67
+              },
+              "kwin_x11": {
+                "pid": 3934,
+                "start_ticks": 12627,
+                "cpu_seconds": 23320.96
+              },
+              "driver": {
+                "pid": 3341800,
+                "start_ticks": 146040435,
+                "cpu_seconds": 25.17
+              },
+              "player": {
+                "pid": 3354014,
+                "start_ticks": 146042163,
+                "cpu_seconds": 3.09
+              },
+              "sampler": {
+                "pid": 3244380,
+                "start_ticks": 146009429,
+                "cpu_seconds": 1.13
+              }
+            },
+            "system_cpu_seconds": 2351016.43,
+            "monotonic_s": 1427379.2151671238
+          },
+          "driver_cpu_cores": 0.4536505664449807,
+          "display_stack_cpu_cores": 0.6693095792956716,
+          "external_power_after": {
+            "/sys/class/power_supply/AC/online": "1",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:001/online": "0",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:002/online": "0"
+          },
+          "input_pacing_ok": true,
+          "input_pacing_warnings": [],
+          "input_deadline_miss_percent": 0.0,
+          "sampling_ok": true,
+          "measurement_errors": [],
+          "vino_usb": {
+            "bytes": 2836015360,
+            "presentations": 863,
+            "note": "USB submissions, not measured monitor output"
+          }
+        }
+      },
+      {
+        "block": "block-02",
+        "repeat": 1,
+        "backend": "gpu",
+        "cases": [
+          "scroll",
+          "motion",
+          "idle"
+        ],
+        "case": "motion",
+        "measurement": {
+          "event": "done",
+          "start_monotonic_s": 1427394.384165101,
+          "end_monotonic_s": 1427424.384230724,
+          "seconds": 30.000065623,
+          "static_hold": false,
+          "frames_submitted": 1800,
+          "input_frames_per_second": 59.999869,
+          "input_deadline_misses": 0,
+          "x_submission_p99_ms": 4.506017,
+          "max_lateness_ms": 6.540125,
+          "max_input_gap_ms": 21.620984,
+          "cpu_interval_seconds": 30.00105267134495,
+          "external_power_before": {
+            "/sys/class/power_supply/AC/online": "1",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:001/online": "0",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:002/online": "0"
+          },
+          "cpu_cores": {
+            "Xorg": 0.13099540349642366,
+            "kwin_x11": 0.06699764911643317,
+            "driver": 0.39898599996236006,
+            "player": 0.06533104092950925,
+            "sampler": 0.004333181286140924
+          },
+          "system_busy_cpu_cores": 2.183256724940233,
+          "power": {
+            "sample_count": 151,
+            "sampled_seconds": 30.00182762206532,
+            "max_gap_seconds": 0.20175569294951856,
+            "mean_watts": 23.319869369111448,
+            "estimated_joules": 699.6387009811629,
+            "temperature_start_c": 60.0,
+            "temperature_end_c": 60.0,
+            "temperature_max_c": 62.0
+          },
+          "pixel_checks_passed": 16,
+          "counters_before": {
+            "processes": {
+              "Xorg": {
+                "pid": 2873,
+                "start_ticks": 10889,
+                "cpu_seconds": 29585.77
+              },
+              "kwin_x11": {
+                "pid": 3934,
+                "start_ticks": 12627,
+                "cpu_seconds": 23321.93
+              },
+              "driver": {
+                "pid": 3341800,
+                "start_ticks": 146040435,
+                "cpu_seconds": 31.46
+              },
+              "player": {
+                "pid": 3364881,
+                "start_ticks": 146046723,
+                "cpu_seconds": 1.11
+              },
+              "sampler": {
+                "pid": 3244380,
+                "start_ticks": 146009429,
+                "cpu_seconds": 1.16
+              }
+            },
+            "system_cpu_seconds": 2351052.35,
+            "monotonic_s": 1427394.3839526037
+          },
+          "counters_after": {
+            "processes": {
+              "Xorg": {
+                "pid": 2873,
+                "start_ticks": 10889,
+                "cpu_seconds": 29589.7
+              },
+              "kwin_x11": {
+                "pid": 3934,
+                "start_ticks": 12627,
+                "cpu_seconds": 23323.94
+              },
+              "driver": {
+                "pid": 3341800,
+                "start_ticks": 146040435,
+                "cpu_seconds": 43.43
+              },
+              "player": {
+                "pid": 3364881,
+                "start_ticks": 146046723,
+                "cpu_seconds": 3.07
+              },
+              "sampler": {
+                "pid": 3244380,
+                "start_ticks": 146009429,
+                "cpu_seconds": 1.29
+              }
+            },
+            "system_cpu_seconds": 2351117.85,
+            "monotonic_s": 1427424.385005275
+          },
+          "driver_cpu_cores": 0.39898599996236006,
+          "display_stack_cpu_cores": 0.5969790525752169,
+          "external_power_after": {
+            "/sys/class/power_supply/AC/online": "1",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:001/online": "0",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:002/online": "0"
+          },
+          "input_pacing_ok": true,
+          "input_pacing_warnings": [],
+          "input_deadline_miss_percent": 0.0,
+          "sampling_ok": true,
+          "measurement_errors": [],
+          "vino_usb": {
+            "bytes": 1619159824,
+            "presentations": 1419,
+            "note": "USB submissions, not measured monitor output"
+          }
+        }
+      },
+      {
+        "block": "block-02",
+        "repeat": 1,
+        "backend": "gpu",
+        "cases": [
+          "scroll",
+          "motion",
+          "idle"
+        ],
+        "case": "idle",
+        "measurement": {
+          "event": "done",
+          "start_monotonic_s": 1427439.666984494,
+          "end_monotonic_s": 1427469.66702146,
+          "seconds": 30.000036966,
+          "static_hold": true,
+          "frames_submitted": 0,
+          "input_frames_per_second": 0.0,
+          "input_deadline_misses": 0,
+          "x_submission_p99_ms": 0.302176,
+          "max_lateness_ms": 1.104574,
+          "max_input_gap_ms": 17.70585,
+          "cpu_interval_seconds": 30.00081564905122,
+          "external_power_before": {
+            "/sys/class/power_supply/AC/online": "1",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:001/online": "0",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:002/online": "0"
+          },
+          "cpu_cores": {
+            "Xorg": 0.0829977434323639,
+            "kwin_x11": 0.05533182895486884,
+            "driver": 0.25332644581749403,
+            "player": 0.0016666213540624602,
+            "sampler": 0.003666566978937409
+          },
+          "system_busy_cpu_cores": 2.3282700316283615,
+          "power": {
+            "sample_count": 151,
+            "sampled_seconds": 30.00170406792313,
+            "max_gap_seconds": 0.20186063600704074,
+            "mean_watts": 20.959515705175885,
+            "estimated_joules": 628.821187593674,
+            "temperature_start_c": 57.0,
+            "temperature_end_c": 56.0,
+            "temperature_max_c": 63.0
+          },
+          "pixel_checks_passed": 16,
+          "counters_before": {
+            "processes": {
+              "Xorg": {
+                "pid": 2873,
+                "start_ticks": 10889,
+                "cpu_seconds": 29590.94
+              },
+              "kwin_x11": {
+                "pid": 3934,
+                "start_ticks": 12627,
+                "cpu_seconds": 23324.79
+              },
+              "driver": {
+                "pid": 3341800,
+                "start_ticks": 146040435,
+                "cpu_seconds": 47.48
+              },
+              "player": {
+                "pid": 3387782,
+                "start_ticks": 146051241,
+                "cpu_seconds": 0.14
+              },
+              "sampler": {
+                "pid": 3244380,
+                "start_ticks": 146009429,
+                "cpu_seconds": 1.32
+              }
+            },
+            "system_cpu_seconds": 2351141.36,
+            "monotonic_s": 1427439.666816244
+          },
+          "counters_after": {
+            "processes": {
+              "Xorg": {
+                "pid": 2873,
+                "start_ticks": 10889,
+                "cpu_seconds": 29593.43
+              },
+              "kwin_x11": {
+                "pid": 3934,
+                "start_ticks": 12627,
+                "cpu_seconds": 23326.45
+              },
+              "driver": {
+                "pid": 3341800,
+                "start_ticks": 146040435,
+                "cpu_seconds": 55.08
+              },
+              "player": {
+                "pid": 3387782,
+                "start_ticks": 146051241,
+                "cpu_seconds": 0.19
+              },
+              "sampler": {
+                "pid": 3244380,
+                "start_ticks": 146009429,
+                "cpu_seconds": 1.43
+              }
+            },
+            "system_cpu_seconds": 2351211.21,
+            "monotonic_s": 1427469.667631893
+          },
+          "driver_cpu_cores": 0.25332644581749403,
+          "display_stack_cpu_cores": 0.39165601820472673,
+          "external_power_after": {
+            "/sys/class/power_supply/AC/online": "1",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:001/online": "0",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:002/online": "0"
+          },
+          "input_pacing_ok": true,
+          "input_pacing_warnings": [],
+          "input_deadline_miss_percent": 0.0,
+          "sampling_ok": true,
+          "measurement_errors": [],
+          "vino_usb": {
+            "bytes": 0,
+            "presentations": 0,
+            "note": "USB submissions, not measured monitor output"
+          }
+        }
+      },
+      {
+        "block": "block-03",
+        "repeat": 1,
+        "backend": "official",
+        "cases": [
+          "scroll",
+          "motion",
+          "idle"
+        ],
+        "case": "scroll",
+        "measurement": {
+          "event": "done",
+          "start_monotonic_s": 1427502.529902752,
+          "end_monotonic_s": 1427532.530017836,
+          "seconds": 30.000115084,
+          "static_hold": false,
+          "frames_submitted": 1800,
+          "input_frames_per_second": 59.99977,
+          "input_deadline_misses": 675,
+          "x_submission_p99_ms": 28.856023,
+          "max_lateness_ms": 47.627138,
+          "max_input_gap_ms": 45.03314,
+          "cpu_interval_seconds": 30.000979373930022,
+          "external_power_before": {
+            "/sys/class/power_supply/AC/online": "1",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:001/online": "0",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:002/online": "0"
+          },
+          "cpu_cores": {
+            "Xorg": 0.14432862161029156,
+            "kwin_x11": 0.0716643271275918,
+            "driver": 0.8526388315918872,
+            "player": 0.09533022120222036,
+            "sampler": 0.0036665469693161644
+          },
+          "system_busy_cpu_cores": 2.469919367515178,
+          "power": {
+            "sample_count": 151,
+            "sampled_seconds": 30.00182756409049,
+            "max_gap_seconds": 0.20178248384036124,
+            "mean_watts": 25.145340959143017,
+            "estimated_joules": 754.4061834964706,
+            "temperature_start_c": 61.0,
+            "temperature_end_c": 60.0,
+            "temperature_max_c": 63.0
+          },
+          "pixel_checks_passed": 16,
+          "counters_before": {
+            "processes": {
+              "Xorg": {
+                "pid": 2873,
+                "start_ticks": 10889,
+                "cpu_seconds": 29597.29
+              },
+              "kwin_x11": {
+                "pid": 3934,
+                "start_ticks": 12627,
+                "cpu_seconds": 23328.62
+              },
+              "driver": {
+                "pid": 3416785,
+                "start_ticks": 146055838,
+                "cpu_seconds": 17.76
+              },
+              "player": {
+                "pid": 3418534,
+                "start_ticks": 146057534,
+                "cpu_seconds": 1.53
+              },
+              "sampler": {
+                "pid": 3244380,
+                "start_ticks": 146009429,
+                "cpu_seconds": 1.54
+              }
+            },
+            "system_cpu_seconds": 2351275.87,
+            "official_service_cpu_seconds": 17.779524,
+            "monotonic_s": 1427502.529716568
+          },
+          "counters_after": {
+            "processes": {
+              "Xorg": {
+                "pid": 2873,
+                "start_ticks": 10889,
+                "cpu_seconds": 29601.62
+              },
+              "kwin_x11": {
+                "pid": 3934,
+                "start_ticks": 12627,
+                "cpu_seconds": 23330.77
+              },
+              "driver": {
+                "pid": 3416785,
+                "start_ticks": 146055838,
+                "cpu_seconds": 43.34
+              },
+              "player": {
+                "pid": 3418534,
+                "start_ticks": 146057534,
+                "cpu_seconds": 4.39
+              },
+              "sampler": {
+                "pid": 3244380,
+                "start_ticks": 146009429,
+                "cpu_seconds": 1.65
+              }
+            },
+            "system_cpu_seconds": 2351349.97,
+            "official_service_cpu_seconds": 43.354584,
+            "monotonic_s": 1427532.530695942
+          },
+          "official_service_cpu_cores": 0.8524741703007198,
+          "driver_cpu_cores": 0.8524741703007198,
+          "display_stack_cpu_cores": 1.0684671190386033,
+          "external_power_after": {
+            "/sys/class/power_supply/AC/online": "1",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:001/online": "0",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:002/online": "0"
+          },
+          "input_pacing_ok": false,
+          "input_pacing_warnings": [
+            "675/1800 replay deadlines missed (37.5%; warning threshold 1%)"
+          ],
+          "input_deadline_miss_percent": 37.5,
+          "sampling_ok": true,
+          "measurement_errors": []
+        }
+      },
+      {
+        "block": "block-03",
+        "repeat": 1,
+        "backend": "official",
+        "cases": [
+          "scroll",
+          "motion",
+          "idle"
+        ],
+        "case": "motion",
+        "measurement": {
+          "event": "done",
+          "start_monotonic_s": 1427547.957735409,
+          "end_monotonic_s": 1427577.957799364,
+          "seconds": 30.000063955,
+          "static_hold": false,
+          "frames_submitted": 1800,
+          "input_frames_per_second": 59.999872,
+          "input_deadline_misses": 0,
+          "x_submission_p99_ms": 3.774016,
+          "max_lateness_ms": 4.866291,
+          "max_input_gap_ms": 19.834144,
+          "cpu_interval_seconds": 30.001088906545192,
+          "external_power_before": {
+            "/sys/class/power_supply/AC/online": "1",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:001/online": "0",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:002/online": "0"
+          },
+          "cpu_cores": {
+            "Xorg": 0.13199520898519224,
+            "kwin_x11": 0.06099778597044536,
+            "driver": 0.5133147016087222,
+            "player": 0.06299771337925231,
+            "sampler": 0.0033332123481085905
+          },
+          "system_busy_cpu_cores": 2.0299263199950257,
+          "power": {
+            "sample_count": 151,
+            "sampled_seconds": 30.002091475995257,
+            "max_gap_seconds": 0.2038746471516788,
+            "mean_watts": 22.95987230245867,
+            "estimated_joules": 688.8441890955348,
+            "temperature_start_c": 58.0,
+            "temperature_end_c": 59.0,
+            "temperature_max_c": 62.0
+          },
+          "pixel_checks_passed": 16,
+          "counters_before": {
+            "processes": {
+              "Xorg": {
+                "pid": 2873,
+                "start_ticks": 10889,
+                "cpu_seconds": 29603.62
+              },
+              "kwin_x11": {
+                "pid": 3934,
+                "start_ticks": 12627,
+                "cpu_seconds": 23331.71
+              },
+              "driver": {
+                "pid": 3416785,
+                "start_ticks": 146055838,
+                "cpu_seconds": 51.2
+              },
+              "player": {
+                "pid": 3432199,
+                "start_ticks": 146062077,
+                "cpu_seconds": 1.07
+              },
+              "sampler": {
+                "pid": 3244380,
+                "start_ticks": 146009429,
+                "cpu_seconds": 1.68
+              }
+            },
+            "system_cpu_seconds": 2351375.16,
+            "official_service_cpu_seconds": 51.214661,
+            "monotonic_s": 1427547.9574365984
+          },
+          "counters_after": {
+            "processes": {
+              "Xorg": {
+                "pid": 2873,
+                "start_ticks": 10889,
+                "cpu_seconds": 29607.58
+              },
+              "kwin_x11": {
+                "pid": 3934,
+                "start_ticks": 12627,
+                "cpu_seconds": 23333.54
+              },
+              "driver": {
+                "pid": 3416785,
+                "start_ticks": 146055838,
+                "cpu_seconds": 66.6
+              },
+              "player": {
+                "pid": 3432199,
+                "start_ticks": 146062077,
+                "cpu_seconds": 2.96
+              },
+              "sampler": {
+                "pid": 3244380,
+                "start_ticks": 146009429,
+                "cpu_seconds": 1.78
+              }
+            },
+            "system_cpu_seconds": 2351436.06,
+            "official_service_cpu_seconds": 66.619475,
+            "monotonic_s": 1427577.958525505
+          },
+          "official_service_cpu_cores": 0.5134751624511603,
+          "driver_cpu_cores": 0.5134751624511603,
+          "display_stack_cpu_cores": 0.7064681574067979,
+          "external_power_after": {
+            "/sys/class/power_supply/AC/online": "1",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:001/online": "0",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:002/online": "0"
+          },
+          "input_pacing_ok": true,
+          "input_pacing_warnings": [],
+          "input_deadline_miss_percent": 0.0,
+          "sampling_ok": true,
+          "measurement_errors": []
+        }
+      },
+      {
+        "block": "block-03",
+        "repeat": 1,
+        "backend": "official",
+        "cases": [
+          "scroll",
+          "motion",
+          "idle"
+        ],
+        "case": "idle",
+        "measurement": {
+          "event": "done",
+          "start_monotonic_s": 1427593.206327038,
+          "end_monotonic_s": 1427623.206392666,
+          "seconds": 30.000065628,
+          "static_hold": true,
+          "frames_submitted": 0,
+          "input_frames_per_second": 0.0,
+          "input_deadline_misses": 2,
+          "x_submission_p99_ms": 0.208741,
+          "max_lateness_ms": 34.871723,
+          "max_input_gap_ms": 51.475442,
+          "cpu_interval_seconds": 30.001052965410054,
+          "external_power_before": {
+            "/sys/class/power_supply/AC/online": "1",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:001/online": "0",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:002/online": "0"
+          },
+          "cpu_cores": {
+            "Xorg": 0.07633065421528733,
+            "kwin_x11": 0.0526648181922075,
+            "driver": 0.28932317842336003,
+            "player": 0.001999929804769768,
+            "sampler": 0.0033332163412829424
+          },
+          "system_busy_cpu_cores": 1.4199501613896397,
+          "power": {
+            "sample_count": 151,
+            "sampled_seconds": 30.00215413584374,
+            "max_gap_seconds": 0.20240865205414593,
+            "mean_watts": 16.115607328104304,
+            "estimated_joules": 483.50293505051815,
+            "temperature_start_c": 56.0,
+            "temperature_end_c": 53.0,
+            "temperature_max_c": 56.0
+          },
+          "pixel_checks_passed": 16,
+          "counters_before": {
+            "processes": {
+              "Xorg": {
+                "pid": 2873,
+                "start_ticks": 10889,
+                "cpu_seconds": 29608.81
+              },
+              "kwin_x11": {
+                "pid": 3934,
+                "start_ticks": 12627,
+                "cpu_seconds": 23334.4
+              },
+              "driver": {
+                "pid": 3416785,
+                "start_ticks": 146055838,
+                "cpu_seconds": 71.33
+              },
+              "player": {
+                "pid": 3444172,
+                "start_ticks": 146066600,
+                "cpu_seconds": 0.07
+              },
+              "sampler": {
+                "pid": 3244380,
+                "start_ticks": 146009429,
+                "cpu_seconds": 1.81
+              }
+            },
+            "system_cpu_seconds": 2351457.88,
+            "official_service_cpu_seconds": 71.338288,
+            "monotonic_s": 1427593.2061030576
+          },
+          "counters_after": {
+            "processes": {
+              "Xorg": {
+                "pid": 2873,
+                "start_ticks": 10889,
+                "cpu_seconds": 29611.1
+              },
+              "kwin_x11": {
+                "pid": 3934,
+                "start_ticks": 12627,
+                "cpu_seconds": 23335.98
+              },
+              "driver": {
+                "pid": 3416785,
+                "start_ticks": 146055838,
+                "cpu_seconds": 80.01
+              },
+              "player": {
+                "pid": 3444172,
+                "start_ticks": 146066600,
+                "cpu_seconds": 0.13
+              },
+              "sampler": {
+                "pid": 3244380,
+                "start_ticks": 146009429,
+                "cpu_seconds": 1.91
+              }
+            },
+            "system_cpu_seconds": 2351500.48,
+            "official_service_cpu_seconds": 80.020869,
+            "monotonic_s": 1427623.207156023
+          },
+          "official_service_cpu_cores": 0.2894092087371283,
+          "driver_cpu_cores": 0.2894092087371283,
+          "display_stack_cpu_cores": 0.4184046811446231,
+          "external_power_after": {
+            "/sys/class/power_supply/AC/online": "1",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:001/online": "0",
+            "/sys/class/power_supply/ucsi-source-psy-USBC000:002/online": "0"
+          },
+          "input_pacing_ok": true,
+          "input_pacing_warnings": [],
+          "input_deadline_miss_percent": 0.1111111111111111,
+          "sampling_ok": true,
+          "measurement_errors": []
+        }
+      }
+    ],
+    "blocks": [
+      {
+        "repeat": 0,
+        "backend": "official",
+        "cases": [
+          "idle",
+          "scroll",
+          "motion"
+        ]
+      },
+      {
+        "repeat": 0,
+        "backend": "gpu",
+        "cases": [
+          "idle",
+          "scroll",
+          "motion"
+        ]
+      },
+      {
+        "repeat": 1,
+        "backend": "gpu",
+        "cases": [
+          "scroll",
+          "motion",
+          "idle"
+        ]
+      },
+      {
+        "repeat": 1,
+        "backend": "official",
+        "cases": [
+          "scroll",
+          "motion",
+          "idle"
+        ]
+      }
+    ],
+    "method": "same Dell 1920x1080/60, laptop primary, other outputs off; both drivers capture and send USB",
+    "vulkan_validation": false,
+    "monitor_fps_verified": false,
+    "quality_equivalence_verified": false,
+    "sensor": {
+      "path": "/sys/class/drm/card1/device/hwmon/hwmon12",
+      "power_label": "PPT",
+      "temperature_label": "edge",
+      "scope": "AMD hwmon reported power; not whole-laptop or wall power"
+    },
+    "settings": {
+      "pairs": 2,
+      "warmup": 15,
+      "seconds": 30,
+      "settle": 15,
+      "dock": "8-1.2",
+      "head": 0,
+      "card": 0,
+      "device": 0
+    },
+    "external_power_inputs": {
+      "/sys/class/power_supply/AC/online": "1",
+      "/sys/class/power_supply/ucsi-source-psy-USBC000:001/online": "0",
+      "/sys/class/power_supply/ucsi-source-psy-USBC000:002/online": "0"
+    },
+    "limitations": [
+      "Input submissions and Vino USB presentations do not measure delivered monitor FPS or latency",
+      "Visual smoothness and quality need user observation; codecs and adaptive quality may differ",
+      "Synthetic full-window damage; not browser decoding, window dragging, or arbitrary desktop workloads",
+      "AMD reported PPT is not wall or whole-laptop power; normal background apps and automatic clocks remain active"
+    ],
+    "inputs": {
+      "schema": 1,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "frames_per_head": 16,
+      "interleaved_heads": 2,
+      "files": {
+        "live-replay": "799814feee5c2a23708ca13dee56cb181051f41fc25a57e2198058d43e1e451f",
+        "idle.bgrx": "b8fb35be385d70ca99d8ba49d36cd24abf2a20a51f45b7b83bc2185ebb0b480c",
+        "scroll.bgrx": "1a353b169464e1d1492fd58dde04203c48df7a12f011425c524240b4c91b9da9",
+        "motion.bgrx": "bb557d60243098096571c016a1fe23ce5e85f0721bb47b79ca3e3f2c5bdd93ae"
+      },
+      "gpu_binary_sha256": "2f998dc67fc962e1dac49997b4d349137a37a5a31b5d8285dcaa66f2a031b77a",
+      "exporter_sha256": "915ab2d013dd1e9de71fc9bcb59601eb82185a488984ad66c32b6864fb0d5434",
+      "player_source_sha256": "4c451507852d7f4b5c2df29876c91e8e8764bbd32d052f8feaa5393eebbac451"
+    },
+    "official_sha256": "e57cc78ca42b8cb06a20892af76ce29f0f055136760428421133e6af2822ed4a",
+    "harness_sha256": {
+      "compare-live.py": "8448733f305adb71cd8d7eea33fcffed32f2df973697bfc25ec81878e2df0422",
+      "live-trial.py": "83a10cc57bb438cb07df81ae3e37b9ac77807008e698b7bd9122380dd0bc44bb"
+    },
+    "versions": "displaylink-driver\t6.4.0-22\nevdi\t1.15.1-197\n",
+    "kernel": "7.0.0-34-generic",
+    "original_outputs": [
+      {
+        "name": "eDP",
+        "connected": true,
+        "primary": true,
+        "mode": "1920x1200",
+        "x": 0,
+        "y": 0,
+        "rate": "60.00",
+        "edid": "00ffffffffffff0030ae3d400000000000210104a51e137803cb5591575a91291c505400000001010101010101010101010101010101263d80b870b0284010103e002ebc10000018000000fd00283c4b4b10010a2020202020200000000f00d10a3cd10a28280a0006afad3c000000fe004231343055414e30342e37200a003e"
+      },
+      {
+        "name": "HDMI-A-0",
+        "connected": false,
+        "primary": false,
+        "mode": null,
+        "x": 0,
+        "y": 0,
+        "rate": null,
+        "edid": ""
+      },
+      {
+        "name": "DisplayPort-0",
+        "connected": false,
+        "primary": false,
+        "mode": null,
+        "x": 0,
+        "y": 0,
+        "rate": null,
+        "edid": ""
+      },
+      {
+        "name": "DisplayPort-1",
+        "connected": false,
+        "primary": false,
+        "mode": null,
+        "x": 0,
+        "y": 0,
+        "rate": null,
+        "edid": ""
+      },
+      {
+        "name": "DisplayPort-2",
+        "connected": false,
+        "primary": false,
+        "mode": null,
+        "x": 0,
+        "y": 0,
+        "rate": null,
+        "edid": ""
+      },
+      {
+        "name": "DisplayPort-3",
+        "connected": false,
+        "primary": false,
+        "mode": null,
+        "x": 0,
+        "y": 0,
+        "rate": null,
+        "edid": ""
+      },
+      {
+        "name": "DisplayPort-4",
+        "connected": false,
+        "primary": false,
+        "mode": null,
+        "x": 0,
+        "y": 0,
+        "rate": null,
+        "edid": ""
+      },
+      {
+        "name": "DisplayPort-5",
+        "connected": false,
+        "primary": false,
+        "mode": null,
+        "x": 0,
+        "y": 0,
+        "rate": null,
+        "edid": ""
+      },
+      {
+        "name": "DisplayPort-6",
+        "connected": false,
+        "primary": false,
+        "mode": null,
+        "x": 0,
+        "y": 0,
+        "rate": null,
+        "edid": ""
+      },
+      {
+        "name": "DisplayPort-7",
+        "connected": false,
+        "primary": false,
+        "mode": null,
+        "x": 0,
+        "y": 0,
+        "rate": null,
+        "edid": ""
+      },
+      {
+        "name": "DisplayPort-8",
+        "connected": false,
+        "primary": false,
+        "mode": null,
+        "x": 0,
+        "y": 0,
+        "rate": null,
+        "edid": ""
+      },
+      {
+        "name": "DisplayPort-9",
+        "connected": false,
+        "primary": false,
+        "mode": null,
+        "x": 0,
+        "y": 0,
+        "rate": null,
+        "edid": ""
+      },
+      {
+        "name": "DisplayPort-10",
+        "connected": false,
+        "primary": false,
+        "mode": null,
+        "x": 0,
+        "y": 0,
+        "rate": null,
+        "edid": ""
+      },
+      {
+        "name": "DisplayPort-11",
+        "connected": false,
+        "primary": false,
+        "mode": null,
+        "x": 0,
+        "y": 0,
+        "rate": null,
+        "edid": ""
+      },
+      {
+        "name": "DVI-I-4-3",
+        "connected": false,
+        "primary": false,
+        "mode": null,
+        "x": 0,
+        "y": 0,
+        "rate": null,
+        "edid": ""
+      },
+      {
+        "name": "DVI-I-3-4",
+        "connected": false,
+        "primary": false,
+        "mode": null,
+        "x": 0,
+        "y": 0,
+        "rate": null,
+        "edid": ""
+      },
+      {
+        "name": "DVI-I-2-2",
+        "connected": true,
+        "primary": false,
+        "mode": "1920x1080",
+        "x": 1920,
+        "y": 0,
+        "rate": "60.00",
+        "edid": "00ffffffffffff0010acdca042504d37051c010380351e78ea0565a756529c270f5054a54b00714f8180a9c0d1c00101010101010101023a801871382d40582c45000f282100001e000000ff004e504e5254383231374d50420a000000fc0044454c4c205032343137480a20000000fd00384c1e5311000a202020202020016c020317b14c9005040302071601141f121365030c001000023a801871382d40582c45000f282100001e011d8018711c1620582c25000f282100009e011d007251d01e206e2855000f282100001e8c0ad08a20e02d10103e96000f282100001800000000000000000000000000000000000000000000000000000000000000003d"
+      },
+      {
+        "name": "DVI-I-1-1",
+        "connected": true,
+        "primary": false,
+        "mode": null,
+        "x": 0,
+        "y": 0,
+        "rate": null,
+        "edid": "00ffffffffffff0009d1ce78455400002a19010380351e782e6b35a455559f270c5054a56b80d1c081c081008180a9c0b30001010101023a801871382d40582c4500132b2100001e000000ff005641463033323730534c300a20000000fd00324c1e5311000a202020202020000000fc0042656e5120474c323436300a200151020322f14f90050403020111121314060715161f2309070765030c00100083010000023a801871382d40582c4500132b2100001f011d8018711c1620582c2500132b2100009f011d007251d01e206e285500132b2100001e8c0ad08a20e02d10103e9600132b21000018000000000000000000000000000000000000000000e7"
+      }
+    ],
+    "finished_unix": 1792337701.0228996,
+    "summary": [
+      {
+        "case": "idle",
+        "backend": "official",
+        "repetitions": 2,
+        "input_pacing_ok": true,
+        "input_pacing_warning_runs": 0,
+        "metrics": {
+          "driver_cpu_cores": {
+            "mean": 0.1833480927684402,
+            "min": 0.0772869767997521,
+            "max": 0.2894092087371283
+          },
+          "display_stack_cpu_cores": {
+            "mean": 0.2713449199037056,
+            "min": 0.124285158662788,
+            "max": 0.4184046811446231
+          },
+          "system_busy_cpu_cores": {
+            "mean": 1.2554539787006525,
+            "min": 1.0909577960116652,
+            "max": 1.4199501613896397
+          },
+          "amd_reported_watts": {
+            "mean": 14.469257156852562,
+            "min": 12.82290698560082,
+            "max": 16.115607328104304
+          },
+          "input_frames_per_second": {
+            "mean": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "input_deadline_miss_percent": {
+            "mean": 0.05555555555555555,
+            "min": 0.0,
+            "max": 0.1111111111111111
+          },
+          "x_submission_p99_ms": {
+            "mean": 0.2524715,
+            "min": 0.208741,
+            "max": 0.296202
+          },
+          "max_input_gap_ms": {
+            "mean": 42.2331615,
+            "min": 32.990881,
+            "max": 51.475442
+          }
+        }
+      },
+      {
+        "case": "idle",
+        "backend": "gpu",
+        "repetitions": 2,
+        "input_pacing_ok": true,
+        "input_pacing_warning_runs": 0,
+        "metrics": {
+          "driver_cpu_cores": {
+            "mean": 0.14332937715730928,
+            "min": 0.03333230849712456,
+            "max": 0.25332644581749403
+          },
+          "display_stack_cpu_cores": {
+            "mean": 0.2163273788280877,
+            "min": 0.04099873945144866,
+            "max": 0.39165601820472673
+          },
+          "system_busy_cpu_cores": {
+            "mean": 1.6804524744343299,
+            "min": 1.032634917240298,
+            "max": 2.3282700316283615
+          },
+          "amd_reported_watts": {
+            "mean": 19.5175517300297,
+            "min": 18.07558775488352,
+            "max": 20.959515705175885
+          },
+          "input_frames_per_second": {
+            "mean": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "input_deadline_miss_percent": {
+            "mean": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "x_submission_p99_ms": {
+            "mean": 0.28701699999999997,
+            "min": 0.271858,
+            "max": 0.302176
+          },
+          "max_input_gap_ms": {
+            "mean": 17.6684625,
+            "min": 17.631075,
+            "max": 17.70585
+          }
+        }
+      },
+      {
+        "case": "scroll",
+        "backend": "official",
+        "repetitions": 2,
+        "input_pacing_ok": false,
+        "input_pacing_warning_runs": 2,
+        "metrics": {
+          "driver_cpu_cores": {
+            "mean": 0.8535797277730925,
+            "min": 0.8524741703007198,
+            "max": 0.8546852852454653
+          },
+          "display_stack_cpu_cores": {
+            "mean": 1.0617394528527857,
+            "min": 1.0550117866669684,
+            "max": 1.0684671190386033
+          },
+          "system_busy_cpu_cores": {
+            "mean": 2.169261153782851,
+            "min": 1.868602940050524,
+            "max": 2.469919367515178
+          },
+          "amd_reported_watts": {
+            "mean": 23.64048008578585,
+            "min": 22.135619212428683,
+            "max": 25.145340959143017
+          },
+          "input_frames_per_second": {
+            "mean": 59.999821,
+            "min": 59.99977,
+            "max": 59.999872
+          },
+          "input_deadline_miss_percent": {
+            "mean": 21.97222222222222,
+            "min": 6.444444444444445,
+            "max": 37.5
+          },
+          "x_submission_p99_ms": {
+            "mean": 24.810491,
+            "min": 20.764959,
+            "max": 28.856023
+          },
+          "max_input_gap_ms": {
+            "mean": 44.9540245,
+            "min": 44.874909,
+            "max": 45.03314
+          }
+        }
+      },
+      {
+        "case": "scroll",
+        "backend": "gpu",
+        "repetitions": 2,
+        "input_pacing_ok": true,
+        "input_pacing_warning_runs": 0,
+        "metrics": {
+          "driver_cpu_cores": {
+            "mean": 0.44298441834761515,
+            "min": 0.4323182702502496,
+            "max": 0.4536505664449807
+          },
+          "display_stack_cpu_cores": {
+            "mean": 0.647643884300891,
+            "min": 0.6259781893061105,
+            "max": 0.6693095792956716
+          },
+          "system_busy_cpu_cores": {
+            "mean": 1.876433964245011,
+            "min": 1.7276064724057554,
+            "max": 2.0252614560842668
+          },
+          "amd_reported_watts": {
+            "mean": 22.461446270182805,
+            "min": 21.552031824930232,
+            "max": 23.37086071543538
+          },
+          "input_frames_per_second": {
+            "mean": 59.999862,
+            "min": 59.999848,
+            "max": 59.999876
+          },
+          "input_deadline_miss_percent": {
+            "mean": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "x_submission_p99_ms": {
+            "mean": 5.5796775,
+            "min": 5.033632,
+            "max": 6.125723
+          },
+          "max_input_gap_ms": {
+            "mean": 22.8740935,
+            "min": 22.633732,
+            "max": 23.114455
+          }
+        }
+      },
+      {
+        "case": "motion",
+        "backend": "official",
+        "repetitions": 2,
+        "input_pacing_ok": true,
+        "input_pacing_warning_runs": 0,
+        "metrics": {
+          "driver_cpu_cores": {
+            "mean": 0.5281408462160525,
+            "min": 0.5134751624511603,
+            "max": 0.5428065299809447
+          },
+          "display_stack_cpu_cores": {
+            "mean": 0.7217998271222238,
+            "min": 0.7064681574067979,
+            "max": 0.7371314968376497
+          },
+          "system_busy_cpu_cores": {
+            "mean": 1.7770970137154236,
+            "min": 1.5242677074358215,
+            "max": 2.0299263199950257
+          },
+          "amd_reported_watts": {
+            "mean": 20.50229958783182,
+            "min": 18.04472687320497,
+            "max": 22.95987230245867
+          },
+          "input_frames_per_second": {
+            "mean": 59.999845500000006,
+            "min": 59.999819,
+            "max": 59.999872
+          },
+          "input_deadline_miss_percent": {
+            "mean": 0.0,
+            "min": 0.0,
+            "max": 0.0
+          },
+          "x_submission_p99_ms": {
+            "mean": 4.502997,
+            "min": 3.774016,
+            "max": 5.231978
+          },
+          "max_input_gap_ms": {
+            "mean": 20.344730499999997,
+            "min": 19.834144,
+            "max": 20.855317
+          }
+        }
+      },
+      {
+        "case": "motion",
+        "backend": "gpu",
+        "repetitions": 2,
+        "input_pacing_ok": true,
+        "input_pacing_warning_runs": 0,
+        "metrics": {
+          "driver_cpu_cores": {
+            "mean": 0.4139869374124482,
+            "min": 0.39898599996236006,
+            "max": 0.42898787486253637
+          },
+          "display_stack_cpu_cores": {
+            "mean": 0.6128139753904274,
+            "min": 0.5969790525752169,
+            "max": 0.628648898205638
+          },
+          "system_busy_cpu_cores": {
+            "mean": 1.9167717068581522,
+            "min": 1.6502866887760719,
+            "max": 2.183256724940233
+          },
+          "amd_reported_watts": {
+            "mean": 21.66062243251512,
+            "min": 20.001375495918786,
+            "max": 23.319869369111448
+          },
+          "input_frames_per_second": {
+            "mean": 59.9998705,
+            "min": 59.999869,
+            "max": 59.999872
+          },
+          "input_deadline_miss_percent": {
+            "mean": 0.05555555555555555,
+            "min": 0.0,
+            "max": 0.1111111111111111
+          },
+          "x_submission_p99_ms": {
+            "mean": 5.3739565,
+            "min": 4.506017,
+            "max": 6.241896
+          },
+          "max_input_gap_ms": {
+            "mean": 35.302354,
+            "min": 21.620984,
+            "max": 48.983724
+          }
+        }
+      }
+    ],
+    "input_pacing_ok": false,
+    "input_pacing_warning_runs": 2
+  }
+}

@@ -11,14 +11,16 @@ use super::{
     evdi_add_device, evdi_buffer, evdi_check_device, evdi_close, evdi_connect2, evdi_cursor_move,
     evdi_cursor_set, evdi_ddcci_data, evdi_ddcci_response, evdi_device_context, evdi_device_status,
     evdi_disconnect, evdi_enable_cursor_events, evdi_event_context, evdi_get_event_ready,
-    evdi_grab_pixels, evdi_handle_events, evdi_mode, evdi_open, evdi_rect, evdi_register_buffer,
-    evdi_request_update, evdi_unregister_buffer,
+    evdi_handle_events, evdi_mode, evdi_open, evdi_rect, evdi_register_buffer,
+    evdi_unregister_buffer,
 };
 use crate::ffi;
 use core::ffi::{c_int, c_void};
 use core::ptr::NonNull;
-use std::sync::Mutex;
+use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
+
+pub mod shared_capture;
 
 const BUFFER_ID: c_int = 1;
 /// How long to wait for a freshly added card's node to appear, and how often to look.
@@ -35,15 +37,25 @@ pub enum Error {
     NoAvailableDevice,
     OpenDevice(c_int),
     InvalidEdidLength,
+    CaptureIoctl(c_int),
+    ExternalBuffer,
+    PendingBuffer,
 }
 
 impl core::fmt::Display for Error {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         match self {
+            Self::CaptureIoctl(errno) => write!(
+                f,
+                "EVDI capture ioctl failed: {}",
+                std::io::Error::from_raw_os_error(*errno)
+            ),
             Self::AddDevice => write!(f, "failed to add a Revdi device"),
             Self::NoAvailableDevice => write!(f, "no available Revdi device"),
             Self::OpenDevice(index) => write!(f, "failed to open Revdi device {index}"),
             Self::InvalidEdidLength => write!(f, "EDID is too large for the Revdi ABI"),
+            Self::ExternalBuffer => write!(f, "invalid external capture buffer or mode"),
+            Self::PendingBuffer => write!(f, "cannot change the destination of a pending update"),
         }
     }
 }
@@ -126,6 +138,59 @@ pub struct Frame<'a> {
     pub width: usize,
     pub height: usize,
     pub stride: usize,
+    pub damage: Vec<DamageRect>,
+}
+
+/// An externally allocated destination with ownership retained through registration.
+/// Pixel access still requires an exclusive capture lease at each grab.
+pub struct ExternalBuffer {
+    id: c_int,
+    pointer: NonNull<u8>,
+    width: usize,
+    height: usize,
+    stride: usize,
+    _owner: Arc<dyn Send + Sync>,
+}
+
+impl ExternalBuffer {
+    /// # Safety
+    /// `owner` must retain this stable allocation, and `pointer` must address at least `length`
+    /// initialized writable bytes. Registration grants no pixel access. A caller holding an
+    /// exclusive capture lease may grab/repair pixels; all other CPU/GPU access requires an
+    /// immutable frame lease and must finish before the next exclusive reservation.
+    pub unsafe fn new(
+        id: c_int,
+        pointer: *mut u8,
+        length: usize,
+        geometry: (usize, usize, usize),
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<Self, Error> {
+        let (width, height, stride) = geometry;
+        let pointer = NonNull::new(pointer).ok_or(Error::ExternalBuffer)?;
+        if width == 0
+            || height == 0
+            || width.checked_mul(4).map_or(true, |n| n > stride)
+            || stride.checked_mul(height).map_or(true, |n| n > length)
+            || [width, height, stride]
+                .iter()
+                .any(|&n| n > c_int::MAX as usize)
+        {
+            return Err(Error::ExternalBuffer);
+        }
+        Ok(Self {
+            id,
+            pointer,
+            width,
+            height,
+            stride,
+            _owner: owner,
+        })
+    }
+}
+
+/// Completion metadata for an externally owned destination; no borrowed pixel alias is created.
+pub struct ExternalFrame {
+    pub buffer_id: c_int,
     pub damage: Vec<DamageRect>,
 }
 
@@ -263,6 +328,10 @@ pub struct Device {
     state: Box<EventState>,
     buffer: Option<RegisteredBuffer>,
     mode: Option<Mode>,
+    update_pending: bool,
+    external_buffers: Vec<ExternalBuffer>,
+    external_mode: bool,
+    pending_buffer: Option<c_int>,
 }
 
 /// Every Revdi card index the module currently exposes.
@@ -306,15 +375,30 @@ impl Device {
     }
 
     fn open_index(index: i32) -> Result<Self, Error> {
+        Self::open_existing(index, true)
+    }
+
+    /// Open one existing EVDI card with its cursor policy set before CONNECT.
+    /// This never adds cards or detaches another client's handle.
+    pub fn open_existing(index: i32, cursor_events: bool) -> Result<Self, Error> {
+        if !(0..MAX_DEVICE_INDEX).contains(&index)
+            || evdi_check_device(index) != evdi_device_status::AVAILABLE
+        {
+            return Err(Error::OpenDevice(index));
+        }
         let handle = NonNull::new(evdi_open(index)).ok_or(Error::OpenDevice(index))?;
         let device = Self {
             handle,
             state: Box::default(),
             buffer: None,
             mode: None,
+            update_pending: false,
+            external_buffers: Vec::new(),
+            external_mode: false,
+            pending_buffer: None,
         };
         // SAFETY: the owned handle remains live until `Device::drop`.
-        unsafe { evdi_enable_cursor_events(device.handle.as_ptr(), true) };
+        unsafe { evdi_enable_cursor_events(device.handle.as_ptr(), cursor_events) };
         Ok(device)
     }
 
@@ -326,6 +410,13 @@ impl Device {
     pub fn set_cursor_events(&mut self, enable: bool) {
         // SAFETY: the owned handle remains live until `Device::drop`.
         unsafe { evdi_enable_cursor_events(self.handle.as_ptr(), enable) };
+    }
+
+    /// Whether this handle successfully enabled cursor events without falling back after a
+    /// bitmap-mapping failure. Clients requiring separate composition must check after polling.
+    pub fn cursor_events_enabled(&self) -> bool {
+        // SAFETY: this device owns the live context, and event handling is synchronous.
+        unsafe { self.handle.as_ref().cursor_events_enabled.get() }
     }
 
     /// Advertise a connected monitor using its EDID and explicit scanout limits.
@@ -374,37 +465,188 @@ impl Device {
     /// The returned frame borrows the registered framebuffer, preventing a mode change or
     /// re-registration until the caller has finished reading it.
     pub fn next_frame(&mut self, timeout: Duration) -> Option<Frame<'_>> {
+        self.try_next_frame(timeout).ok().flatten()
+    }
+
+    /// Checked capture for clients that must stop on device errors rather than treat them as idle.
+    pub fn try_next_frame(&mut self, timeout: Duration) -> Result<Option<Frame<'_>>, Error> {
+        if self.external_mode {
+            return Err(Error::ExternalBuffer);
+        }
         self.poll_events(Duration::ZERO);
-        self.buffer.as_ref()?;
+        if self.buffer.is_none() {
+            return Ok(None);
+        }
+        // A reply can arrive after an earlier call's timeout. Consume it before asking again.
+        if self.take_ready() {
+            self.update_pending = false;
+            return self.grab_frame();
+        }
+        if !self.update_pending {
+            // SAFETY: BUFFER_ID is registered for this owned handle.
+            if unsafe { super::request_update_checked(self.handle.as_ptr(), BUFFER_ID) }
+                .map_err(Error::CaptureIoctl)?
+            {
+                return self.grab_frame();
+            }
+            self.update_pending = true;
+        }
+        let deadline = Instant::now() + timeout;
+        loop {
+            let remaining = deadline.saturating_duration_since(Instant::now());
+            if remaining.is_zero() {
+                return Ok(None);
+            }
+            self.poll_events(remaining);
+            if self.take_ready() {
+                self.update_pending = false;
+                return self.grab_frame();
+            }
+            // A mode event invalidates the registered buffer and its outstanding request.
+            if !self.update_pending {
+                return Ok(None);
+            }
+        }
+    }
+
+    /// Select owned external storage instead of the default single-vector capture path.
+    /// Registration itself grants no permission to modify a destination.
+    pub fn register_external_buffers(&mut self, buffers: Vec<ExternalBuffer>) -> Result<(), Error> {
+        if buffers.is_empty() || self.update_pending || self.mode.is_some() {
+            return Err(Error::ExternalBuffer);
+        }
+        for (i, buffer) in buffers.iter().enumerate() {
+            if buffers[..i].iter().any(|old| old.id == buffer.id) {
+                return Err(Error::ExternalBuffer);
+            }
+        }
+        self.unregister_buffer();
+        self.external_mode = true;
+        self.external_buffers = buffers;
+        for buffer in &self.external_buffers {
+            let abi = evdi_buffer {
+                id: buffer.id,
+                buffer: buffer.pointer.as_ptr().cast(),
+                width: buffer.width as c_int,
+                height: buffer.height as c_int,
+                stride: buffer.stride as c_int,
+                rects: core::ptr::null_mut(),
+                rect_count: 0,
+            };
+            // SAFETY: ExternalBuffer retains its validated allocation until unregister.
+            unsafe { evdi_register_buffer(self.handle.as_ptr(), abi) };
+        }
+        Ok(())
+    }
+
+    /// Capture into one previously registered, exclusively reserved destination.
+    ///
+    /// # Safety
+    /// The caller must exclusively own the pixels in `buffer_id` throughout this call and
+    /// retain the same reservation across timeouts until completion or device teardown.
+    /// No CPU/GPU reader may access this destination until the grab and repair are finished.
+    pub unsafe fn try_next_external_frame(
+        &mut self,
+        buffer_id: c_int,
+        timeout: Duration,
+    ) -> Result<Option<ExternalFrame>, Error> {
+        self.poll_events(Duration::ZERO);
+        if !self.external_mode {
+            return Err(Error::ExternalBuffer);
+        }
+        let Some(mode) = self.mode else {
+            return Ok(None);
+        };
+        let buffer = self
+            .external_buffers
+            .iter()
+            .find(|b| b.id == buffer_id)
+            .ok_or(Error::ExternalBuffer)?;
+        if (buffer.width, buffer.height) != (mode.width, mode.height) || mode.bits_per_pixel != 32 {
+            return Err(Error::ExternalBuffer);
+        }
+        if self.pending_buffer.is_some_and(|id| id != buffer_id) {
+            return Err(Error::PendingBuffer);
+        }
+        let take_ready = |this: &mut Self| {
+            this.state
+                .ready_buffer
+                .lock()
+                .unwrap_or_else(|e| e.into_inner())
+                .take()
+                == Some(buffer_id)
+        };
+        if take_ready(self) {
+            self.update_pending = false;
+            self.pending_buffer = None;
+            return self.grab_external(buffer_id);
+        }
+        if !self.update_pending {
+            self.pending_buffer = Some(buffer_id);
+            let ready = super::request_update_checked(self.handle.as_ptr(), buffer_id)
+                .map_err(Error::CaptureIoctl)?;
+            if ready {
+                self.pending_buffer = None;
+                return self.grab_external(buffer_id);
+            }
+            self.update_pending = true;
+        }
+        let deadline = Instant::now() + timeout;
+        loop {
+            let remaining = deadline.saturating_duration_since(Instant::now());
+            if remaining.is_zero() {
+                return Ok(None);
+            }
+            self.poll_events(remaining);
+            if !self.update_pending {
+                return Ok(None);
+            }
+            if take_ready(self) {
+                self.update_pending = false;
+                self.pending_buffer = None;
+                return self.grab_external(buffer_id);
+            }
+        }
+    }
+
+    fn grab_external(&mut self, buffer_id: c_int) -> Result<Option<ExternalFrame>, Error> {
+        let mut rects = [evdi_rect {
+            x1: 0,
+            y1: 0,
+            x2: 0,
+            y2: 0,
+        }; MAX_DAMAGE_RECTS];
+        let mut count = rects.len() as c_int;
+        // SAFETY: callers retain the selected exclusive destination; ioctl is synchronous.
+        unsafe {
+            super::grab_pixels_checked(self.handle.as_ptr(), rects.as_mut_ptr(), &mut count)
+                .map_err(Error::CaptureIoctl)?;
+        }
+        let count = usize::try_from(count).unwrap_or(0).min(rects.len());
+        if count == 0 {
+            return Ok(None);
+        }
+        Ok(Some(ExternalFrame {
+            buffer_id,
+            damage: rects[..count]
+                .iter()
+                .map(|r| DamageRect {
+                    x1: r.x1,
+                    y1: r.y1,
+                    x2: r.x2,
+                    y2: r.y2,
+                })
+                .collect(),
+        }))
+    }
+
+    fn take_ready(&mut self) -> bool {
         self.state
             .ready_buffer
             .lock()
             .unwrap_or_else(|e| e.into_inner())
-            .take();
-        // SAFETY: `BUFFER_ID` names `buffer`, whose allocation remains stable until this method
-        // returns its borrow.
-        let immediately_ready = unsafe { evdi_request_update(self.handle.as_ptr(), BUFFER_ID) };
-        if !immediately_ready {
-            let deadline = Instant::now() + timeout;
-            loop {
-                let remaining = deadline.saturating_duration_since(Instant::now());
-                if remaining.is_zero() {
-                    return None;
-                }
-                self.poll_events(remaining);
-                if self
-                    .state
-                    .ready_buffer
-                    .lock()
-                    .unwrap_or_else(|e| e.into_inner())
-                    .take()
-                    == Some(BUFFER_ID)
-                {
-                    break;
-                }
-            }
-        }
-        self.grab_frame()
+            .take()
+            == Some(BUFFER_ID)
     }
 
     /// Poll and drain non-frame events into owned Rust values.
@@ -426,7 +668,7 @@ impl Device {
         }
     }
 
-    fn grab_frame(&mut self) -> Option<Frame<'_>> {
+    fn grab_frame(&mut self) -> Result<Option<Frame<'_>>, Error> {
         let mut rects = [evdi_rect {
             x1: 0,
             y1: 0,
@@ -436,12 +678,16 @@ impl Device {
         let mut count = rects.len() as c_int;
         // SAFETY: `rects` has `count` slots, and `BUFFER_ID` is registered while `buffer` is Some.
         unsafe {
-            evdi_grab_pixels(self.handle.as_ptr(), rects.as_mut_ptr(), &mut count);
+            super::grab_pixels_checked(self.handle.as_ptr(), rects.as_mut_ptr(), &mut count)
+                .map_err(Error::CaptureIoctl)?;
         }
         let count = usize::try_from(count)
             .ok()
             .map(|count| count.min(rects.len()))
             .unwrap_or(0);
+        if count == 0 {
+            return Ok(None);
+        }
         let damage = rects[..count]
             .iter()
             .map(|r| DamageRect {
@@ -451,14 +697,16 @@ impl Device {
                 y2: r.y2,
             })
             .collect();
-        let buffer = self.buffer.as_ref()?;
-        Some(Frame {
+        let Some(buffer) = self.buffer.as_ref() else {
+            return Ok(None);
+        };
+        Ok(Some(Frame {
             pixels: &buffer.pixels,
             width: buffer.width,
             height: buffer.height,
             stride: buffer.stride,
             damage,
-        })
+        }))
     }
 
     fn poll_events(&mut self, timeout: Duration) {
@@ -500,6 +748,17 @@ impl Device {
     }
 
     fn register_mode(&mut self, mode: Mode) {
+        if self.external_mode {
+            self.update_pending = false;
+            self.pending_buffer = None;
+            self.state
+                .ready_buffer
+                .lock()
+                .unwrap_or_else(|e| e.into_inner())
+                .take();
+            self.mode = Some(mode);
+            return;
+        }
         self.unregister_buffer();
         self.mode = None;
         let Some(stride) = mode.width.checked_mul(4) else {
@@ -543,6 +802,13 @@ impl Device {
     }
 
     fn unregister_buffer(&mut self) {
+        self.update_pending = false;
+        self.pending_buffer = None;
+        self.state
+            .ready_buffer
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+            .take();
         if self.buffer.is_some() {
             // SAFETY: `BUFFER_ID` is registered exactly while `self.buffer` is Some.
             unsafe {
@@ -550,6 +816,11 @@ impl Device {
             }
             self.buffer = None;
         }
+        for buffer in &self.external_buffers {
+            // SAFETY: each external allocation is retained until after unregistering its ID.
+            unsafe { evdi_unregister_buffer(self.handle.as_ptr(), buffer.id) };
+        }
+        self.external_buffers.clear();
     }
 }
 
@@ -573,7 +844,13 @@ fn wait_readable(fd: c_int, timeout: Duration) -> bool {
         events: ffi::POLLIN,
         revents: 0,
     };
-    let timeout_ms = timeout.as_millis().min(c_int::MAX as u128) as c_int;
+    // Deadline callers pass the remaining duration, often below one millisecond.
+    // Flooring it to zero makes them spin in poll(0) until their deadline expires.
+    // Round positive waits up; zero stays nonblocking and readable fds still wake early.
+    let timeout_ms = timeout
+        .as_nanos()
+        .div_ceil(1_000_000)
+        .min(c_int::MAX as u128) as c_int;
     // SAFETY: `poll_fd` is one initialized entry and remains live for the call.
     let ready = unsafe { ffi::poll(&mut poll_fd, 1, timeout_ms) };
     ready > 0 && poll_fd.revents & ffi::POLLIN != 0
@@ -582,6 +859,398 @@ fn wait_readable(fd: c_int, timeout: Duration) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::io::{Read, Write};
+    use std::os::fd::AsRawFd;
+    use std::os::unix::net::UnixStream;
+
+    #[test]
+    fn a_fractional_millisecond_wait_blocks_until_timeout() {
+        let (reader, _writer) = UnixStream::pair().unwrap();
+        let timeout = Duration::from_micros(900);
+        let started = Instant::now();
+        assert!(!wait_readable(reader.as_raw_fd(), timeout));
+        // Rounding a positive remainder down to zero turns the caller's deadline loop
+        // into a busy wait. An empty descriptor must actually wait for this remainder.
+        assert!(started.elapsed() >= timeout);
+    }
+
+    #[test]
+    fn zero_timeout_checks_readiness_without_consuming_the_event() {
+        let (mut reader, mut writer) = UnixStream::pair().unwrap();
+        assert!(!wait_readable(reader.as_raw_fd(), Duration::ZERO));
+        writer.write_all(&[7]).unwrap();
+        assert!(wait_readable(reader.as_raw_fd(), Duration::ZERO));
+        let mut byte = [0];
+        reader.read_exact(&mut byte).unwrap();
+        assert_eq!(byte, [7]);
+        assert!(!wait_readable(reader.as_raw_fd(), Duration::ZERO));
+    }
+
+    #[test]
+    fn an_incoming_event_wakes_a_blocking_wait() {
+        let (reader, mut writer) = UnixStream::pair().unwrap();
+        let sender = std::thread::spawn(move || {
+            std::thread::sleep(Duration::from_millis(10));
+            writer.write_all(&[1]).unwrap();
+        });
+        let timeout = Duration::from_secs(2);
+        let started = Instant::now();
+        let ready = wait_readable(reader.as_raw_fd(), timeout);
+        sender.join().unwrap();
+        assert!(ready);
+        assert!(started.elapsed() < timeout);
+    }
+
+    #[test]
+    fn a_pending_update_survives_timeout_and_consumes_its_late_reply() {
+        // An invalid fd makes any unintended ioctl fail immediately without opening a device.
+        let context = Box::new(super::super::evdi_device_context {
+            fd: -1,
+            buffer_to_update: 2,
+            device_index: -1,
+            cursor_events_enabled: core::cell::Cell::new(false),
+            frame_buffers: vec![evdi_buffer {
+                id: 2,
+                buffer: core::ptr::null_mut(),
+                width: 1,
+                height: 1,
+                stride: 4,
+                rects: core::ptr::null_mut(),
+                rect_count: 0,
+            }],
+        });
+        let mut device = Device {
+            handle: NonNull::new(Box::into_raw(context)).unwrap(),
+            state: Box::default(),
+            buffer: Some(RegisteredBuffer {
+                pixels: vec![0; 4],
+                width: 1,
+                height: 1,
+                stride: 4,
+            }),
+            mode: None,
+            update_pending: true,
+            external_buffers: Vec::new(),
+            external_mode: false,
+            pending_buffer: None,
+        };
+        assert!(device.try_next_frame(Duration::ZERO).unwrap().is_none());
+        assert!(device.update_pending);
+        *device.state.ready_buffer.lock().unwrap() = Some(BUFFER_ID);
+        assert!(matches!(
+            device.try_next_frame(Duration::ZERO),
+            Err(Error::CaptureIoctl(_))
+        ));
+        assert!(!device.update_pending);
+        // A duplicate REQUEST_UPDATE would have changed this to BUFFER_ID (1).
+        assert_eq!(unsafe { device.handle.as_ref().buffer_to_update }, 2);
+    }
+
+    #[test]
+    fn reports_cursor_ioctl_and_bitmap_mapping_failures() {
+        let context = Box::new(super::super::evdi_device_context {
+            fd: -1,
+            buffer_to_update: 0,
+            device_index: -1,
+            frame_buffers: vec![],
+            cursor_events_enabled: core::cell::Cell::new(false),
+        });
+        let mut device = Device {
+            handle: NonNull::new(Box::into_raw(context)).unwrap(),
+            state: Box::default(),
+            buffer: None,
+            mode: None,
+            update_pending: false,
+            external_buffers: Vec::new(),
+            external_mode: false,
+            pending_buffer: None,
+        };
+        device.set_cursor_events(true);
+        assert!(!device.cursor_events_enabled());
+        // Model successful enable followed by a cursor whose GEM handle cannot be mapped.
+        unsafe { device.handle.as_ref().cursor_events_enabled.set(true) };
+        let event = super::super::uapi::DrmEvdiEventCursorSet {
+            base: super::super::uapi::DrmEvent {
+                type_: super::super::uapi::DRM_EVDI_EVENT_CURSOR_SET,
+                length: std::mem::size_of::<super::super::uapi::DrmEvdiEventCursorSet>() as u32,
+            },
+            hot_x: 0,
+            hot_y: 0,
+            width: 1,
+            height: 1,
+            enabled: 1,
+            buffer_handle: 0,
+            buffer_length: 4,
+            pixel_format: u32::from_le_bytes(*b"AR24"),
+            stride: 4,
+        };
+        unsafe {
+            super::super::dispatch_event(
+                device.handle.as_ref(),
+                &device.event_context(),
+                (&event as *const super::super::uapi::DrmEvdiEventCursorSet).cast(),
+                event.base.type_,
+            );
+        }
+        assert!(!device.cursor_events_enabled());
+        assert!(
+            matches!(device.events(Duration::ZERO).as_slice(), [DeviceEvent::CursorSet(c)] if !c.enabled)
+        );
+    }
+
+    #[test]
+    fn queued_cursor_events_reuse_live_handles_and_read_fresh_pixels() {
+        use std::cell::RefCell;
+        use std::fs::OpenOptions;
+        use std::io::{Seek, SeekFrom};
+        use std::os::fd::IntoRawFd;
+        use std::os::unix::fs::{FileExt, OpenOptionsExt};
+        use std::rc::Rc;
+        use std::sync::atomic::{AtomicU64, Ordering};
+
+        const HANDLE: u32 = 17;
+        const BITMAP_OFFSET: u64 = 65536;
+        static NEXT_FILE: AtomicU64 = AtomicU64::new(0);
+        let path = std::env::temp_dir().join(format!(
+            "vino-cursor-regression-{}-{}",
+            std::process::id(),
+            NEXT_FILE.fetch_add(1, Ordering::Relaxed),
+        ));
+        let mut file = OpenOptions::new()
+            .read(true)
+            .write(true)
+            .create_new(true)
+            .mode(0o600)
+            .open(&path)
+            .unwrap();
+        // The descriptor alone owns this scratch file, including on test failure.
+        std::fs::remove_file(path).unwrap();
+        file.set_len(BITMAP_OFFSET + 16).unwrap();
+        let fd = file.try_clone().unwrap().into_raw_fd();
+
+        struct CursorIo {
+            alive: bool,
+            maps: usize,
+            closes: usize,
+            disabled: usize,
+        }
+        let io = Rc::new(RefCell::new(CursorIo {
+            alive: true,
+            maps: 0,
+            closes: 0,
+            disabled: 0,
+        }));
+        let captured = Rc::clone(&io);
+        let _hook = ffi::mock_ioctl(move |called_fd, request, argument| {
+            if called_fd != fd {
+                return None;
+            }
+            let mut state = captured.borrow_mut();
+            if request == ffi::drm_ioctl_mode_map_dumb() {
+                // SAFETY: this ioctl's caller supplies the matching ABI structure.
+                let map = unsafe { &mut *argument.cast::<ffi::DrmModeMapDumb>() };
+                state.maps += 1;
+                if map.handle != HANDLE || !state.alive {
+                    ffi::set_errno(2); // ENOENT, matching the live failure
+                    return Some(-1);
+                }
+                map.offset = BITMAP_OFFSET;
+                Some(0)
+            } else if request == ffi::drm_ioctl_gem_close() {
+                // Model the real handle table: closing the handle invalidates already
+                // queued events naming it; no fresh handle is minted for each event.
+                let close = unsafe { &*argument.cast::<ffi::DrmGemClose>() };
+                assert_eq!(close.handle, HANDLE);
+                state.closes += 1;
+                state.alive = false;
+                Some(0)
+            } else if request == super::super::uapi::ioctl_enable_cursor_events() {
+                let policy =
+                    unsafe { &*argument.cast::<super::super::uapi::DrmEvdiEnableCursorEvents>() };
+                assert_eq!(policy.enable, 0);
+                state.disabled += 1;
+                Some(0)
+            } else {
+                None
+            }
+        });
+        let context = Box::new(super::super::evdi_device_context {
+            fd,
+            buffer_to_update: 0,
+            device_index: -1,
+            frame_buffers: Vec::new(),
+            cursor_events_enabled: core::cell::Cell::new(true),
+        });
+        let mut device = Device {
+            handle: NonNull::new(Box::into_raw(context)).unwrap(),
+            state: Box::default(),
+            buffer: None,
+            mode: None,
+            update_pending: false,
+            external_buffers: Vec::new(),
+            external_mode: false,
+            pending_buffer: None,
+        };
+        fn queue(file: &mut std::fs::File, events: &[(u8, u32, u32)]) {
+            let mut bytes = [0_u8; 1024];
+            for (i, &(enabled, handle, length)) in events.iter().enumerate() {
+                let event = &mut bytes[i * 44..][..44];
+                // Serialize explicit fields rather than reading Rust struct padding.
+                for (offset, value) in [
+                    (0, super::super::uapi::DRM_EVDI_EVENT_CURSOR_SET),
+                    (4, 44),
+                    (16, 2),
+                    (20, 2),
+                    (28, handle),
+                    (32, length),
+                    (36, u32::from_le_bytes(*b"AR24")),
+                    (40, 8),
+                ] {
+                    event[offset..offset + 4].copy_from_slice(&value.to_ne_bytes());
+                }
+                event[24] = enabled;
+            }
+            file.write_all_at(&bytes, 0).unwrap();
+            // The cloned descriptor shares the offset. evdi_handle_events performs the real
+            // read, decode, mmap, bitmap copy, munmap and owned safe callback.
+            file.seek(SeekFrom::Start(0)).unwrap();
+        }
+        let initial = [3_u8, 2, 1, 255, 6, 5, 4, 128, 9, 8, 7, 0, 12, 11, 10, 255];
+        file.write_all_at(&initial, BITMAP_OFFSET).unwrap();
+        queue(&mut file, &[(1, HANDLE, 16), (1, HANDLE, 16)]);
+        let events = device.events(Duration::ZERO);
+        assert_eq!(events.len(), 2);
+        for event in &events {
+            assert!(
+                matches!(event, DeviceEvent::CursorSet(c) if c.enabled && c.pixels == initial),
+                "queued same-handle cursor must retain its bitmap: {event:?}"
+            );
+        }
+        assert!(device.cursor_events_enabled());
+        assert_eq!((io.borrow().maps, io.borrow().closes), (2, 0));
+
+        let changed = [37_u8; 16];
+        file.write_all_at(&changed, BITMAP_OFFSET).unwrap();
+        queue(&mut file, &[(1, HANDLE, 16)]);
+        assert!(matches!(device.events(Duration::ZERO).as_slice(),
+                [DeviceEvent::CursorSet(c)] if c.enabled && c.pixels == changed));
+        assert!(matches!(&events[0], DeviceEvent::CursorSet(c) if c.pixels == initial));
+        assert_eq!(io.borrow().maps, 3);
+
+        queue(&mut file, &[(0, 0, 0), (0, HANDLE, 16)]);
+        let hidden = device.events(Duration::ZERO);
+        assert_eq!(hidden.len(), 2);
+        assert!(hidden.iter().all(
+            |event| matches!(event, DeviceEvent::CursorSet(c) if !c.enabled && c.pixels.is_empty())
+        ));
+        assert!(device.cursor_events_enabled());
+        assert_eq!(
+            (io.borrow().maps, io.borrow().closes, io.borrow().disabled),
+            (3, 0, 0)
+        );
+
+        // Genuine mapping failures still disable the separate-cursor policy; direct capture
+        // must stop instead of accepting framebuffer pixels with a kernel-composited cursor.
+        queue(&mut file, &[(1, HANDLE + 1, 16)]);
+        assert!(matches!(device.events(Duration::ZERO).as_slice(),
+                [DeviceEvent::CursorSet(c)] if !c.enabled && c.pixels.is_empty()));
+        assert!(!device.cursor_events_enabled());
+        assert_eq!(
+            (io.borrow().maps, io.borrow().closes, io.borrow().disabled),
+            (4, 0, 1)
+        );
+        drop(device);
+    }
+
+    #[test]
+    fn external_pending_update_keeps_its_destination_and_consumes_a_late_reply() {
+        let owner = Arc::new(Mutex::new(vec![0_u8; 8]));
+        let pointer = owner.lock().unwrap().as_mut_ptr();
+        let buffers = (0..2)
+            .map(|offset| {
+                // SAFETY: fixed Vec allocation is retained by owner and never accessed elsewhere.
+                unsafe {
+                    ExternalBuffer::new(
+                        7 + offset,
+                        pointer.add(offset as usize * 4),
+                        4,
+                        (1, 1, 4),
+                        owner.clone(),
+                    )
+                    .unwrap()
+                }
+            })
+            .collect::<Vec<_>>();
+        let context = Box::new(super::super::evdi_device_context {
+            fd: -1,
+            buffer_to_update: 7,
+            device_index: -1,
+            cursor_events_enabled: core::cell::Cell::new(true),
+            frame_buffers: buffers
+                .iter()
+                .map(|buffer| evdi_buffer {
+                    id: buffer.id,
+                    buffer: buffer.pointer.as_ptr().cast(),
+                    width: 1,
+                    height: 1,
+                    stride: 4,
+                    rects: core::ptr::null_mut(),
+                    rect_count: 0,
+                })
+                .collect(),
+        });
+        let mut device = Device {
+            handle: NonNull::new(Box::into_raw(context)).unwrap(),
+            state: Box::default(),
+            buffer: None,
+            mode: Some(Mode {
+                width: 1,
+                height: 1,
+                refresh_hz: 60,
+                bits_per_pixel: 32,
+                pixel_format: u32::from_le_bytes(*b"XR24"),
+            }),
+            update_pending: true,
+            external_buffers: buffers,
+            external_mode: true,
+            pending_buffer: Some(7),
+        };
+        // SAFETY: test retains exclusive pixel ownership throughout all pending calls.
+        unsafe {
+            assert!(device
+                .try_next_external_frame(7, Duration::ZERO)
+                .unwrap()
+                .is_none());
+            assert!(device.update_pending);
+            assert_eq!(device.pending_buffer, Some(7));
+            assert!(matches!(
+                device.try_next_external_frame(8, Duration::ZERO),
+                Err(Error::PendingBuffer)
+            ));
+            *device.state.ready_buffer.lock().unwrap() = Some(7);
+            assert!(matches!(
+                device.try_next_external_frame(7, Duration::ZERO),
+                Err(Error::CaptureIoctl(_))
+            ));
+            assert_eq!(device.handle.as_ref().buffer_to_update, 7);
+        }
+        assert!(!device.update_pending);
+        assert_eq!(device.pending_buffer, None);
+        assert!(device.buffer.is_none());
+        let mut changed_mode = device.mode.unwrap();
+        changed_mode.width = 2;
+        device.register_mode(changed_mode);
+        assert!(device.buffer.is_none());
+        assert_eq!(device.external_buffers.len(), 2);
+        // SAFETY: reservation remains exclusive; changed geometry must fail before any ioctl.
+        assert!(matches!(
+            unsafe { device.try_next_external_frame(7, Duration::ZERO) },
+            Err(Error::ExternalBuffer)
+        ));
+        assert!(Arc::strong_count(&owner) > 1);
+        drop(device);
+        assert_eq!(Arc::strong_count(&owner), 1);
+    }
 
     #[test]
     fn rejects_invalid_modes() {

@@ -18,6 +18,7 @@
 //! * **live service** (`chimera`, `--features live,revdi`) — authenticates the
 //!   dock, creates Revdi outputs, and forwards compositor frames through Vino.
 
+pub mod capture_pool;
 #[cfg(all(feature = "live", feature = "revdi"))]
 pub mod daemon;
 pub mod ddcci;
@@ -25,12 +26,21 @@ pub mod ddcci;
 pub mod edid_fetch;
 pub mod kshim;
 pub mod kvino;
+pub mod native_changes;
+pub mod shared_capture;
 pub mod prove;
 #[cfg(feature = "revdi")]
 pub mod revdi;
 pub mod scanout;
 #[cfg(feature = "live")]
 pub mod session;
+pub mod surface;
+#[cfg(all(feature = "live", feature = "revdi"))]
+pub mod trial;
+#[cfg(all(feature = "live", feature = "revdi"))]
+mod trial_capture;
+#[cfg(all(feature = "live", feature = "revdi"))]
+pub mod trial_cursor;
 // `video.rs` reaches for `crate::simd` on x86_64, exactly as it does in the kernel crate.
 #[cfg(target_arch = "x86_64")]
 pub mod simd;
