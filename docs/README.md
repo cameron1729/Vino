@@ -5,6 +5,7 @@ become mixed with kernel API design or build instructions.
 
 | Document | Purpose |
 |---|---|
+| [`gpu-handover.md`](gpu-handover.md) | Start here for the GPU prototype: repositories, current status, pending live validation and source synchronization |
 | [`device.md`](device.md) | Supported hardware, heads, endpoints, modes, and known limits |
 | [`architecture.md`](architecture.md) | Kernel ownership, control, KMS, scanout, and teardown invariants |
 | [`protocol/usb.md`](protocol/usb.md) | USB endpoint map, transport header, framing, and I/O lifecycle |

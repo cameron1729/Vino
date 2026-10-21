@@ -2,6 +2,8 @@
 
 ## GPU encoder prototype branch
 
+Start with the [GPU prototype handover](docs/gpu-handover.md) to resume work.
+
 The `gpu-encoder-prototype` branch adds the Vulkan userspace encoder, supervised
 desktop trials, capture optimizations and measured results. Start with
 [`docs/gpu-encoder.md`](docs/gpu-encoder.md); the latest experimental work is
